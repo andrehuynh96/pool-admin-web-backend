@@ -1,0 +1,4 @@
+module.exports = {
+  "REGISTER": "REGISTER",
+  "FORGOT_PASSWORD": "FORGOT_PASSWORD"
+}
