@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: true
     },
-    twofa_code: {
+    twofa_secret: {
       type: DataTypes.STRING(64),
       allowNull: true,
       defaultValue: VerifyTokenType.REGISTER
