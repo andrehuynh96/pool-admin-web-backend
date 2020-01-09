@@ -41,7 +41,14 @@ const config = {
     usingPass: process.env.REDIS_USING_PASS || 0,
     pass: process.env.REDIS_PASS,
   },
-
+  smtp: {
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT),
+    secure: process.env.SMTP_SECURE.toLowerCase() === 'true',
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  },
+  mailSendAs: process.env.MAIL_SEND_AS || 'no-reply@infinito.io',
 };
 
 module.exports = config;
