@@ -37,7 +37,6 @@ module.exports = (sequelize, DataTypes) => {
     twofa_secret: {
       type: DataTypes.STRING(64),
       allowNull: true,
-      defaultValue: VerifyTokenType.REGISTER
     },
     twofa_enable_flg: {
       type: DataTypes.BOOLEAN,
