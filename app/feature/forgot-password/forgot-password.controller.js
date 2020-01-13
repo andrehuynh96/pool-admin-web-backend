@@ -1,0 +1,66 @@
+const logger = require('app/lib/logger');
+const User = require("app/model/staking").users;
+const UserStatus = require("app/model/staking/value-object/user-status");
+const VerifyTokenType = require("app/model/staking/value-object/verify-token-type");
+const config = require("app/config");
+const mailer = require('app/lib/mailer');
+
+module.exports = async (req, res, next) => {
+  try {
+    let user = await User.findOne({
+      where: {
+        email: req.body.email,
+        deleted_flg: false
+      }
+    });
+    if (!user) {
+      return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+    }
+
+    if (user.status == UserStatus.UNACTIVATED) {
+      return res.forbidden(res.__("UNCONFIRMED_ACCOUNT", "UNCONFIRMED_ACCOUNT"));
+    }
+
+    if (user.status == UserStatus.LOCKED) {
+      return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
+    }
+
+    let verifyToken = Buffer.from(uuidV4()).toString('base64');
+    let today = new Date();
+    today.setHours(today.getHours() + config.expiredVefiryToken);
+    user = await User.update({
+      verify_token: verifyToken,
+      verify_token_expired_at: today,
+      verify_token_type: VerifyTokenType.FORGOT_PASSWORD
+    }, {
+        where: {
+          id: user.id
+        },
+        returning: true
+      })
+
+    _sendEmail(user);
+    return res.ok(true);
+  }
+  catch (err) {
+    logger.error("forgot password fail: ", err);
+    next(err);
+  }
+};
+
+async function _sendEmail(user) {
+  try {
+    let subject = 'Listco Account - Reset Account Password';
+    let from = `Listco <${config.mailSendAs}>`;
+    let data = {
+      email: user.email,
+      fullname: user.fullname,
+      link: `${config.linkWebsiteVerify}/${user.verify_token}`,
+      hours: config.expiredVefiryToken
+    }
+    data = Object.assign({}, data, config.email);
+    await mailer.sendWithTemplate(subject, from, user.email, data, "forgot-password.ejs");
+  } catch (err) {
+    logger.error("send email forgot password fail", err);
+  }
+}

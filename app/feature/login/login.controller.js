@@ -33,7 +33,7 @@ module.exports = async (req, res, next) => {
     if (user.twofa_enable_flg) {
       let verifyToken = Buffer.from(uuidV4()).toString('base64');
       let today = new Date();
-      today.setSeconds(today.getSeconds() + config.expiredVefiryToken);
+      today.setHours(today.getHours() + config.expiredVefiryToken);
       await User.update({
         verify_token: verifyToken,
         verify_token_expired_at: today,

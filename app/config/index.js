@@ -49,8 +49,10 @@ const config = {
     pass: process.env.SMTP_PASS
   },
   mailSendAs: process.env.MAIL_SEND_AS || 'no-reply@infinito.io',
-  expiredVefiryToken: process.env.EXPIRED_VERIFY_TOKEN ? parseInt(process.env.EXPIRED_VERIFY_TOKEN) : 300,
-  enableSeed: process.env.ENABLE_SEED == "1"
+  expiredVefiryToken: process.env.EXPIRED_VERIFY_TOKEN ? parseInt(process.env.EXPIRED_VERIFY_TOKEN) : 2,
+  enableSeed: process.env.ENABLE_SEED == "1",
+  websiteUrl: process.env.WEBSITE_URL,
+  linkWebsiteVerify: process.env.WEBSITE_URL + '/set-new-password'
 };
 
 module.exports = config;

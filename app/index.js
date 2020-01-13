@@ -67,7 +67,7 @@ router.get('/', function (req, res) {
   };
   res.json(result);
 });
-router.get('/health', (req, res) => res.send('OK!'));
+router.get('/web/health', (req, res) => res.send('OK!'));
 require('app/config/swagger')(router, '/staking-pool-admin-backend');
 router.use('/web', require('app/feature'));
 
