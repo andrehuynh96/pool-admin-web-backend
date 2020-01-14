@@ -23,27 +23,27 @@ module.exports = (sequelize, DataTypes) => {
     partner_type: {
       type: DataTypes.STRING(16),
       allowNull: false,
-      default: PartnerType.CHILD
+      defaultValue: PartnerType.CHILD
     },
     actived_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: true
+      defaultValue: true
     },
     deleted_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: false
+      defaultValue: false
     },
     created_by: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      default: 0
+      defaultValue: 0
     },
     updated_by: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      default: 0
+      defaultValue: 0
     }
   }, {
       underscored: true,

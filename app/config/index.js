@@ -52,7 +52,8 @@ const config = {
   expiredVefiryToken: process.env.EXPIRED_VERIFY_TOKEN ? parseInt(process.env.EXPIRED_VERIFY_TOKEN) : 2,
   enableSeed: process.env.ENABLE_SEED == "1",
   websiteUrl: process.env.WEBSITE_URL,
-  linkWebsiteVerify: process.env.WEBSITE_URL + '/set-new-password'
+  linkWebsiteVerify: process.env.WEBSITE_URL + '/set-new-password',
+  appLimit: process.env.APP_LIMIT
 };
 
 module.exports = config;
