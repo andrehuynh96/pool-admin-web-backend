@@ -73,7 +73,8 @@ module.exports = router;
  *                 "data":{
                       "id": 1,
                       "email":"infinito@blockchainlabs.asia",
-                      "name": "Infinito"
+                      "name": "Infinito",
+                      "partner_type": "AFFILIATE"
                     }
  *             }
  *       400:
@@ -113,6 +114,9 @@ module.exports = router;
  *       - name: email
  *         in: query
  *         type: string
+ *       - name: actived_flg
+ *         in: query
+ *         type: boolean
  *     produces:
  *       - application/json
  *     responses:
@@ -121,11 +125,16 @@ module.exports = router;
  *         examples:
  *           application/json:
  *             {
- *                 "data": [{
+ *                 "items": [{
                       "id": 1,
                       "email":"infinito@blockchainlabs.asia",
-                      "name": "Infinito"
-                    }]
+                      "name": "Infinito",
+                      "partner_type": "AFFILIATE",
+                      "created_at": "2020-01-07 20:22:04.728+09"
+                    }],
+                    "offset": 0,
+                    "limit": 10,
+                    "total": 1
  *             }
  *       400:
  *         description: Error
@@ -181,7 +190,8 @@ module.exports = router;
  *                 "data":{
                       "id": 1,
                       "email":"infinito@blockchainlabs.asia",
-                      "name": "Infinito"
+                      "name": "Infinito",
+                      "partner_type": "AFFILIATE"
                     }
  *             }
  *       400:
@@ -221,7 +231,8 @@ module.exports = router;
  *                 "data":{
                       "id": 1,
                       "email":"infinito@blockchainlabs.asia",
-                      "name": "Infinito"
+                      "name": "Infinito",
+                      "partner_type": "AFFILIATE"
                     }
  *             }
  *       400:
