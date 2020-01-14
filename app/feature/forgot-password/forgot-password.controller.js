@@ -1,9 +1,11 @@
 const logger = require('app/lib/logger');
 const User = require("app/model/staking").users;
 const UserStatus = require("app/model/staking/value-object/user-status");
-const VerifyTokenType = require("app/model/staking/value-object/verify-token-type");
 const config = require("app/config");
 const mailer = require('app/lib/mailer');
+const OTP = require("app/model/staking").otps;
+const OtpType = require("app/model/staking/value-object/otp-type");
+const uuidV4 = require('uuid/v4');
 
 module.exports = async (req, res, next) => {
   try {
@@ -28,16 +30,25 @@ module.exports = async (req, res, next) => {
     let verifyToken = Buffer.from(uuidV4()).toString('base64');
     let today = new Date();
     today.setHours(today.getHours() + config.expiredVefiryToken);
-    user = await User.update({
-      verify_token: verifyToken,
-      verify_token_expired_at: today,
-      verify_token_type: VerifyTokenType.FORGOT_PASSWORD
+
+    await OTP.update({
+      expired: true
     }, {
         where: {
-          id: user.id
+          user_id: user.id,
+          action_type: OtpType.FORGOT_PASSWORD
         },
         returning: true
       })
+
+    await OTP.create({
+      code: verifyToken,
+      used: false,
+      expired: false,
+      expired_at: today,
+      user_id: user.id,
+      action_type: OtpType.FORGOT_PASSWORD
+    })
 
     _sendEmail(user);
     return res.ok(true);

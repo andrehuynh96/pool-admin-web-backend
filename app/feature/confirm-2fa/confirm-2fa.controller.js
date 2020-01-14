@@ -1,21 +1,26 @@
 const logger = require('app/lib/logger');
 const User = require("app/model/staking").users;
 const UserStatus = require("app/model/staking/value-object/user-status");
-const VerifyTokenType = require("app/model/staking/value-object/verify-token-type");
 const userMapper = require("app/feature/response-schema/user.response-schema");
 const speakeasy = require("speakeasy");
+const OTP = require("app/model/staking").otps;
+const OtpType = require("app/model/staking/value-object/otp-type");
 
 module.exports = async (req, res, next) => {
   try {
-    let user = await User.findOne({
+    let otp = await OTP.findOne({
       where: {
-        verify_token: req.body.verify_token,
-        verify_token_type: VerifyTokenType.TWOFA,
-        deleted_flg: false
+        code: req.body.verify_token,
+        action_type: OtpType.TWOFA
       }
     });
-    if (!user) {
-      return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+    if (!otp) {
+      return res.badRequest(res.__("TOKEN_INVALID"), "TOKEN_INVALID");
+    }
+
+    let today = new Date();
+    if (otp.expired_at < today || otp.expired || otp.used) {
+      return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED");
     }
 
     var verified = speakeasy.totp.verify({
@@ -28,6 +33,15 @@ module.exports = async (req, res, next) => {
       return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT");
     }
 
+    let user = await User.findOne({
+      where: {
+        id: otp.user_id
+      }
+    });
+    if (!user) {
+      return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+    }
+
     if (user.status == UserStatus.UNACTIVATED) {
       return res.forbidden(res.__("UNCONFIRMED_ACCOUNT", "UNCONFIRMED_ACCOUNT"));
     }
@@ -35,10 +49,15 @@ module.exports = async (req, res, next) => {
     if (user.status == UserStatus.LOCKED) {
       return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
     }
-    let today = new Date();
-    if (user.verify_token_expired_at < today) {
-      return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED");
-    }
+
+    await OTP.update({
+      used: true
+    }, {
+        where: {
+          id: otp.id
+        },
+      })
+
     req.session.authenticated = true;
     req.session.user = user;
     return res.ok(userMapper(user));

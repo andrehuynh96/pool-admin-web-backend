@@ -1,5 +1,3 @@
-const UserStatus = require("./value-object/user-status");
-const VerifyTokenType = require("./value-object/verify-token-type");
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("user_login_his", {

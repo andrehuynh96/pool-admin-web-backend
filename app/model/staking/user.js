@@ -1,5 +1,4 @@
 const UserStatus = require("./value-object/user-status");
-const VerifyTokenType = require("./value-object/verify-token-type");
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("users", {
@@ -20,19 +19,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(36),
       allowNull: false,
       defaultValue: UserStatus.UNACTIVATED
-    },
-    verify_token: {
-      type: DataTypes.STRING(128),
-      allowNull: true
-    },
-    verify_token_type: {
-      type: DataTypes.STRING(32),
-      allowNull: true,
-      defaultValue: VerifyTokenType.REGISTER
-    },
-    verify_token_expired_at: {
-      type: DataTypes.DATE,
-      allowNull: true
     },
     twofa_secret: {
       type: DataTypes.STRING(64),

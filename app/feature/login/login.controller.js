@@ -1,10 +1,12 @@
 const logger = require('app/lib/logger');
 const User = require("app/model/staking").users;
+const OTP = require("app/model/staking").otps;
 const UserStatus = require("app/model/staking/value-object/user-status");
-const VerifyTokenType = require("app/model/staking/value-object/verify-token-type");
+const OtpType = require("app/model/staking/value-object/otp-type");
 const userMapper = require("app/feature/response-schema/user.response-schema");
 const bcrypt = require('bcrypt');
 const config = require("app/config");
+const uuidV4 = require('uuid/v4');
 
 module.exports = async (req, res, next) => {
   try {
@@ -34,20 +36,30 @@ module.exports = async (req, res, next) => {
       let verifyToken = Buffer.from(uuidV4()).toString('base64');
       let today = new Date();
       today.setHours(today.getHours() + config.expiredVefiryToken);
-      await User.update({
-        verify_token: verifyToken,
-        verify_token_expired_at: today,
-        verify_token_type: VerifyTokenType.TWOFA
+
+      await OTP.update({
+        expired: true
       }, {
           where: {
-            id: user.id
-          }
+            user_id: user.id,
+            action_type: OtpType.TWOFA
+          },
+          returning: true
         })
+
+      await OTP.create({
+        code: verifyToken,
+        used: false,
+        expired: false,
+        expired_at: today,
+        user_id: user.id,
+        action_type: OtpType.TWOFA
+      })
+
       return res.ok({
         twofa: true,
         verify_token: verifyToken
       });
-
     }
     else {
       req.session.authenticated = true;
