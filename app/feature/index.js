@@ -7,6 +7,7 @@ router.use(require('./logout/logout.route'));
 router.use(require('./forgot-password/forgot-password.route'));
 router.use(require('./set-new-password/set-new-password.route'));
 router.use(require('./partner/partner.route'));
+router.use(require('./staking-platform/staking-platform.route'));
 
 
 module.exports = router;

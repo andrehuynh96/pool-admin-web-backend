@@ -71,7 +71,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: StakingType.NATIVE
     },
-    sc_address: {
+    sc_lookup_addr: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
+    sc_token_address: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
+    validator_address: {
       type: DataTypes.STRING(128),
       allowNull: true
     },
@@ -94,5 +102,4 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
-}
-
+} 
