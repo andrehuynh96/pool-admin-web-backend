@@ -29,7 +29,7 @@ memo.all = async (req, res, next) => {
 memo.create = async (req, res, next) => {
   const transaction = await database.transaction();
   try {
-    logger.info('partner-tx-memo::create');
+    logger.info('partner-tx-memo::update');
     const { params: { partner_id }, body: { items }, user } = req;
     let updatedItems = [];
     let insertedItems = [];
@@ -73,12 +73,12 @@ memo.create = async (req, res, next) => {
 
 memo.getHis = async (req, res, next) => {
   try {
-    logger.info('partner-tx-memo::all');
+    logger.info('partner-tx-memo::all::histories');
     const { query: { offset, limit }, params: { partner_id } } = req;
     const where = { partner_id: partner_id, default_flg: false };
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({lim, off, where: where, order: [['platform', 'ASC'], ['partner_id', 'ASC']]});
+    const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({lim, off, where: where, order: [['platform', 'ASC']]});
     return res.ok({
       items: partner_tx_memos.map(item => mapper(item)),
       offset: off,
