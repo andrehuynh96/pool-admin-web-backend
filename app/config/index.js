@@ -53,7 +53,8 @@ const config = {
   enableSeed: process.env.ENABLE_SEED == "1",
   websiteUrl: process.env.WEBSITE_URL,
   linkWebsiteVerify: process.env.WEBSITE_URL + '/set-new-password',
-  disableRecaptcha: true
+  disableRecaptcha: true,
+  appLimit: process.env.APP_LIMIT || 10
 };
 
 module.exports = config;
