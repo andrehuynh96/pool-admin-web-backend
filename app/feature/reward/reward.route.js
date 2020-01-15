@@ -1,12 +1,12 @@
 const express = require('express');
 const validator = require('app/middleware/validator.middleware');
-const requestSchema = require('./payout.request-schema');
-const controller = require('./payout.controller');
+const requestSchema = require('./reward.request-schema');
+const controller = require('./reward.controller');
 
 const router = express.Router();
 
 router.get(
-  '/staking-platforms/:staking_platform_id/payouts',
+  '/settings/commissions',
   controller.get
 );
 
@@ -14,7 +14,7 @@ router.get(
 
 /**
  * @swagger
- * /web/staking-platforms/:staking_platform_id/payouts:
+ * /web/settings/commissions:
  *   get:
  *     summary: get pay out
  *     tags:
@@ -49,7 +49,7 @@ router.get(
  */
 
 router.put(
-  '/staking-platforms/:staking_platform_id/payouts',
+  '/settings/commissions',
   validator(requestSchema),
   controller.update
 );
@@ -63,7 +63,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/staking-platforms/:staking_platform_id/payouts:
+ * /web/settings/commissions:
  *   put:
  *     summary: update pay out
  *     tags:
