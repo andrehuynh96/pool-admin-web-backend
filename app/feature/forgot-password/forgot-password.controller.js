@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
       }
     });
     if (!user) {
-      return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+      return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ["email"] });
     }
 
     if (user.status == UserStatus.UNACTIVATED) {

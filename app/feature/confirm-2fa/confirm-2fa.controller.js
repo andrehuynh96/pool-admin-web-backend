@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
       }
     });
     if (!otp) {
-      return res.badRequest(res.__("TOKEN_INVALID"), "TOKEN_INVALID");
+      return res.badRequest(res.__("TOKEN_INVALID"), "TOKEN_INVALID", { fields: ["verify_token"] });
     }
 
     let today = new Date();
@@ -30,7 +30,7 @@ module.exports = async (req, res, next) => {
     });
 
     if (!verified) {
-      return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT");
+      return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT", { fields: ["twofa_code"] });
     }
 
     let user = await User.findOne({
