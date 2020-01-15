@@ -40,14 +40,17 @@ module.exports = async (req, res, next) => {
     }
 
     let passWord = bcrypt.hashSync(req.body.password, 10);
-    user = await User.update({
+    let [_, response] = await User.update({
       password_hash: passWord,
     }, {
         where: {
           id: user.id
         },
         returning: true
-      })
+      });
+    if (!response || response.length == 0) {
+      return res.serverInternalError();
+    }
 
     return res.ok(true);
   }

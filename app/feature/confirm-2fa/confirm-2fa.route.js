@@ -49,7 +49,9 @@ module.exports = router;
  *             {
  *                 "data":{
                       "id": 1,
-                      "email":"example@gmail.com"
+                      "email":"example@gmail.com",
+                      "twofa_secret":"sCM87xx",
+                      "twofa_enable_flg": true
                     }
  *             }
  *       400:
