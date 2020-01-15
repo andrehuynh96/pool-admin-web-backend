@@ -2,11 +2,10 @@ const objectMapper = require('object-mapper');
 
 const destObject = {
   id: 'id',
-  name: 'name',
-  email: 'email',
-  parent_id: 'parent_id',
-  partner_type: 'partner_type',
-  createdAt: 'created_at'
+  platform: 'platform',
+  memo: 'memo',
+  default_flg: 'default_flg',
+  updatedAt: 'updated_at'
 };
 
 module.exports = srcObject => {

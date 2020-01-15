@@ -3,7 +3,7 @@ const config = require('app/config');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const Partner = require('app/model/staking').partners;
-const mapper = require("app/feature/response-schema/partner.response-schema");
+const mapper = require('app/feature/response-schema/partner.response-schema');
 
 var partner = {};
 

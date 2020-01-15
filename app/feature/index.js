@@ -8,6 +8,7 @@ router.use(require('./forgot-password/forgot-password.route'));
 router.use(require('./set-new-password/set-new-password.route'));
 router.use(require('./partner/partner.route'));
 router.use(require('./staking-platform/staking-platform.route'));
+router.use(require('./partner-tx-memo/partner-tx-memo.route'));
 
 
 module.exports = router;
