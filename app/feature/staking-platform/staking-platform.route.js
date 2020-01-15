@@ -9,22 +9,26 @@ const router = express.Router();
 
 router.get(
   '/staking-platforms/time-unit',
+  authenticate,
   controller.timeUnit
 );
 
 router.get(
   '/staking-platforms',
+  authenticate,
   controller.getAll
 );
 
 router.get(
   '/staking-platforms/:id',
+  authenticate,
   controller.get
 );
 
 router.put(
   '/staking-platforms/:id',
   parseformdata,
+  authenticate,
   validator(update),
   controller.update
 );
@@ -32,6 +36,7 @@ router.put(
 router.post(
   '/staking-platforms',
   parseformdata,
+  authenticate,
   validator(create),
   controller.create
 );
