@@ -1,5 +1,6 @@
+const Temporal = require('sequelize-temporal');
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("partner_commissions", {
+  const partner_commission = sequelize.define("partner_commissions", {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -26,4 +27,6 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
+  Temporal(partner_commission, sequelize, { blocking: true, full: false });  
+  return partner_commission;
 }

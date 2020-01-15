@@ -65,6 +65,7 @@ const config = {
     fileSize: process.env.CDN_FILE_SIZE ? parseFloat(process.env.CDN_FILE_SIZE) : 5242880
   },
   enableDocsLink: process.env.ENABLE_DOCS_LINK == "1",
+  appLimit: process.env.APP_LIMIT || 10
 };
 
 module.exports = config;
