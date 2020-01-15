@@ -55,7 +55,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.notFound(res.__("NOT_FOUND"), "NOT_FOUND");
+        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND");
       }
 
       return res.ok(result);
@@ -76,7 +76,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.notFound(res.__("NOT_FOUND"), "NOT_FOUND");
+        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND");
       }
 
       if (req.body.icon) {
