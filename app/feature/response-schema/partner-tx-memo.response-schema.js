@@ -5,6 +5,7 @@ const destObject = {
   platform: 'platform',
   memo: 'memo',
   default_flg: 'default_flg',
+  created_by: 'created_by',
   updatedAt: 'updated_at'
 };
 
