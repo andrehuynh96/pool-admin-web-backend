@@ -54,6 +54,17 @@ const config = {
   websiteUrl: process.env.WEBSITE_URL,
   linkWebsiteVerify: process.env.WEBSITE_URL + '/set-new-password',
   disableRecaptcha: true,
+  CDN: {
+    url: process.env.CDN_URL,
+    accessKey: process.env.CDN_ACCESS_KEY,
+    secretKey: process.env.CDN_SECRET_KEY,
+    bucket: process.env.CDN_BUCKET,
+    folderPlatform: process.env.CDN_FOLDER_PLATFORM,
+    exts: process.env.CDN_FILE_EXT ? process.env.CDN_FILE_EXT.split(',')
+      : [],
+    fileSize: process.env.CDN_FILE_SIZE ? parseFloat(process.env.CDN_FILE_SIZE) : 5242880
+  },
+  enableDocsLink: process.env.ENABLE_DOCS_LINK == "1",
   appLimit: process.env.APP_LIMIT || 10
 };
 
