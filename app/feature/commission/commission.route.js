@@ -72,7 +72,7 @@ router.get(
  */
 
 router.get(
-  '/settings/commissions/history',
+  '/settings/commissions/histories',
   controller.getHistory
 );
 
@@ -85,7 +85,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/settings/commissions/history?size={size}&page={page}:
+ * /web/settings/commissions/histories?size={size}&page={page}:
  *   get:
  *     summary: get pay out
  *     tags:
@@ -98,7 +98,7 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *           { data: { size: 20, page: 1, total: 0, his: [] } }
+ *             { data: { size: 20, page: 1, total: 0, his: [] } }
  *       400:
  *         description: Error
  *         schema:

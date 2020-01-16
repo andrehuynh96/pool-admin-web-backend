@@ -6,7 +6,7 @@ const controller = require('app/feature/reward/reward.controller');
 const router = express.Router();
 
 router.get(
-  '/settings/reward',
+  '/settings/rewards',
   controller.get
 );
 
@@ -27,9 +27,19 @@ router.get(
  *         description: Ok
  *         examples:
  *           application/json:
- *             {
- *                 "data": []
- *             }
+ *             { data:
+   [ { id: '5a4bc5ea-135f-4013-a30e-104bc1d11358',
+       platform: 'ETH',
+       commission: '80.00',
+       created_by: 5,
+       createdAt: '2020-01-13T03:15:23.525Z',
+       updatedAt: '2020-01-13T03:15:23.525Z' },
+     { id: '5a4bc5ea-135f-4013-a30e-104bc1d11359',
+       platform: 'ETH',
+       commission: '70.00',
+       created_by: 5,
+       createdAt: '2020-01-13T07:18:48.669Z',
+       updatedAt: '2020-01-13T07:18:48.669Z' } ] }
  *       400:
  *         description: Error
  *         schema:
@@ -49,8 +59,7 @@ router.get(
  */
 
 router.get(
-  '/settings/reward/histories ',
-  validator(requestSchema),
+  '/settings/rewards/histories',
   controller.getHistory
 );
 
@@ -76,9 +85,7 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *             {
- *                 "data": []
- *             }
+ *             { data: { size: 20, page: 1, total: 0, his: [] } }
  *       400:
  *         description: Error
  *         schema:

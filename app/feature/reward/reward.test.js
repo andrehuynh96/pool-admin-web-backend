@@ -11,10 +11,10 @@ describe('commission', function () {
     setTimeout(done, 3000)
   });
 
-  describe('/settings/commissions', () => {
-    it('it should GET all commission configs', (done) => {
+  describe('/settings/rewards', () => {
+    it.only('it should GET all rewards configs', (done) => {
       chai.request(server)
-        .get('/web/settings/commissions')
+        .get('/web/settings/rewards')
         .end((err, res) => {
           console.log(res.body)
           res.should.have.status(200);
@@ -23,9 +23,9 @@ describe('commission', function () {
         });
     });
 
-    it.only('it should GET all commission config history', (done) => {
+    it('it should GET all rewards config history', (done) => {
       chai.request(server)
-        .get('/web/settings/commissions/histories')
+        .get('/web/settings/rewards/histories')
         .end((err, res) => {
           console.log(res.body)
           res.should.have.status(200);
