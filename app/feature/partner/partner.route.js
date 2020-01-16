@@ -117,6 +117,9 @@ module.exports = router;
  *       - name: actived_flg
  *         in: query
  *         type: boolean
+ *       - name: root
+ *         in: query
+ *         type: boolean
  *     produces:
  *       - application/json
  *     responses:
