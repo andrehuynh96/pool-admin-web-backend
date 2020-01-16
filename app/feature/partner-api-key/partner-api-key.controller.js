@@ -16,7 +16,7 @@ key.all = async (req, res, next) => {
     }
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_api_keys } = await ApiKey.findAndCountAll({lim, off, where: where, order: [['updatedAt', 'DESC']]});
+    const { count: total, rows: partner_api_keys } = await ApiKey.findAndCountAll({offset: off, limit: lim, where: where, order: [['updatedAt', 'DESC']]});
     return res.ok({
       items: partner_api_keys.map(item => mapper(item)),
       offset: off,

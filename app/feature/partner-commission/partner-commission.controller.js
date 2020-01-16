@@ -13,7 +13,7 @@ commission.all = async (req, res, next) => {
     const where = { partner_id: partner_id };
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_commissions } = await PartnerCommission.findAndCountAll({lim, off, where: where, order: [['platform', 'ASC']]});
+    const { count: total, rows: partner_commissions } = await PartnerCommission.findAndCountAll({offset: off, limit: lim, where: where, order: [['platform', 'ASC']]});
     return res.ok({
       items: partner_commissions.map(item => mapper(item)),
       offset: off,
@@ -69,7 +69,7 @@ commission.getHis = async (req, res, next) => {
     const where = { partner_id: partner_id };
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_commissions_histories } = await History.findAndCountAll({lim, off, where: where, order: [['platform', 'ASC']]});
+    const { count: total, rows: partner_commissions_histories } = await History.findAndCountAll({offset: off, limit: lim, where: where, order: [['platform', 'ASC']]});
     return res.ok({
       items: partner_commissions_histories.map(item => mapper(item)),
       offset: off,
