@@ -1,7 +1,7 @@
 const express = require('express');
 const validator = require('app/middleware/validator.middleware');
-const requestSchema = require('./reward.request-schema');
-const controller = require('./reward.controller');
+const requestSchema = require('app/feature/reward/reward.request-schema');
+const controller = require('app/feature/reward/reward.controller');
 
 const router = express.Router();
 

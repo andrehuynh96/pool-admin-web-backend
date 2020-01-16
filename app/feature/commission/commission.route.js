@@ -1,7 +1,5 @@
-const express = require('express');
-const validator = require('app/middleware/validator.middleware');
-const requestSchema = require('./reward.request-schema');
-const controller = require('./reward.controller');
+const express = require('express');;
+const controller = require('app/feature/commission/commission.controller');
 
 const router = express.Router();
 
@@ -27,9 +25,34 @@ router.get(
  *         description: Ok
  *         examples:
  *           application/json:
- *             {
- *                 "data": []
- *             }
+ *            { data:
+   [ { id: 'a92b8ebc-256a-11ea-978f-2e728ce88125',
+       platform: 'ATOM',
+       cycle: 1000,
+       cycle_type: 'BLOCK',
+       min_amount: 2000,
+       amount_unit: 'ATOM',
+       created_by: 5,
+       createdAt: '2019-08-02T03:00:00.000Z',
+       updatedAt: '2019-12-23T10:05:02.989Z' },
+     { id: 'a92b8ebc-256a-11ea-978f-2e728ce88126',
+       platform: 'XTZ',
+       cycle: 3,
+       cycle_type: 'CYCLE',
+       min_amount: 1000000,
+       amount_unit: 'ATOM',
+       created_by: 5,
+       createdAt: '2019-08-02T03:00:00.000Z',
+       updatedAt: '2019-08-02T03:00:00.000Z' },
+     { id: 'a92b913c-256a-11ea-978f-2e728ce88125',
+       platform: 'IRIS',
+       cycle: 1000,
+       cycle_type: 'BLOCK',
+       min_amount: 1000000,
+       amount_unit: 'IRIS',
+       created_by: 5,
+       createdAt: '2019-08-02T03:00:00.000Z',
+       updatedAt: '2019-08-02T03:00:00.000Z' } ] }
  *       400:
  *         description: Error
  *         schema:
@@ -48,9 +71,8 @@ router.get(
  *           $ref: '#/definitions/500'
  */
 
-router.put(
+router.get(
   '/settings/commissions/history',
-  validator(requestSchema),
   controller.getHistory
 );
 
@@ -63,7 +85,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/settings/commissions/history:
+ * /web/settings/commissions/history?size={size}&page={page}:
  *   get:
  *     summary: get pay out
  *     tags:
@@ -76,9 +98,7 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *             {
- *                 "data": []
- *             }
+ *           { data: { size: 20, page: 1, total: 0, his: [] } }
  *       400:
  *         description: Error
  *         schema:
