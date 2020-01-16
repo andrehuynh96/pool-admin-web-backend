@@ -5,6 +5,8 @@ const userMapper = require("app/feature/response-schema/user.response-schema");
 const speakeasy = require("speakeasy");
 const OTP = require("app/model/staking").otps;
 const OtpType = require("app/model/staking/value-object/otp-type");
+const UserActivityLog = require("app/model/staking").user_activity_logs;
+const ActionType = require("app/model/staking/value-object/user-activity-action-type");
 
 module.exports = async (req, res, next) => {
   try {
@@ -56,7 +58,16 @@ module.exports = async (req, res, next) => {
         where: {
           id: otp.id
         },
-      })
+      });
+
+    const registerIp = (req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.headers['x-client'] || req.ip).replace(/^.*:/, '');
+
+    await UserActivityLog.create({
+      user_id: user.id,
+      client_ip: registerIp,
+      action: ActionType.LOGIN,
+      user_agent: req.headers['user-agent']
+    });
 
     req.session.authenticated = true;
     req.session.user = user;

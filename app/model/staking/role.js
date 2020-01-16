@@ -12,12 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.STRING(512),
-      allowNull: false
+      allowNull: true
     },
     deleted_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: false
+      defaultValue: false
     }
   }, {
       underscored: true,

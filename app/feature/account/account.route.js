@@ -2,7 +2,7 @@ const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const authenticate = require('app/middleware/authenticate.middleware');
 const parseformdata = require('app/middleware/parse-formdata.middleware');
-const { changePassword, update, } = require('./validator');
+const { changePassword, update, twofa } = require('./validator');
 const controller = require('./account.controller');
 const verifyRecaptcha = require('app/middleware/verify-recaptcha.middleware');
 const config = require('app/config')
@@ -34,6 +34,20 @@ router.get(
   controller.get2Fa
 );
 
+router.post(
+  '/me/2fa',
+  authenticate,
+  validator(twofa),
+  controller.update2Fa
+);
+
+
+router.get(
+  '/me/login-history',
+  authenticate,
+  controller.loginHistory
+);
+
 module.exports = router;
 
 
@@ -57,10 +71,12 @@ module.exports = router;
  *           application/json:
  *             {
  *                 "data":{
-                      id": 1,
+                        "id": 1,
                         "email":"example@gmail.com",
                         "twofa_secret":"sCM87xx",
-                        "twofa_enable_flg": true
+                        "twofa_enable_flg": true,
+                        "create_at":"",
+                        "user_sts":"ACTIVATED"
                     }
 
  *             }
@@ -216,7 +232,7 @@ module.exports = router;
  *            example:
  *                  {
                           "twofa_secret":"AIU45sdsahssdsjYUDHd6",
-                          "twofa_code":"123456", 
+                          "twofa_code":"123456",
  *                  }
  *     produces:
  *       - application/json
@@ -247,4 +263,71 @@ module.exports = router;
  */
 
 
+
 /*********************************************************************/
+
+
+/**
+ * @swagger
+ * /web/me/login-history:
+ *   get:
+ *     summary: search login-history
+ *     tags:
+ *       - Accounts
+ *     description:
+ *     parameters:
+ *       - name: offset
+ *         in: query
+ *         type: integer
+ *         format: int32
+ *       - name: limit
+ *         in: query
+ *         type: integer
+ *         format: int32
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         examples:
+ *           application/json:
+ *             {
+ *                 "data": {
+                      "items": [
+                        {
+                          "user_id":1,
+                          "client_ip":"192.168.0.1",
+                          "action":"LOGIN",
+                          "user_agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0",
+                          "data":"",
+                          "createdAt":"2020-01-13T06:47:41.248Z",
+                          "updatedAt":"2020-01-13T06:47:41.248Z"
+                        }
+                      ],
+                      "offset": 0,
+                      "limit": 10,
+                      "total": 4
+ *                 }
+ *             }
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/400'
+ *       401:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/401'
+ *       404:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/404'
+ *       500:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/500'
+ */
+
+
+/*********************************************************************/
+
+

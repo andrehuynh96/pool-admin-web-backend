@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
     actived_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: true
+      defaultValue: true
     },
     confirmation_block: {
       type: DataTypes.INTEGER,
@@ -86,17 +86,17 @@ module.exports = (sequelize, DataTypes) => {
     deleted_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: false
+      defaultValue: false
     },
     created_by: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      default: 0
+      defaultValue: 0
     },
     updated_by: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      default: 0
+      defaultValue: 0
     }
   }, {
       underscored: true,
