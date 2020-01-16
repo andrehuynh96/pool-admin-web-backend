@@ -3,14 +3,14 @@ const config = require('app/config');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const Partner = require('app/model/staking').partners;
-const mapper = require("app/feature/response-schema/partner.response-schema");
+const mapper = require('app/feature/response-schema/partner.response-schema');
 
 var partner = {};
 
 partner.all = async (req, res, next) => {
   try {
     logger.info('partner::all');
-    const { query: { offset, limit, name, email, actived_flg} } = req;
+    const { query: { offset, limit, name, email, actived_flg, root} } = req;
     const where = { deleted_flg: false };
     if (name) {
       where.name = {[Op.iLike]: `%${name}%`};
@@ -18,13 +18,16 @@ partner.all = async (req, res, next) => {
     if (email) {
       where.email = {[Op.iLike]: `%${email}%`};
     }
-
     if (actived_flg) {
       where.actived_flg = actived_flg;
     }
+    if (root && (root == 1 || root == true || root == 'true')) {
+      where.parent_id = {[Op.eq]: null};
+    }
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partners } = await Partner.findAndCountAll({lim, off, where: where, order: [['name', 'ASC']]});
+
+    const { count: total, rows: partners } = await Partner.findAndCountAll({offset: off, limit: lim, where: where, order: [['name', 'ASC']]});
     return res.ok({
       items: partners.map(item => mapper(item)),
       offset: off,

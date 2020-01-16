@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
       }
     });
     if (!user) {
-      return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+      return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ["email"] });
     }
     const match = await bcrypt.compare(req.body.password, user.password_hash);
     if (!match) {

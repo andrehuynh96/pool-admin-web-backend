@@ -117,6 +117,9 @@ module.exports = router;
  *       - name: actived_flg
  *         in: query
  *         type: boolean
+ *       - name: root
+ *         in: query
+ *         type: boolean
  *     produces:
  *       - application/json
  *     responses:
@@ -124,8 +127,9 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *             {
- *                 "items": [{
+ *             {  
+               "data": {
+                 "items": [{
                       "id": 1,
                       "email":"infinito@blockchainlabs.asia",
                       "name": "Infinito",
@@ -135,6 +139,7 @@ module.exports = router;
                     "offset": 0,
                     "limit": 10,
                     "total": 1
+                  }
  *             }
  *       400:
  *         description: Error
