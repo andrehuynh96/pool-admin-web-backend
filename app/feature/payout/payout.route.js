@@ -27,9 +27,15 @@ router.get(
  *         description: Ok
  *         examples:
  *           application/json:
- *             {
- *                 "data": []
- *             }
+ *             { data:
+   [ { id: 1,
+       staking_platform_id: '96b7f440-1a3b-11ea-978f-2e728ce88125',
+       reward_platform: 'ETH',
+       token_name: 'INFT',
+       token_address: 'dac17f958d2ee523',
+       reward_max_payout: 10,
+       createdAt: '2020-01-13T03:15:23.525Z',
+       updatedAt: '2020-01-13T03:15:23.525Z' } ] }
  *       400:
  *         description: Error
  *         schema:

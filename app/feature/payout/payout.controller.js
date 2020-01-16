@@ -5,6 +5,7 @@ module.exports = {
   get: async (req, res, next) => {
     try {
       let platformId = req.params.staking_platform_id
+      console.log('platformId', platformId)
       let payouts = await ERC20StakingCfg.findAll({
         where: {
           staking_platform_id: platformId

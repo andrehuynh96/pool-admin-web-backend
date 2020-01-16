@@ -7,8 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     staking_platform_id: {
       type: DataTypes.UUID,
-      allowNull: false,
-      defaultValue: DataTypes.UUIDV4(),
+      allowNull: false
     },
     reward_platform: {
       type: DataTypes.STRING(16),
