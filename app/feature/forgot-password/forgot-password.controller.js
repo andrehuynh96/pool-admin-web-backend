@@ -65,7 +65,7 @@ async function _sendEmail(user, verifyToken) {
     let from = `Listco <${config.mailSendAs}>`;
     let data = {
       email: user.email,
-      fullname: user.fullname,
+      fullname: user.email,
       link: `${config.linkWebsiteVerify}/${verifyToken}`,
       hours: config.expiredVefiryToken
     }

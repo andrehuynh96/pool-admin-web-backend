@@ -4,13 +4,15 @@ const UserStatus = require("app/model/staking/value-object/user-status");
 const OTP = require("app/model/staking").otps;
 const OtpType = require("app/model/staking/value-object/otp-type");
 const bcrypt = require('bcrypt');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 module.exports = async (req, res, next) => {
   try {
     let otp = await OTP.findOne({
       where: {
         code: req.body.verify_token,
-        action_type: OtpType.FORGOT_PASSWORD
+        action_type: { [Op.in]: [OtpType.FORGOT_PASSWORD, OtpType.CREATE_ACCOUNT] }
       }
     });
     if (!otp) {

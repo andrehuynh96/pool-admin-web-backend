@@ -8,6 +8,8 @@ const uuidV4 = require('uuid/v4');
 const speakeasy = require("speakeasy");
 const OTP = require("app/model/staking").otps;
 const OtpType = require("app/model/staking/value-object/otp-type");
+const UserActivityLog = require("app/model/staking").user_activity_logs;
+const ActionType = require("app/model/staking/value-object/user-activity-action-type");
 
 module.exports = {
   getMe: async (req, res, next) => {
@@ -51,7 +53,7 @@ module.exports = {
         password_hash: passWord
       }, {
           where: {
-            id: req.user.id
+            id: req.user.id,
           },
           returning: true
         });
@@ -107,6 +109,33 @@ module.exports = {
     }
     catch (err) {
       logger.error('getMe fail:', err);
+      next(err);
+    }
+  },
+  loginHistory: async (req, res, next) => {
+    try {
+      let limit = req.query.limit ? parseInt(req.query.limit) : 10;
+      let offset = req.query.offset ? parseInt(req.query.offset) : 0;
+
+      const { count: total, rows: items } = await UserActivityLog.findAndCountAll({
+        limit,
+        offset,
+        where: {
+          user_id: req.user.id,
+          action: ActionType.LOGIN
+        },
+        order: [['created_at', 'DESC']]
+      });
+
+      return res.ok({
+        items: items,
+        offset: offset,
+        limit: limit,
+        total: total
+      });
+    }
+    catch (err) {
+      logger.error('loginHistory fail:', err);
       next(err);
     }
   }
