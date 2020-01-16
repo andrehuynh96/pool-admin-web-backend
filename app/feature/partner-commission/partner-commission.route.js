@@ -1,22 +1,22 @@
 const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const { create } = require('./validator');
-const controller = require('./partner-tx-memo.controller');
+const controller = require('./partner-commission.controller');
 
 const router = express.Router();
 
 router.get(
-  '/partners/:partner_id/memos',
+  '/partners/:partner_id/commissions',
   controller.all
 );
 
 router.post(
-  '/partners/:partner_id/memos',
+  '/partners/:partner_id/commissions',
   validator(create),
   controller.create
 );
 router.get(
-  '/partners/:partner_id/memos/histories',
+  '/partners/:partner_id/commissions/histories',
   controller.getHis
 );
 
@@ -28,11 +28,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/partners/{partner_id}/memos:
+ * /web/partners/{partner_id}/commissions:
  *   post:
- *     summary: update partner memos
+ *     summary: update partner commissions
  *     tags:
- *       - Memo
+ *       - Commission
  *     description:
  *     parameters:
  *       - in: path
@@ -41,13 +41,15 @@ module.exports = router;
  *         required: true  
  *       - in: body
  *         name: data
- *         description: Data for Partner.
+ *         description: Data for commision.
  *         schema:
  *            type: array
  *            example:
- *               { items: [{     
+ *               { items: [{
+                        "id": "3c3ed477-a40e-439c-97ff-a404498ed5c1",     
                         "platform":"ATOM",
-                        "memo":"Infinito:ATOM"
+                        "commission":20,
+                        "reward_address": "cosmos1suvplzztw7kn4ntn9pcduxz2lxfjfy5akd3uk0"
                     }]
                   }
  *     produces:
@@ -59,10 +61,10 @@ module.exports = router;
  *           application/json:
  *             {
  *                 "data":[{
-                      "id": "5cbe2366-1a55-11ea-978f-2e728ce88125",
+                      "id": "3c3ed477-a40e-439c-97ff-a404498ed5c1",     
                         "platform":"ATOM",
-                        "memo":"Infinito:ATOM",
-                        "default_flg": true,
+                        "commission":20,
+                        "reward_address": "cosmos1suvplzztw7kn4ntn9pcduxz2lxfjfy5akd3uk0",
                         "updated_at": "2020-01-07T11:22:04.602Z",
                         "updated_by": 0
                     }]
@@ -84,9 +86,9 @@ module.exports = router;
  *         schema:
  *           $ref: '#/definitions/500'
  *   get:
- *     summary: get partner memo
+ *     summary: get partner commissions
  *     tags:
- *       - Memo
+ *       - Commission
  *     description:
  *     parameters:
  *       - in: path
@@ -110,10 +112,10 @@ module.exports = router;
  *           application/json:
  *             {  "data": {
  *                 "items":[{
-                        "id": "5cbe2366-1a55-11ea-978f-2e728ce88125",
+                        "id": "3c3ed477-a40e-439c-97ff-a404498ed5c1",     
                         "platform":"ATOM",
-                        "memo":"Infinito:ATOM",
-                        "default_flg": true,
+                        "commission":20,
+                        "reward_address": "cosmos1suvplzztw7kn4ntn9pcduxz2lxfjfy5akd3uk0",
                         "updated_at": "2020-01-07T11:22:04.602Z",
                         "updated_by": 0
                     }],
@@ -143,11 +145,11 @@ module.exports = router;
 
  /**
  * @swagger
- * /web/partners/{partner_id}/memos/histories:
+ * /web/partners/{partner_id}/commissions/histories:
  *   get:
- *     summary: get partner memo histories
+ *     summary: get partner commission histories
  *     tags:
- *       - Memo
+ *       - Commission
  *     description:
  *     parameters:
  *       - in: path
@@ -171,11 +173,11 @@ module.exports = router;
  *           application/json:
  *             {  "data": {
  *                 "items":[{
-                      "id": "5cbe2366-1a55-11ea-978f-2e728ce88125",
+                      "id": "3c3ed477-a40e-439c-97ff-a404498ed5c1",     
                         "platform":"ATOM",
-                        "memo":"Infinito:ATOM",
-                        "default_flg": false,
-                        "updated_at": "2020-01-07 20:22:04.728+09",
+                        "commission":20,
+                        "reward_address": "cosmos1suvplzztw7kn4ntn9pcduxz2lxfjfy5akd3uk0",
+                        "updated_at": "2020-01-07T11:22:04.602Z",
                         "updated_by": 0
                     }],
                     "offset": 0,

@@ -12,7 +12,7 @@ router.use(require('./partner-tx-memo/partner-tx-memo.route'));
 router.use(require('./account/account.route'));
 router.use(require('./user/user.route'));
 router.use(require('./role/role.route'));
-
+router.use(require('./partner-commission/partner-commission.route')); 
 
 module.exports = router;
 
