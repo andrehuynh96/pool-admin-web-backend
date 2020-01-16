@@ -48,10 +48,12 @@ module.exports = router;
  *           application/json:
  *             {
  *                 "data":{
-                      "id": 1,
-                      "email":"example@gmail.com",
-                      "twofa_secret":"sCM87xx",
-                      "twofa_enable_flg": true
+                        "id": 1,
+                        "email":"example@gmail.com",
+                        "twofa_secret":"sCM87xx",
+                        "twofa_enable_flg": true,
+                        "create_at":"",
+                        "user_sts":"ACTIVATED"
                     }
  *             }
  *       400:

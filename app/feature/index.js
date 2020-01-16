@@ -10,6 +10,8 @@ router.use(require('./partner/partner.route'));
 router.use(require('./staking-platform/staking-platform.route'));
 router.use(require('./partner-tx-memo/partner-tx-memo.route'));
 router.use(require('./account/account.route'));
+router.use(require('./user/user.route'));
+router.use(require('./role/role.route'));
 
 
 module.exports = router;
