@@ -11,6 +11,7 @@ router.use(require('./staking-platform/staking-platform.route'));
 router.use(require('./partner-tx-memo/partner-tx-memo.route')); 
 router.use(require('./account/account.route')); 
 router.use(require('./partner-commission/partner-commission.route')); 
+router.use(require('./partner-api-key/partner-api-key.route'));
 
 module.exports = router;
 
