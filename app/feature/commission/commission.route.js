@@ -6,7 +6,7 @@ const controller = require('./reward.controller');
 const router = express.Router();
 
 router.get(
-  '/settings/reward',
+  '/settings/commissions',
   controller.get
 );
 
@@ -14,7 +14,7 @@ router.get(
 
 /**
  * @swagger
- * /web/settings/reward:
+ * /web/settings/commissions:
  *   get:
  *     summary: get pay out
  *     tags:
@@ -48,10 +48,10 @@ router.get(
  *           $ref: '#/definitions/500'
  */
 
-router.get(
-  '/settings/reward/histories ',
+router.put(
+  '/settings/commissions',
   validator(requestSchema),
-  controller.getHistory
+  controller.update
 );
 
 module.exports = router;
@@ -63,12 +63,23 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/settings/reward/histories:
- *   get:
- *     summary: get pay out
+ * /web/settings/commissions:
+ *   put:
+ *     summary: update pay out
  *     tags:
  *       - Pay out
  *     description:
+ *     parameters:
+ *       - in: body
+ *         name: data
+ *         description: Data for update.
+ *         schema:
+ *            type: array
+ *            example:
+ *               [{
+                        "id":1,
+                        "max_payout":100,
+                  }]
  *     produces:
  *       - application/json
  *     responses:
@@ -77,7 +88,7 @@ module.exports = router;
  *         examples:
  *           application/json:
  *             {
- *                 "data": []
+ *                 "data": true
  *             }
  *       400:
  *         description: Error

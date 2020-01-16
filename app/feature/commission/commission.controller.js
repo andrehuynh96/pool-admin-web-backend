@@ -1,6 +1,5 @@
 const logger = require('app/lib/logger');
 const StakingRewardCfg = require("app/model/staking").staking_reward_cfgs;
-const StakingRewardCfgHis = require("app/model/staking").staking_reward_cfg_his
 
 module.exports = {
   get: async (req, res, next) => {
@@ -16,22 +15,22 @@ module.exports = {
     }
   },
 
-  getHistory: async (req, res, next) => {
+  update: async (req, res, next) => {
     try {
-      let size = req.query.limit || 20
-      let page = req.query.page || 1
-      let total = await StakingRewardCfgHis.count()
-      let rewardCfg = await StakingRewardCfgHis.findAll({
-        offset: (page - 1) * size,
-        limit: size,
-        raw: true
-      });
-      return res.ok({
-        size: size,
-        page: page,
-        total: total,
-        his: rewardCfg
-      });
+      let cfgs = req.body
+
+      for (let cfg of cfgs) {
+        await StakingRewardCfg.update({
+          commission: cfg.commission,
+        }, {
+            where: {
+              id: cfg.id
+            },
+            returning: true
+          })
+      }
+
+      return res.ok(true);
     }
     catch (err) {
       logger.error("update staking reward config fail: ", err);
