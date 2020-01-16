@@ -26,6 +26,7 @@
     "express-recaptcha": "^5.0.1",
     "express-session": "^1.17.0",
     "formidable": "^1.2.1",
+    "hashids": "^2.1.0",
     "helmet": "^3.21.2",
     "i18n": "^0.8.4",
     "joi": "^14.3.1",
