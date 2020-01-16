@@ -49,9 +49,9 @@ router.get(
  */
 
 router.put(
-  '/settings/commissions',
+  '/settings/commissions/history',
   validator(requestSchema),
-  controller.update
+  controller.getHistory
 );
 
 module.exports = router;
@@ -63,23 +63,12 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/settings/commissions:
- *   put:
- *     summary: update pay out
+ * /web/settings/commissions/history:
+ *   get:
+ *     summary: get pay out
  *     tags:
  *       - Pay out
  *     description:
- *     parameters:
- *       - in: body
- *         name: data
- *         description: Data for update.
- *         schema:
- *            type: array
- *            example:
- *               [{
-                        "id":1,
-                        "max_payout":100,
-                  }]
  *     produces:
  *       - application/json
  *     responses:
@@ -88,7 +77,7 @@ module.exports = router;
  *         examples:
  *           application/json:
  *             {
- *                 "data": true
+ *                 "data": []
  *             }
  *       400:
  *         description: Error
