@@ -10,7 +10,7 @@ var partner = {};
 partner.all = async (req, res, next) => {
   try {
     logger.info('partner::all');
-    const { query: { offset, limit, name, email, actived_flg} } = req;
+    const { query: { offset, limit, name, email, actived_flg, root} } = req;
     const where = { deleted_flg: false };
     if (name) {
       where.name = {[Op.iLike]: `%${name}%`};
@@ -18,9 +18,11 @@ partner.all = async (req, res, next) => {
     if (email) {
       where.email = {[Op.iLike]: `%${email}%`};
     }
-
     if (actived_flg) {
       where.actived_flg = actived_flg;
+    }
+    if (root && (root == 1 || root == true || root == 'true')) {
+      where.parent_id = {[Op.eq]: null};
     }
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);

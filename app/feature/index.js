@@ -12,6 +12,7 @@ router.use(require('./partner-tx-memo/partner-tx-memo.route'));
 router.use(require('./account/account.route')); 
 router.use(require('./partner-commission/partner-commission.route')); 
 router.use(require('./partner-api-key/partner-api-key.route'));
+router.use(require('./partner/child/partner-child.route'));
 
 module.exports = router;
 
