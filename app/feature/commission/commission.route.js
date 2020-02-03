@@ -1,10 +1,12 @@
 const express = require('express');;
 const controller = require('app/feature/commission/commission.controller');
+const authenticate = require('app/middleware/authenticate.middleware');
 
 const router = express.Router();
 
 router.get(
   '/settings/commissions',
+  authenticate,
   controller.get
 );
 
@@ -73,6 +75,7 @@ router.get(
 
 router.get(
   '/settings/commissions/histories',
+  authenticate,
   controller.getHistory
 );
 
