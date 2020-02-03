@@ -1,12 +1,12 @@
 const express = require('express');
-const validator = require('app/middleware/validator.middleware');
-const requestSchema = require('app/feature/reward/reward.request-schema');
 const controller = require('app/feature/reward/reward.controller');
+const authenticate = require('app/middleware/authenticate.middleware');
 
 const router = express.Router();
 
 router.get(
   '/settings/rewards',
+  authenticate,
   controller.get
 );
 
@@ -62,6 +62,7 @@ router.get(
 
 router.get(
   '/settings/rewards/histories',
+  authenticate,
   controller.getHistory
 );
 

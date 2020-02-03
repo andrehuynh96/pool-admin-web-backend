@@ -2,11 +2,13 @@ const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const requestSchema = require('./payout.request-schema');
 const controller = require('./payout.controller');
+const authenticate = require('app/middleware/authenticate.middleware');
 
 const router = express.Router();
 
 router.get(
   '/staking-platforms/:staking_platform_id/payouts',
+  authenticate,
   controller.get
 );
 
@@ -57,6 +59,7 @@ router.get(
 router.put(
   '/staking-platforms/:staking_platform_id/payouts',
   validator(requestSchema),
+  authenticate,
   controller.update
 );
 
