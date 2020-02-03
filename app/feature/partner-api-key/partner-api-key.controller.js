@@ -52,7 +52,7 @@ key.delete = async (req, res, next) => {
   try {
     logger.info('api key::delete');
     const { params: { id }} = req; 
-    await ApiKey.update({actived_flg : false }, {where: {id: id}});
+    await ApiKey.destroy({where: {id: id}});
     return res.ok({deleted: true});
   } catch (error) {
     logger.error(error);
