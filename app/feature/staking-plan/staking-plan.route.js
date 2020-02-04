@@ -159,23 +159,25 @@ router.put(
 
 /**
  * @swagger
- * /web/staking-platforms/:staking_platform_id/payouts:
+ * /web/staking-platforms/:staking_platform_id/plans/:plan_id:
  *   put:
- *     summary: update pay out
+ *     summary: update plan
  *     tags:
- *       - Pay out
+ *       - Staking plan
  *     description:
  *     parameters:
  *       - in: body
  *         name: data
  *         description: Data for update.
  *         schema:
- *            type: array
+ *            type: object
  *            example:
- *               [{
-                        "id":1,
-                        "max_payout":100,
-                  }]
+ *               {
+ *                  staking_plan_code: "plan-032",
+                    duration: 21,
+                    duration_type: "MONTH",
+                    reward_per_year: 3.500
+ *               }
  *     produces:
  *       - application/json
  *     responses:
@@ -206,8 +208,60 @@ router.put(
 
 router.post(
   '/staking-platforms/:staking_platform_id/plans',
+  validator(create),
   controller.create
 )
+
+/*********************************************************************/
+
+/**
+ * @swagger
+ * /web/staking-platforms/:staking_platform_id/plans/:plan_id:
+ *   put:
+ *     summary: update plan
+ *     tags:
+ *       - Staking plan
+ *     description:
+ *     parameters:
+ *       - in: body
+ *         name: data
+ *         description: Data for update.
+ *         schema:
+ *            type: object
+ *            example:
+ *               {
+ *                  staking_plan_code: "plan-032",
+                    duration: 21,
+                    duration_type: "MONTH",
+                    reward_per_year: 3.500
+ *               }
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         examples:
+ *           application/json:
+ *             {
+ *                 "data": true
+ *             }
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/400'
+ *       401:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/401'
+ *       404:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/404'
+ *       500:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/500'
+ */
 
 module.exports = router;
 

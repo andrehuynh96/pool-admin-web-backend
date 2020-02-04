@@ -66,7 +66,6 @@ module.exports = {
       return res.ok(true);
     }
     catch (err) {
-      console.log(err)
       logger.error("update staking plan fail: ", err);
       next(err);
     }
@@ -81,6 +80,7 @@ module.exports = {
       return res.ok(true);
     }
     catch (err) {
+      console.log(err)
       logger.error("create staking plan fail: ", err);
       next(err);
     }

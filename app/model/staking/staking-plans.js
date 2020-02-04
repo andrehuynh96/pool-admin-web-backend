@@ -2,9 +2,10 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("staking_plans", {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       primaryKey: true,
-      autoIncrement: true
+      allowNull: false,
+      defaultValue: DataTypes.UUIDV4(),
     },
     staking_platform_id: {
       type: DataTypes.UUID,
