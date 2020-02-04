@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get(
   '/staking-platforms/:staking_platform_id/plans',
+  authenticate,
   controller.getPlans
 );
 
@@ -100,6 +101,7 @@ router.get(
 
 router.get(
   '/staking-platforms/:staking_platform_id/plans/:plan_id',
+  authenticate,
   controller.getDetail
 );
 
@@ -151,6 +153,7 @@ router.get(
 
 router.put(
   '/staking-platforms/:staking_platform_id/plans/:plan_id',
+  authenticate,
   validator(update),
   controller.update
 )
@@ -208,6 +211,7 @@ router.put(
 
 router.post(
   '/staking-platforms/:staking_platform_id/plans',
+  authenticate,
   validator(create),
   controller.create
 )
