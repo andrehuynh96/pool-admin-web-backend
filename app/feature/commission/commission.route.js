@@ -14,7 +14,7 @@ router.get(
 
 /**
  * @swagger
- * /web/settings/commissions:
+ * /web/settings/commissions?limit={limit}&page={page}:
  *   get:
  *     summary: get pay out
  *     tags:
