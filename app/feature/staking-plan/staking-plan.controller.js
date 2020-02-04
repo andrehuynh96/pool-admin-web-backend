@@ -6,6 +6,7 @@ module.exports = {
     try {
       let size = req.query.limit || 20
       let page = req.query.page || 1
+      let platformId = req.params.staking_platform_id
       let total = await StakingPlan.count({
         staking_platform_id: platformId
       })
@@ -21,7 +22,7 @@ module.exports = {
         size: size,
         page: page,
         total: total,
-        his: plans
+        plans: plans
       });
     }
     catch (err) {
@@ -65,6 +66,7 @@ module.exports = {
       return res.ok(true);
     }
     catch (err) {
+      console.log(err)
       logger.error("update staking plan fail: ", err);
       next(err);
     }

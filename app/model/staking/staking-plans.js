@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4(),
     },
-    staking_platform_code: {
+    staking_plan_code: {
       type: DataTypes.STRING(8),
       allowNull: false
     },
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: true
     },
-    reward_in_diff_platform: {
+    reward_in_diff_platform_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false
