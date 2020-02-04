@@ -26,8 +26,8 @@ module.exports = {
       if (req.query.staking_type) {
         where.staking_type = req.query.staking_type
       }
-      if (req.query.actived_flg != undefined) {
-        where.actived_flg = req.query.actived
+      if (req.query.status != undefined) {
+        where.status = req.query.status
       }
 
       const { count: total, rows: items } = await StakingPlatform.findAndCountAll({ limit, offset, where: where, order: [['created_at', 'DESC']] });
