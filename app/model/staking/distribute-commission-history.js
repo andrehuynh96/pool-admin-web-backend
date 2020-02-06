@@ -56,6 +56,22 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0
     },
+    day: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    week: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    month: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    year: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }
   }, {
       underscored: true,
       timestamps: true,

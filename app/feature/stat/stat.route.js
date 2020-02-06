@@ -57,14 +57,22 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *             {  "data": {
- *                 "items":[{
-                        "platform":"ATOM",
-                        "user":100,
-                        "balance": 1000
-                    }]
-                  }
- *             }
+ *             {
+                "data": {
+                  "items": [
+                    {
+                      "platform": "XTZ",
+                      "user": "1",
+                      "balance": 100
+                    },
+                    {
+                      "platform": "ATOM",
+                      "user": 2,
+                      "balance": 2287
+                    }
+                  ]
+                }
+              }
  *       400:
  *         description: Error
  *         schema:
@@ -114,13 +122,24 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *             {  "data": {
- *                 "items":[{
-                        "platform":"ATOM",
-                        "amount": 1000
-                    }]
-                  }
- *             }
+ *             {
+                "data": {
+                  "items": [
+                    {
+                      "platform": "ATOM",
+                      "amount": 12192085355210800000
+                    },
+                    {
+                      "platform": "IRIS",
+                      "amount": 3.65849006618403e+21
+                    },
+                    {
+                      "platform": "XTZ",
+                      "amount": 3747003
+                    }
+                  ]
+                }
+              }
  *       400:
  *         description: Error
  *         schema:
@@ -170,21 +189,42 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *             {  "data": {
- *                 "items":[{
-                        "platform":"ATOM",
-                        "data": {
-                          "day": [{
-                            "date": "2019-01-01",
-                            "user": 1,
+ *             {
+                "data": {
+                  "items": [
+                    {
+                      "platform": "XTZ",
+                      "data": {
+                        "day": [
+                          {
+                            "day": 31,
+                            "month": 12,
+                            "year": 2019,
+                            "user": "1",
                             "balance": 100
-                          }],
-                          week: [],
-                          month: []
-                        }
-                    }]
-                  }
- *             }
+                          }
+                        ],
+                        "week": [
+                          {
+                            "week": 1,
+                            "year": 2019,
+                            "user": "1",
+                            "balance": 100
+                          }
+                        ],
+                        "month": [
+                          {
+                            "month": 12,
+                            "year": 2019,
+                            "user": "1",
+                            "balance": 100
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
  *       400:
  *         description: Error
  *         schema:
@@ -234,20 +274,50 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *             {  "data": {
- *                 "items":[{
-                        "platform":"XTZ",
+ *             {
+                  "data": {
+                    "items": [
+                      {
+                        "platform": "XTZ",
                         "data": {
-                          "day": [{
-                            "date": "2019-01-01",
-                            "amount": 100
-                          }],
-                          week: [],
-                          month: []
+                          "day": [
+                            {
+                              "day": 9,
+                              "month": 1,
+                              "year": 2020,
+                              "amount": 2647635
+                            },
+                            {
+                              "day": 14,
+                              "month": 1,
+                              "year": 2020,
+                              "amount": 1099368
+                            }
+                          ],
+                          "week": [
+                            {
+                              "week": 2,
+                              "year": 2020,
+                              "amount": 2647635
+                            },
+                            {
+                              "week": 3,
+                              "year": 2020,
+                              "amount": 1099368
+                            }
+                          ],
+                          "month": [
+                            {
+                              "month": 1,
+                              "year": 2020,
+                              "amount": 3747003
+                            }
+                          ]
                         }
-                    }]
+                      }
+                    ]
                   }
- *             }
+                }
  *       400:
  *         description: Error
  *         schema:

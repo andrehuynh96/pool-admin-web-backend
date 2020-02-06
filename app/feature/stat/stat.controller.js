@@ -69,24 +69,20 @@ stat.drawChart = async (req, res, next) => {
     let tdate = new Date(new Date(to).setDate(new Date(to).getDate() + 1));
     logger.info('stat::from::', fdate);
     logger.info('stat::to::', tdate);
-    const [cosmosIds, irisIds] = await Promise.all([
-      getCosmosChartId(fdate, tdate, partner_id),
-      getIrisChartId(fdate, tdate, partner_id)
-    ])
     const [tezosDays, tezosWeeks, tezosMonths, cosmosDays, cosmosWeeks, cosmosMonths, irisDays, irisWeeks, irisMonths] = await Promise.all([
       getTezosChartDay(fdate, tdate, partner_id),
       getTezosChartWeek(fdate, tdate, partner_id),
       getTezosChartMonth(fdate, tdate, partner_id),
-      getCosmosChartDay(fdate, tdate, partner_id, cosmosIds),
-      getCosmosChartWeek(fdate, tdate, partner_id, cosmosIds),
-      getCosmosChartMonth(fdate, tdate, partner_id, cosmosIds),
-      getIrisChartDay(fdate, tdate, partner_id, irisIds),
-      getIrisChartWeek(fdate, tdate, partner_id, irisIds),
-      getIrisChartMonth(fdate, tdate, partner_id, irisIds)
+      getCosmosChartDay(fdate, tdate, partner_id),
+      getCosmosChartWeek(fdate, tdate, partner_id),
+      getCosmosChartMonth(fdate, tdate, partner_id),
+      getIrisChartDay(fdate, tdate, partner_id),
+      getIrisChartWeek(fdate, tdate, partner_id),
+      getIrisChartMonth(fdate, tdate, partner_id)
     ])
-    items.push({platform: 'XTZ', data: { day: tezosDays, week: tezosWeeks, month: tezosMonths}});
-    items.push({platform: 'ATOM', data: { day: cosmosDays, week: cosmosWeeks, month: cosmosMonths}});
-    items.push({platform: 'IRIS', data: { day: irisDays, week: irisWeeks, month: irisMonths}});
+    items.push({platform: 'XTZ', data: { day: format(tezosDays), week: format(tezosWeeks), month: format(tezosMonths)}});
+    items.push({platform: 'ATOM', data: { day: format(cosmosDays), week: format(cosmosWeeks), month: format(cosmosMonths)}});
+    items.push({platform: 'IRIS', data: { day: format(irisDays), week: format(irisWeeks), month: format(irisMonths)}});
     return res.ok({
       items: items
     });
@@ -115,29 +111,30 @@ stat.drawCommission = async (req, res, next) => {
     let iris = {platform: 'IRIS', data: { day: [], week: [], month: []}};
     for (let d of dDays) {
       if (d.platform == 'XTZ') {
-        tezos.data.day.push({date: d.getDataValue('date'), amount: d.getDataValue('amount')});
+        tezos.data.day.push({day: d.getDataValue('day'), month: d.getDataValue('month'), year: d.getDataValue('year'), amount: d.getDataValue('amount')});
       } else if (d.platform == 'ATOM') {
-        cosmos.data.day.push({date: d.getDataValue('date'), amount: d.getDataValue('amount')});
+        cosmos.data.day.push({day: d.getDataValue('day'), month: d.getDataValue('month'), year: d.getDataValue('year'), amount: d.getDataValue('amount')});
       } else if (d.platform == 'IRIS') {
-        iris.data.day.push({date: d.getDataValue('date'), amount: d.getDataValue('amount')});
+        iris.data.day.push({day: d.getDataValue('day'), month: d.getDataValue('month'), year: d.getDataValue('year'), amount: d.getDataValue('amount')});
       }
     }
     for (let d of dWeeks) {
+      let year = d.getDataValue('week') == 1 && d.getDataValue('month') == 12 ? d.getDataValue('year') + 1 : d.getDataValue('year');
       if (d.platform == 'XTZ') {
-        tezos.data.week.push({week: d.getDataValue('week'), amount: d.getDataValue('amount')});
+        tezos.data.week.push({week: d.getDataValue('week'), year: year, amount: d.getDataValue('amount')});
       } else if (d.platform == 'ATOM') {
-        cosmos.data.week.push({week: d.getDataValue('week'), amount: d.getDataValue('amount')});
+        cosmos.data.week.push({week: d.getDataValue('week'), year: year, amount: d.getDataValue('amount')});
       } else if (d.platform == 'IRIS') {
-        iris.data.week.push({week: d.getDataValue('week'), amount: d.getDataValue('amount')});
+        iris.data.week.push({week: d.getDataValue('week'), year: year, amount: d.getDataValue('amount')});
       }
     }
     for (let d of dMonths) {
       if (d.platform == 'XTZ') {
-        tezos.data.month.push({month: d.getDataValue('month'), amount: d.getDataValue('amount')});
+        tezos.data.month.push({month: d.getDataValue('month'), year: d.getDataValue('year'), amount: d.getDataValue('amount')});
       } else if (d.platform == 'ATOM') {
-        cosmos.data.month.push({month: d.getDataValue('month'), amount: d.getDataValue('amount')});
+        cosmos.data.month.push({month: d.getDataValue('month'), year: d.getDataValue('year'), amount: d.getDataValue('amount')});
       } else if (d.platform == 'IRIS') {
-        iris.data.month.push({month: d.getDataValue('month'), amount: d.getDataValue('amount')});
+        iris.data.month.push({month: d.getDataValue('month'), year: d.getDataValue('year'), amount: d.getDataValue('amount')});
       }
     }
     items.push(tezos);
@@ -252,10 +249,10 @@ const getTezosChartDay = async(from, to, partner_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const votes = await TrackingVote.findAll({
-        attributes: [[Sequelize.fn('date_trunc', 'day', Sequelize.col('created_at')), 'date'], [Sequelize.fn('count', Sequelize.col('voter_address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
+        attributes: ['day', 'month', 'year', [Sequelize.fn('count', Sequelize.col('voter_address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
         where: { partner_id: partner_id, platform: 'XTZ', type: TrackingVoteType.DELEGATE, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'date'],
-        order: Sequelize.literal('date ASC')
+        group: ['partner_id', 'day', 'month', 'year'],
+        order: [['year', 'ASC'], ['month', 'ASC'], ['day', 'ASC']]
       });
       resolve(votes)
     } catch (error) {
@@ -269,10 +266,10 @@ const getTezosChartWeek = async(from, to, partner_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const votes = await TrackingVote.findAll({
-        attributes: [[Sequelize.fn('date_trunc', 'week', Sequelize.col('created_at')), 'week'], [Sequelize.fn('count', Sequelize.col('voter_address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
+        attributes: ['week', 'month', 'year', [Sequelize.fn('count', Sequelize.col('voter_address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
         where: { partner_id: partner_id, platform: 'XTZ', type: TrackingVoteType.DELEGATE, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'week'],
-        order: Sequelize.literal('week ASC')
+        group: ['partner_id', 'week', 'month', 'year'],
+        order: [['year', 'ASC'], ['week', 'ASC']]
       });
       resolve(votes)
     } catch (error) {
@@ -286,10 +283,10 @@ const getTezosChartMonth = async(from, to, partner_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const votes = await TrackingVote.findAll({
-        attributes: [[Sequelize.fn('date_trunc', 'month', Sequelize.col('created_at')), 'month'], [Sequelize.fn('count', Sequelize.col('voter_address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
+        attributes: ['month', 'year', [Sequelize.fn('count', Sequelize.col('voter_address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
         where: { partner_id: partner_id, platform: 'XTZ', type: TrackingVoteType.DELEGATE, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'month'],
-        order: Sequelize.literal('month ASC')
+        group: ['partner_id', 'month', 'year'],
+        order: [['year', 'ASC'], ['month', 'ASC']]
       });
       resolve(votes)
     } catch (error) {
@@ -299,25 +296,16 @@ const getTezosChartMonth = async(from, to, partner_id) => {
   })
 }
 
-const getCosmosChartId = async(from, to, partner_id) => {
+const getCosmosChartDay = async(from, to, partner_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const cosmoses = await CosmosAccount.findAll({
-        attributes: ['id', 'address', 'balance'],
+        attributes: ['day', 'month', 'year', [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance_change')), 'balance']],
         where: { partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        order: [['createdAt' ,'DESC' ]]
+        group: ['partner_id', 'day', 'month', 'year'],
+        order: [['year', 'ASC'], ['month', 'ASC'], ['day', 'ASC']]
       })
-      let temp = [];
-      let ids = [];
-      for (cosmos of cosmoses) {
-        if (temp.indexOf(cosmos.address) == -1) {
-          temp.push(cosmos.address);
-          if (cosmos.balance > 0) {
-            ids.push(cosmos.id);
-          }
-        }
-      }
-      resolve(ids);
+      resolve(cosmoses);
     } catch (error) {
       logger.error(error);
       reject(error);
@@ -325,91 +313,48 @@ const getCosmosChartId = async(from, to, partner_id) => {
   })
 }
 
-const getIrisChartId = async(from, to, partner_id) => {
+const getCosmosChartWeek = async(from, to, partner_id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const cosmoses = await CosmosAccount.findAll({
+        attributes: ['week', 'month', 'year', [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance_change')), 'balance']],
+        where: { partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
+        group: ['partner_id', 'week', 'month', 'year'],
+        order: [['year', 'ASC'], ['week', 'ASC']]
+      })
+      resolve(cosmoses);
+    } catch (error) {
+      logger.error(error);
+      reject(error);
+    }
+  })
+}
+
+const getCosmosChartMonth = async(from, to, partner_id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const cosmoses = await CosmosAccount.findAll({
+        attributes: ['month', 'year', [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance_change')), 'balance']],
+        where: { partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
+        group: ['partner_id', 'month', 'year'],
+        order: [['year', 'ASC'], ['month', 'ASC']]
+      })
+      resolve(cosmoses);
+    } catch (error) {
+      logger.error(error);
+      reject(error);
+    }
+  })
+}
+
+const getIrisChartDay = async(from, to, partner_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const irises = await IrisAccount.findAll({
-        attributes: ['id', 'address', 'balance'],
+        attributes: ['day', 'month', 'year', [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance_change')), 'balance']],
         where: { partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        order: [['createdAt' ,'DESC' ]]
-      })
-      let temp = [];
-      let ids = [];
-      for (iris of irises) {
-        if (temp.indexOf(iris.address) == -1) {
-          temp.push(iris.address);
-          if (iris.balance > 0) {
-            ids.push(iris.id);
-          }
-        }
-      }
-      resolve(ids);
-    } catch (error) {
-      logger.error(error);
-      reject(error);
-    }
-  })
-}
-
-const getCosmosChartDay = async(from, to, partner_id, ids) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const cosmoses = await CosmosAccount.findAll({
-        attributes: [[Sequelize.fn('date_trunc', 'day', Sequelize.col('created_at')), 'date'], [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
-        where: { id: ids, partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'date'],
-        order: Sequelize.literal('date ASC')
-      })
-      resolve(cosmoses);
-    } catch (error) {
-      logger.error(error);
-      reject(error);
-    }
-  })
-}
-
-const getCosmosChartWeek = async(from, to, partner_id, ids) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const cosmoses = await CosmosAccount.findAll({
-        attributes: [[Sequelize.fn('date_trunc', 'week', Sequelize.col('created_at')), 'week'], [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
-        where: { id: ids, partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'week'],
-        order: Sequelize.literal('week ASC')
-      })
-      resolve(cosmoses);
-    } catch (error) {
-      logger.error(error);
-      reject(error);
-    }
-  })
-}
-
-const getCosmosChartMonth = async(from, to, partner_id, ids) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const cosmoses = await CosmosAccount.findAll({
-        attributes: [[Sequelize.fn('date_trunc', 'month', Sequelize.col('created_at')), 'month'], [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
-        where: { id: ids, partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'month'],
-        order: Sequelize.literal('month ASC')
-      })
-      resolve(cosmoses);
-    } catch (error) {
-      logger.error(error);
-      reject(error);
-    }
-  })
-}
-
-const getIrisChartDay = async(from, to, partner_id, ids) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const irises = await IrisAccount.findAll({
-        attributes: [[Sequelize.fn('date_trunc', 'day', Sequelize.col('created_at')), 'date'], [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
-        where: { id: ids, partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'date'],
-        order: Sequelize.literal('date ASC')
+        group: ['partner_id', 'day', 'month', 'year'],
+        order: [['year', 'ASC'], ['month', 'ASC'], ['day', 'ASC']]
       })
       resolve(irises);
     } catch (error) {
@@ -419,14 +364,14 @@ const getIrisChartDay = async(from, to, partner_id, ids) => {
   })
 }
 
-const getIrisChartWeek = async(from, to, partner_id, ids) => {
+const getIrisChartWeek = async(from, to, partner_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const irises = await IrisAccount.findAll({
-        attributes: [[Sequelize.fn('date_trunc', 'week', Sequelize.col('created_at')), 'week'], [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
-        where: { id: ids, partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'week'],
-        order: Sequelize.literal('week ASC')
+        attributes: ['week', 'month', 'year', [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance_change')), 'balance']],
+        where: { partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
+        group: ['partner_id', 'week', 'month', 'year'],
+        order: [['year', 'ASC'], ['week', 'ASC']]
       })
       resolve(irises);
     } catch (error) {
@@ -436,14 +381,14 @@ const getIrisChartWeek = async(from, to, partner_id, ids) => {
   })
 }
 
-const getIrisChartMonth = async(from, to, partner_id, ids) => {
+const getIrisChartMonth = async(from, to, partner_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const irises = await IrisAccount.findAll({
-        attributes: [[Sequelize.fn('date_trunc', 'month', Sequelize.col('created_at')), 'month'], [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance')), 'balance']],
-        where: { id: ids, partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'month'],
-        order: Sequelize.literal('month ASC')
+        attributes: ['month', 'year', [Sequelize.fn('count', Sequelize.col('address')), 'user'], [Sequelize.fn('sum', Sequelize.col('balance_change')), 'balance']],
+        where: { partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
+        group: ['partner_id', 'month', 'year'],
+        order: [['year', 'ASC'], ['month', 'ASC']]
       })
       resolve(irises);
     } catch (error) {
@@ -457,10 +402,10 @@ const getDistributeCommissionsDay = async(from, to, partner_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const distributions = await DistributeCommissionHistory.findAll({
-        attributes: ['platform', [Sequelize.fn('date_trunc', 'day', Sequelize.col('created_at')), 'date'], [Sequelize.fn('sum', Sequelize.col('total_amount')), 'amount']],
+        attributes: ['platform', 'day', 'month', 'year', [Sequelize.fn('sum', Sequelize.col('total_amount')), 'amount']],
         where: { partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'platform', 'date'],
-        order: Sequelize.literal('date ASC')
+        group: ['partner_id', 'platform', 'day', 'month', 'year'],
+        order: [['year', 'ASC'], ['month', 'ASC'], ['day', 'ASC']]
       });
       resolve(distributions)
     } catch (error) {
@@ -474,10 +419,10 @@ const getDistributeCommissionsWeek = async(from, to, partner_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const distributions = await DistributeCommissionHistory.findAll({
-        attributes: ['platform', [Sequelize.fn('date_trunc', 'week', Sequelize.col('created_at')), 'week'], [Sequelize.fn('sum', Sequelize.col('total_amount')), 'amount']],
+        attributes: ['platform', 'week', 'month', 'year', [Sequelize.fn('sum', Sequelize.col('total_amount')), 'amount']],
         where: { partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'platform', 'week'],
-        order: Sequelize.literal('week ASC')
+        group: ['partner_id', 'platform', 'week', 'month', 'year'],
+        order: [['year', 'ASC'], ['week', 'ASC']]
       });
       resolve(distributions)
     } catch (error) {
@@ -491,10 +436,10 @@ const getDistributeCommissionsMonth = async(from, to, partner_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const distributions = await DistributeCommissionHistory.findAll({
-        attributes: ['platform', [Sequelize.fn('date_trunc', 'month', Sequelize.col('created_at')), 'month'], [Sequelize.fn('sum', Sequelize.col('total_amount')), 'amount']],
+        attributes: ['platform', 'month', 'year', [Sequelize.fn('sum', Sequelize.col('total_amount')), 'amount']],
         where: { partner_id: partner_id, createdAt: {[Op.gte]: from, [Op.lt]: to}},
-        group: ['partner_id', 'platform', 'month'],
-        order: Sequelize.literal('month ASC')
+        group: ['partner_id', 'platform', 'month', 'year'],
+        order: [['year', 'ASC'], ['month', 'ASC']]
       });
       resolve(distributions)
     } catch (error) {
@@ -502,6 +447,24 @@ const getDistributeCommissionsMonth = async(from, to, partner_id) => {
       reject(error);
     }
   })
+}
+
+const format= (array) => {
+  let items = []
+  for (let a of array) {
+    let b = a.toJSON();
+    if (b.week) {
+      if (b.week == 1 && b.month == 12) {
+        b.year = b.year + 1;
+      }
+     delete b.month;
+    }
+    if (b.user) {
+      b.user = parseInt(b.user);
+    }
+    items.push(b);
+  }
+  return items;
 }
 
 
