@@ -4,7 +4,7 @@ const controller = require('./stat.controller');
 const router = express.Router();
 
 router.get(
-  '/partners/:partner_id/stats/users',
+  '/partners/:partner_id/stats',
   controller.countUser
 );
 
@@ -29,7 +29,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/partners/{partner_id}/stats/users:
+ * /web/partners/{partner_id}/stats:
  *   get:
  *     summary: get partner stat
  *     tags:
