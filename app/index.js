@@ -9,6 +9,7 @@ const rateLimit = require('express-rate-limit');
 const i18n = require('i18n');
 const path = require('path');
 const redis = require('app/lib/redis').client();
+const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const redisStore = require('connect-redis')(session);
 
@@ -19,6 +20,7 @@ i18n.configure({
 });
 router.use(i18n.init);
 
+app.use(cookieParser());
 router.use(session({
   key: 'sid',
   secret: 'secret-session',
