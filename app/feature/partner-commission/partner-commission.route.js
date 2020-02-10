@@ -2,21 +2,25 @@ const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const { create } = require('./validator');
 const controller = require('./partner-commission.controller');
+const authenticate = require('app/middleware/authenticate.middleware');
 
 const router = express.Router();
 
 router.get(
   '/partners/:partner_id/commissions',
+  authenticate,
   controller.all
 );
 
 router.post(
   '/partners/:partner_id/commissions',
+  authenticate,
   validator(create),
   controller.create
 );
 router.get(
   '/partners/:partner_id/commissions/histories',
+  authenticate,
   controller.getHis
 );
 
