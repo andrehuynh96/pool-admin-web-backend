@@ -1,10 +1,12 @@
 const express = require('express');
 const controller = require('./partner-child.controller');
+const authenticate = require('app/middleware/authenticate.middleware');
 
 const router = express.Router();
 
 router.get(
   '/partners/:partner_id/childs',
+  authenticate,
   controller.all
 );
 
