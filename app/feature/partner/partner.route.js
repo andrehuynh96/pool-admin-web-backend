@@ -2,33 +2,39 @@ const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const { create, update } = require('./validator');
 const controller = require('./partner.controller');
+const authenticate = require('app/middleware/authenticate.middleware');
 
 const router = express.Router();
 
 router.post(
   '/partners',
+  authenticate,
   validator(create),
   controller.create
 );
 
 router.get(
   '/partners',
+  authenticate,
   controller.all
 );
 
 router.put(
   '/partners/:partner_id',
+  authenticate,
   validator(update),
   controller.update
 );
 
 router.get(
   '/partners/:partner_id',
+  authenticate,
   controller.get
 );
 
 router.delete(
   '/partners/:partner_id',
+  authenticate,
   controller.delete
 );
 

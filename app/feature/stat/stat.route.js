@@ -1,25 +1,30 @@
 const express = require('express');
 const controller = require('./stat.controller');
+const authenticate = require('app/middleware/authenticate.middleware');
 
 const router = express.Router();
 
 router.get(
   '/partners/:partner_id/stats',
+  authenticate,
   controller.countUser
 );
 
 router.get(
   '/partners/:partner_id/stats/commissions',
+  authenticate,
   controller.sumCommission
 );
 
 router.get(
   '/partners/:partner_id/stats/charts',
+  authenticate,
   controller.drawChart
 )
 
 router.get(
   '/partners/:partner_id/stats/charts/commissions',
+  authenticate,
   controller.drawCommission
 )
 
