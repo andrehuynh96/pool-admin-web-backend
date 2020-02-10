@@ -20,7 +20,7 @@ i18n.configure({
 });
 router.use(i18n.init);
 
-app.use(cookieParser());
+router.use(cookieParser());
 router.use(session({
   key: 'sid',
   secret: 'secret-session',
