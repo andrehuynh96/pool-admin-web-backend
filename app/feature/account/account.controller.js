@@ -92,6 +92,16 @@ module.exports = {
         return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT");
       }
 
+      let result = await User.findOne({
+        where: {
+          twofa_secret: req.body.twofa_secret
+        }
+      })
+
+      if (result) {
+        return res.badRequest(res.__("TWOFA_EXISTS_ALREADY"), "TWOFA_EXISTS_ALREADY");
+      }
+
       let [_, response] = await User.update({
         twofa_secret: req.body.twofa_secret,
         twofa_enable_flg: true
