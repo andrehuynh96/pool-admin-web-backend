@@ -1,7 +1,7 @@
 const UserStatus = require("./value-object/user-status");
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("users", {
+  const User = sequelize.define("users", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -48,4 +48,9 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
+  User.associate = (models) => {
+    // associations can be defined here
+    User.hasMany(models.user_roles, {foreignKey: 'user_id'})
+  };
+  return User;
 } 

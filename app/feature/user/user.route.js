@@ -10,7 +10,6 @@ const router = express.Router();
 
 router.get(
   '/users',
-  authenticate,
   controller.search
 );
 
