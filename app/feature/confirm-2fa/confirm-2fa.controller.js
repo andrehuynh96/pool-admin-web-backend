@@ -25,16 +25,6 @@ module.exports = async (req, res, next) => {
       return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED");
     }
 
-    var verified = speakeasy.totp.verify({
-      secret: user.twofa_secret,
-      encoding: 'base32',
-      token: req.body.twofa_code,
-    });
-
-    if (!verified) {
-      return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT", { fields: ["twofa_code"] });
-    }
-
     let user = await User.findOne({
       where: {
         id: otp.user_id
@@ -50,6 +40,16 @@ module.exports = async (req, res, next) => {
 
     if (user.status == UserStatus.LOCKED) {
       return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
+    }
+
+    var verified = speakeasy.totp.verify({
+      secret: user.twofa_secret,
+      encoding: 'base32',
+      token: req.body.twofa_code,
+    });
+
+    if (!verified) {
+      return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT", { fields: ["twofa_code"] });
     }
 
     await OTP.update({
