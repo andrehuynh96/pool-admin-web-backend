@@ -61,7 +61,6 @@ module.exports = router;
                       "user":{
                         "id": 1,
                         "email":"example@gmail.com",
-                        "twofa_secret":"sCM87xx",
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED"
