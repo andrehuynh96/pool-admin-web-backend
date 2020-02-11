@@ -62,7 +62,7 @@ module.exports = {
         return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
       }
 
-      let userRole = await UserRole.findOne.findOne({
+      let userRole = await UserRole.findOne({
         where: {
           user_id: req.params.id
         }
