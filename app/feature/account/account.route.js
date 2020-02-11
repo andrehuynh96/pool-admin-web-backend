@@ -73,7 +73,6 @@ module.exports = router;
  *                 "data":{
                         "id": 1,
                         "email":"example@gmail.com",
-                        "twofa_secret":"sCM87xx",
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED"
@@ -222,13 +221,15 @@ module.exports = router;
  *         schema:
  *            type: object
  *            required:
- *            - twofa_secret
+ *            - disable
  *            - twofa_code
   *            properties:
  *              twofa_secret:
  *                type: string
  *              twofa_code:
  *                type: string
+ *              disable:
+ *                type: boolean
  *            example:
  *                  {
                           "twofa_secret":"AIU45sdsahssdsjYUDHd6",
