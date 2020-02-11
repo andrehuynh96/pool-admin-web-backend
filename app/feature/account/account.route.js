@@ -234,6 +234,7 @@ module.exports = router;
  *                  {
                           "twofa_secret":"AIU45sdsahssdsjYUDHd6",
                           "twofa_code":"123456",
+                          "disable":false
  *                  }
  *     produces:
  *       - application/json
