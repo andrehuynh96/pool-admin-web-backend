@@ -43,7 +43,7 @@ module.exports = {
         return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
       }
 
-      const match = await bcrypt.compare(req.body.password, user.password_hash);
+      const match = await bcrypt.compare(req.body.password, result.password_hash);
       if (!match) {
         return res.badRequest(res.__("PASSWORD_INVALID", "PASSWORD_INVALID"));
       }
