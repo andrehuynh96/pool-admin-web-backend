@@ -3,7 +3,7 @@ const validator = require('app/middleware/validator.middleware');
 const authenticate = require('app/middleware/authenticate.middleware');
 const parseformdata = require('app/middleware/parse-formdata.middleware');
 const { create, update, } = require('./validator');
-const controller = require('./user.contorller');
+const controller = require('./user.controller');
 const config = require('app/config')
 
 const router = express.Router();
