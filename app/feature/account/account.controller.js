@@ -49,7 +49,7 @@ module.exports = {
       }
 
       let passWord = bcrypt.hashSync(req.body.new_password, 10);
-      let [_, user] = await StakingPlatform.update({
+      let [_, user] = await User.update({
         password_hash: passWord
       }, {
           where: {
