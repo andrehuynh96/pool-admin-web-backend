@@ -70,7 +70,7 @@ module.exports = {
 
       let response = userMapper(result);
       if (userRole) {
-        response.role_id = userRole.id;
+        response.role_id = userRole.role_id;
       }
       return res.ok(response);
     }
