@@ -1,4 +1,5 @@
 const config = require("app/config");
+require("./permission");
 
 if (config.enableSeed) {
   try {

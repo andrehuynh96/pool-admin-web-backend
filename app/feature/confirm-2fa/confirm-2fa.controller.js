@@ -7,6 +7,7 @@ const OTP = require("app/model/staking").otps;
 const OtpType = require("app/model/staking/value-object/otp-type");
 const UserActivityLog = require("app/model/staking").user_activity_logs;
 const ActionType = require("app/model/staking/value-object/user-activity-action-type");
+const UserRole = require('app/model/staking').user_roles;
 
 module.exports = async (req, res, next) => {
   try {
@@ -61,6 +62,12 @@ module.exports = async (req, res, next) => {
       });
 
     const registerIp = (req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.headers['x-client'] || req.ip).replace(/^.*:/, '');
+    let roles = await UserRole.findAll({
+      attributes: ['role_id'],
+      where: {
+        user_id: user.id
+      }
+    })
 
     await UserActivityLog.create({
       user_id: user.id,
@@ -71,6 +78,7 @@ module.exports = async (req, res, next) => {
 
     req.session.authenticated = true;
     req.session.user = user;
+    req.session.role = roles.map(role => role.role_id);
     return res.ok(userMapper(user));
   }
   catch (err) {

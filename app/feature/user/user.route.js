@@ -232,7 +232,7 @@ module.exports = router;
  *            example:
  *                  {
                           "email":"example@gmail.com",
-                          "role":1
+                          "role_id":1
  *                  }
  *     produces:
  *       - application/json
@@ -248,7 +248,7 @@ module.exports = router;
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED",
-                        "role":1
+                        "role_id":1
  *                 }
  *             }
  *       400:
@@ -293,7 +293,7 @@ module.exports = router;
  *            example:
  *                  {
                           "user_sts":"UNACTIVATED|ACTIVATED|LOCKED",
-                          "role":1
+                          "role_id":1
  *                  }
  *     produces:
  *       - application/json
@@ -309,7 +309,7 @@ module.exports = router;
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED",
-                        "role":1
+                        "role_id":1
  *                 }
  *             }
  *       400:

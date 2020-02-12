@@ -3,6 +3,8 @@ const validator = require('app/middleware/validator.middleware');
 const { create, update } = require('./validator');
 const controller = require('./partner.controller');
 const authenticate = require('app/middleware/authenticate.middleware');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
@@ -16,6 +18,7 @@ router.post(
 router.get(
   '/partners',
   authenticate,
+  authority(Permission.VIEW_LIST_PARTNER),
   controller.all
 );
 
