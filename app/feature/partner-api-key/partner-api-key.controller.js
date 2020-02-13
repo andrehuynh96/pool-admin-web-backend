@@ -34,7 +34,7 @@ key.create = async (req, res, next) => {
     logger.info('api key::create');
     const { params: { partner_id }, user, body } = req;
     let data = body;
-    data.created_by = user;
+    data.created_by = user.id;
     data.partner_id = partner_id;
     data.api_key = uuidv4();
     const hashids = new Hashids(body.name, 32);
