@@ -3,12 +3,15 @@ const validator = require('app/middleware/validator.middleware');
 const requestSchema = require('./payout.request-schema');
 const controller = require('./payout.controller');
 const authenticate = require('app/middleware/authenticate.middleware');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/staking-platforms/:staking_platform_id/payouts',
   authenticate,
+  authority(Permission.VIEW_LIST_PAYOUT_STAKING_PLATFORM),
   controller.get
 );
 
@@ -60,6 +63,7 @@ router.put(
   '/staking-platforms/:staking_platform_id/payouts',
   validator(requestSchema),
   authenticate,
+  authority(Permission.UPDATE_PAYOUT_STAKING_PLATFORM),
   controller.update
 );
 

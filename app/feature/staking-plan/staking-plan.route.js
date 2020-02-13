@@ -3,12 +3,15 @@ const validator = require('app/middleware/validator.middleware');
 const { create, update } = require('./validator');
 const controller = require('./staking-plan.controller');
 const authenticate = require('app/middleware/authenticate.middleware');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/staking-platforms/:staking_platform_id/plans',
   authenticate,
+  authority(Permission.VIEW_LIST_PLAN_STAKING_PLATFORM),
   controller.getPlans
 );
 
@@ -102,6 +105,7 @@ router.get(
 router.get(
   '/staking-platforms/:staking_platform_id/plans/:plan_id',
   authenticate,
+  authority(Permission.VIEW_PLAN_STAKING_PLATFORM),
   controller.getDetail
 );
 
@@ -154,6 +158,7 @@ router.get(
 router.put(
   '/staking-platforms/:staking_platform_id/plans/:plan_id',
   authenticate,
+  authority(Permission.UPDATE_PLAN_STAKING_PLATFORM),
   validator(update),
   controller.update
 )
@@ -212,6 +217,7 @@ router.put(
 router.post(
   '/staking-platforms/:staking_platform_id/plans',
   authenticate,
+  authority(Permission.CREATE_PLAN_STAKING_PLATFORM),
   validator(create),
   controller.create
 )

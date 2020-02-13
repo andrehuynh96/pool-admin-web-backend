@@ -1,12 +1,15 @@
 const express = require('express');
 const controller = require('./partner-child.controller');
 const authenticate = require('app/middleware/authenticate.middleware');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/partners/:partner_id/childs',
   authenticate,
+  authority(Permission.VIEW_LIST_CHILD_PARTNER),
   controller.all
 );
 

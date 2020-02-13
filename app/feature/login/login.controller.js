@@ -9,6 +9,7 @@ const userMapper = require("app/feature/response-schema/user.response-schema");
 const bcrypt = require('bcrypt');
 const config = require("app/config");
 const uuidV4 = require('uuid/v4');
+const UserRole = require('app/model/staking').user_roles;
 
 module.exports = async (req, res, next) => {
   try {
@@ -65,6 +66,12 @@ module.exports = async (req, res, next) => {
     }
     else {
       const registerIp = (req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.headers['x-client'] || req.ip).replace(/^.*:/, '');
+      let roles = await UserRole.findAll({
+        attributes: ['role_id'],
+        where: {
+          user_id: user.id
+        }
+      })
 
       await UserActivityLog.create({
         user_id: user.id,
@@ -72,9 +79,9 @@ module.exports = async (req, res, next) => {
         action: ActionType.LOGIN,
         user_agent: req.headers['user-agent']
       });
-
       req.session.authenticated = true;
       req.session.user = user;
+      req.session.role = roles.map(role => role.role_id);
       return res.ok({
         twofa: false,
         user: userMapper(user)

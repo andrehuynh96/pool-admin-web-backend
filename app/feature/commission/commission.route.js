@@ -2,11 +2,15 @@ const express = require('express');;
 const controller = require('app/feature/commission/commission.controller');
 const authenticate = require('app/middleware/authenticate.middleware');
 
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
+
 const router = express.Router();
 
 router.get(
   '/settings/commissions',
   authenticate,
+  authority(Permission.VIEW_LIST_COMMISSION_SETTING),
   controller.get
 );
 
@@ -76,6 +80,7 @@ router.get(
 router.get(
   '/settings/commissions/histories',
   authenticate,
+  authority(Permission.VIEW_COMMISSION_HISTORY_SETTING),
   controller.getHistory
 );
 
