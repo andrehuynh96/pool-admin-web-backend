@@ -4,25 +4,30 @@ const authenticate = require('app/middleware/authenticate.middleware');
 const parseformdata = require('app/middleware/parse-formdata.middleware');
 const { create, update, } = require('./validator');
 const controller = require('./user.controller');
-const config = require('app/config')
+const config = require('app/config');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/users',
   authenticate,
+  authority(Permission.VIEW_LIST_USER),
   controller.search
 );
 
 router.get(
   '/users/:id',
   authenticate,
+  authority(Permission.VIEW_USER),
   controller.get
 );
 
 router.post(
   '/users',
   authenticate,
+  authority(Permission.CREATE_USER),
   validator(create),
   controller.create
 );
@@ -30,6 +35,7 @@ router.post(
 router.put(
   '/users/:id',
   authenticate,
+  authority(Permission.UPDATE_USER),
   validator(update),
   controller.update
 );
@@ -37,6 +43,7 @@ router.put(
 router.delete(
   '/users/:id',
   authenticate,
+  authority(Permission.DELETE_USER),
   controller.delete
 );
 

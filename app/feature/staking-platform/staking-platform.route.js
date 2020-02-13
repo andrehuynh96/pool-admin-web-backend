@@ -4,24 +4,29 @@ const authenticate = require('app/middleware/authenticate.middleware');
 const parseformdata = require('app/middleware/parse-formdata.middleware');
 const { create, update } = require('./validator');
 const controller = require('./staking-platform.controller');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/staking-platforms/time-unit',
   authenticate,
+  authority(Permission.VIEW_TIME_UNIT_STAKING_PLATFORM),
   controller.timeUnit
 );
 
 router.get(
   '/staking-platforms',
   authenticate,
+  authority(Permission.VIEW_LIST_STAKING_PLATFORM),
   controller.getAll
 );
 
 router.get(
   '/staking-platforms/:id',
   authenticate,
+  authority(Permission.VIEW_STAKING_PLATFORM),
   controller.get
 );
 
@@ -29,6 +34,7 @@ router.put(
   '/staking-platforms/:id',
   parseformdata,
   authenticate,
+  authority(Permission.UPDATE_STAKING_PLATFORM),
   validator(update),
   controller.update
 );
@@ -37,6 +43,7 @@ router.post(
   '/staking-platforms',
   parseformdata,
   authenticate,
+  authority(Permission.CREATE_STAKING_PLATFORM),
   validator(create),
   controller.create
 );

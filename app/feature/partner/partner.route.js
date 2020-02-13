@@ -11,6 +11,7 @@ const router = express.Router();
 router.post(
   '/partners',
   authenticate,
+  authority(Permission.CREATE_PARTNER),
   validator(create),
   controller.create
 );
@@ -25,6 +26,7 @@ router.get(
 router.put(
   '/partners/:partner_id',
   authenticate,
+  authority(Permission.UPDATE_PARTNER),
   validator(update),
   controller.update
 );
@@ -32,12 +34,14 @@ router.put(
 router.get(
   '/partners/:partner_id',
   authenticate,
+  authority(Permission.VIEW_PARTNER),
   controller.get
 );
 
 router.delete(
   '/partners/:partner_id',
   authenticate,
+  authority(Permission.DELETE_PARTNER),
   controller.delete
 );
 

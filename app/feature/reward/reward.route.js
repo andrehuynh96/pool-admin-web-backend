@@ -1,12 +1,15 @@
 const express = require('express');
 const controller = require('app/feature/reward/reward.controller');
 const authenticate = require('app/middleware/authenticate.middleware');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/settings/rewards',
   authenticate,
+  authority(Permission.VIEW_LIST_REWARD_SETTING),
   controller.get
 );
 
@@ -63,6 +66,7 @@ router.get(
 router.get(
   '/settings/rewards/histories',
   authenticate,
+  authority(Permission.VIEW_HISTORY_REWARD_SETTING),
   controller.getHistory
 );
 

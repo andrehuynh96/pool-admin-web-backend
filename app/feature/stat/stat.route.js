@@ -1,30 +1,36 @@
 const express = require('express');
 const controller = require('./stat.controller');
 const authenticate = require('app/middleware/authenticate.middleware');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/partners/:partner_id/stats',
   authenticate,
+  authority(Permission.VIEW_STAT_PARTNER),
   controller.countUser
 );
 
 router.get(
   '/partners/:partner_id/stats/commissions',
   authenticate,
+  authority(Permission.VIEW_COMMISSION_STAT_PARTNER),
   controller.sumCommission
 );
 
 router.get(
   '/partners/:partner_id/stats/charts',
   authenticate,
+  authority(Permission.VIEW_CHART_STAT_PARTNER),
   controller.drawChart
 )
 
 router.get(
   '/partners/:partner_id/stats/charts/commissions',
   authenticate,
+  authority(Permission.VIEW_COMMISSION_CHART_STAT_PARTNER),
   controller.drawCommission
 )
 
