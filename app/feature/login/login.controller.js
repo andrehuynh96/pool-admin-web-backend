@@ -27,11 +27,11 @@ module.exports = async (req, res, next) => {
       return res.unauthorized(res.__("LOGIN_FAIL", "LOGIN_FAIL"));
     }
 
-    if (user.status == UserStatus.UNACTIVATED) {
+    if (user.user_sts == UserStatus.UNACTIVATED) {
       return res.forbidden(res.__("UNCONFIRMED_ACCOUNT", "UNCONFIRMED_ACCOUNT"));
     }
 
-    if (user.status == UserStatus.LOCKED) {
+    if (user.user_sts == UserStatus.LOCKED) {
       return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
     }
 
