@@ -19,6 +19,7 @@ module.exports = {
     try {
       let limit = req.query.limit ? parseInt(req.query.limit) : 10;
       let offset = req.query.offset ? parseInt(req.query.offset) : 0;
+      let roles = req.session.role;
       let where = { deleted_flg: false };
       let include = [
         {
@@ -27,7 +28,10 @@ module.exports = {
             {
               model: Role
             }
-          ]
+          ],
+          where: {
+            role_id: {[Op.gte]: Math.min(...roles)}
+          }
         }
       ];
       if (req.query.user_sts) {
@@ -36,8 +40,7 @@ module.exports = {
       if (req.query.query) {
         where.email = { [Op.iLike]: `%${req.query.query}%` };
       }
-      
-      const { count: total, rows: items } = await User.findAndCountAll({ limit, offset, include: include, where: where, order: [['created_at', 'DESC']] });
+      const { count: total, rows: items } = await User.findAndCountAll({ limit, offset, where: where, include: include, order: [['created_at', 'DESC']] });
       return res.ok({
         items: userMapper(items),
         offset: offset,
