@@ -1,14 +1,22 @@
 const logger = require('app/lib/logger');
 const DistributeCommissionCfg = require("app/model/staking").distribute_commission_cfgs;
 const DistributeCommissionCfgHis = require("app/model/staking").distribute_commission_cfg_his;
+const config = require('app/config');
 
 module.exports = {
   get: async (req, res, next) => {
     try {
-      let commissionCfg = await DistributeCommissionCfg.findAll({
-        raw: true
+      const { query: { offset, limit} } = req;
+      const off = parseInt(offset) || 0;
+      const lim = parseInt(limit) || parseInt(config.appLimit);
+
+      const { count: total, rows: items } = await DistributeCommissionCfg.findAndCountAll({offset: off, limit: lim, order: [['platform', 'ASC']]});
+      return res.ok({
+        items: items,
+        offset: off,
+        limit: lim,
+        total: total
       });
-      return res.ok(commissionCfg);
     }
     catch (err) {
       logger.error("get distribute commission config fail: ", err);
@@ -18,23 +26,20 @@ module.exports = {
 
   getHistory: async (req, res, next) => {
     try {
-      let size = req.query.limit || 20
-      let page = req.query.page || 1
-      let total = await DistributeCommissionCfgHis.count()
-      let commissionCfg = await DistributeCommissionCfgHis.findAll({
-        offset: (page - 1) * size,
-        limit: size,
-        raw: true
-      });
+      const { query: { offset, limit} } = req;
+      const off = parseInt(offset) || 0;
+      const lim = parseInt(limit) || parseInt(config.appLimit);
+
+      const { count: total, rows: items } = await DistributeCommissionCfgHis.findAndCountAll({offset: off, limit: lim, order: [['platform', 'ASC']]});
       return res.ok({
-        size: size,
-        page: page,
-        total: total,
-        his: commissionCfg
+        items: items,
+        offset: off,
+        limit: lim,
+        total: total
       });
     }
     catch (err) {
-      logger.error("update distribute commission config fail: ", err);
+      logger.error("get distribute commission history config fail: ", err);
       next(err);
     }
   }

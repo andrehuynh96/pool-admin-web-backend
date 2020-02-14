@@ -1,14 +1,22 @@
 const logger = require('app/lib/logger');
 const StakingRewardCfg = require("app/model/staking").staking_reward_cfgs;
-const StakingRewardCfgHis = require("app/model/staking").staking_reward_cfg_his
+const StakingRewardCfgHis = require("app/model/staking").staking_reward_cfg_his;
+const config = require('app/config');
 
 module.exports = {
   get: async (req, res, next) => {
     try {
-      let rewardCfg = await StakingRewardCfg.findAll({
-        raw: true
+      const { query: { offset, limit}} = req;
+      const off = parseInt(offset) || 0;
+      const lim = parseInt(limit) || parseInt(config.appLimit);
+
+      const { count: total, rows: items } = await StakingRewardCfg.findAndCountAll({offset: off, limit: lim, order: [['platform', 'ASC']]});
+      return res.ok({
+        items: items,
+        offset: off,
+        limit: lim,
+        total: total
       });
-      return res.ok(rewardCfg);
     }
     catch (err) {
       logger.error("get staking reward config fail: ", err);
@@ -18,23 +26,20 @@ module.exports = {
 
   getHistory: async (req, res, next) => {
     try {
-      let size = req.query.limit || 20
-      let page = req.query.page || 1
-      let total = await StakingRewardCfgHis.count()
-      let rewardCfg = await StakingRewardCfgHis.findAll({
-        offset: (page - 1) * size,
-        limit: size,
-        raw: true
-      });
+      const { query: { offset, limit}} = req;
+      const off = parseInt(offset) || 0;
+      const lim = parseInt(limit) || parseInt(config.appLimit);
+      
+      const { count: total, rows: items } = await StakingRewardCfgHis.findAndCountAll({offset: off, limit: lim, order: [['platform', 'ASC']]});
       return res.ok({
-        size: size,
-        page: page,
-        total: total,
-        his: rewardCfg
+        items: items,
+        offset: off,
+        limit: lim,
+        total: total
       });
     }
     catch (err) {
-      logger.error("update staking reward config fail: ", err);
+      logger.error("get staking reward config history fail: ", err);
       next(err);
     }
   }

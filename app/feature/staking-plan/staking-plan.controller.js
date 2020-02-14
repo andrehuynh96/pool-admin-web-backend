@@ -1,28 +1,21 @@
 const logger = require('app/lib/logger');
 const StakingPlan = require("app/model/staking").staking_plans;
+const config = require('app/config');
 
 module.exports = {
   getPlans: async (req, res, next) => {
     try {
-      let size = req.query.limit || 20
-      let page = req.query.page || 1
-      let platformId = req.params.staking_platform_id
-      let total = await StakingPlan.count({
-        staking_platform_id: platformId
-      })
-      let plans = await StakingPlan.findAll({
-        where: {
-          staking_platform_id: platformId
-        },
-        offset: (page - 1) * size,
-        limit: size,
-        raw: true
-      });
+      const { query: { offset, limit}} = req;
+      let platformId = req.params.staking_platform_id;
+      let where = {staking_platform_id: platformId};
+      const off = parseInt(offset) || 0;
+      const lim = parseInt(limit) || parseInt(config.appLimit);
+      const { count: total, rows: items } = await StakingPlan.findAndCountAll({offset: off, limit: lim, where: where, order: [['staking_plan_code', 'ASC']]});
       return res.ok({
-        size: size,
-        page: page,
-        total: total,
-        plans: plans
+        items: items,
+        offset: off,
+        limit: lim,
+        total: total
       });
     }
     catch (err) {
