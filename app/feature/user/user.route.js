@@ -40,6 +40,13 @@ router.put(
   controller.update
 );
 
+router.post(
+  '/users/:id/resend-active-code',
+  authenticate,
+  authority(Permission.RESEND_EMAIL_USER),
+  controller.resendEmailActive
+);
+
 router.delete(
   '/users/:id',
   authenticate,
@@ -336,3 +343,52 @@ module.exports = router;
  *         schema:
  *           $ref: '#/definitions/500'
  */
+
+
+
+
+/*********************************************************************/
+
+
+/**
+ * @swagger
+ * /web/users/{id}/resend-active-code:
+ *   post:
+ *     summary: resend active code
+ *     tags:
+ *       - Users
+ *     description:
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         type: string
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         examples:
+ *           application/json:
+ *             {
+ *                 "data": true
+ *             }
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/400'
+ *       401:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/401'
+ *       404:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/404'
+ *       500:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/500'
+ */
+
+
+/*********************************************************************/
