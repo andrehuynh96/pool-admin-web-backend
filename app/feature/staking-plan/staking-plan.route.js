@@ -19,12 +19,25 @@ router.get(
 
 /**
  * @swagger
- * /web/staking-platforms/:staking_platform_id/plans?limit={limit}&page={page}:
+ * /web/staking-platforms/{staking_platform_id}/plans:
  *   get:
  *     summary: get staking plan
  *     tags:
- *       - Staking plan
+ *       - Staking Plan
  *     description:
+ *     parameters:
+ *       - in: path
+ *         name: staking_platform_id
+ *         type: string
+ *         required: true
+ *       - name: offset
+ *         in: query
+ *         type: integer
+ *         format: int32
+ *       - name: limit
+ *         in: query
+ *         type: integer
+ *         format: int32
  *     produces:
  *       - application/json
  *     responses:
@@ -34,10 +47,10 @@ router.get(
  *           application/json:
  *             {
                 data: {
-                size: 20,
-                page: 1,
+                limit: 20,
+                offset: 1,
                 total: 10,
-                plans: [
+                items: [
                   {
                   id: "0e37df36-f698-11e6-8dd4-cb9ced3df976",
                   staking_platform_id: "96b7f440-1a3b-11ea-978f-2e728ce88125",
@@ -111,12 +124,21 @@ router.get(
 
 /**
  * @swagger
- * /web/staking-platforms/:staking_platform_id/plans/:plan_id:
+ * /web/staking-platforms/{staking_platform_id}/plans/{plan_id}:
  *   get:
  *     summary: get staking plan detail
  *     tags:
- *       - Staking plan
+ *       - Staking Plan
  *     description:
+ *     parameters:
+ *       - in: path
+ *         name: staking_platform_id
+ *         type: string
+ *         required: true
+ *       - in: path
+ *         name: plan_id
+ *         type: string
+ *         required: true
  *     produces:
  *       - application/json
  *     responses:
@@ -167,13 +189,21 @@ router.put(
 
 /**
  * @swagger
- * /web/staking-platforms/:staking_platform_id/plans/:plan_id:
+ * /web/staking-platforms/{staking_platform_id}/plans/{plan_id}:
  *   put:
  *     summary: update plan
  *     tags:
- *       - Staking plan
+ *       - Staking Plan
  *     description:
  *     parameters:
+ *       - in: path
+ *         name: staking_platform_id
+ *         type: string
+ *         required: true
+ *       - in: path
+ *         name: plan_id
+ *         type: string
+ *         required: true
  *       - in: body
  *         name: data
  *         description: Data for update.
@@ -226,13 +256,21 @@ router.post(
 
 /**
  * @swagger
- * /web/staking-platforms/:staking_platform_id/plans/:plan_id:
- *   put:
- *     summary: update plan
+ * /web/staking-platforms/{staking_platform_id}/plans/{plan_id}:
+ *   post:
+ *     summary: create plan
  *     tags:
- *       - Staking plan
+ *       - Staking Plan
  *     description:
  *     parameters:
+ *       - in: path
+ *         name: staking_platform_id
+ *         type: string
+ *         required: true
+ *       - in: path
+ *         name: plan_id
+ *         type: string
+ *         required: true
  *       - in: body
  *         name: data
  *         description: Data for update.
