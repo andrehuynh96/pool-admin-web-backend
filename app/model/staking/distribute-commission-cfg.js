@@ -1,5 +1,6 @@
+const Temporal = require('sequelize-temporal');
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("distribute_commission_cfgs", {
+  const distribute_commission_cfg =  sequelize.define("distribute_commission_cfgs", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -33,4 +34,6 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
+  Temporal(distribute_commission_cfg, sequelize, { blocking: true, full: false });
+  return distribute_commission_cfg;
 }

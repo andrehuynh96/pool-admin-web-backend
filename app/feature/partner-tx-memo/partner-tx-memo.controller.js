@@ -43,8 +43,8 @@ memo.create = async (req, res, next) => {
       condition.memo = item.memo;
       let existMemo = await TxMemo.findOne({where: condition});
       if (!existMemo) {
-        item.created_by = user;
-        item.updated_by = user;
+        item.created_by = user.id;
+        item.updated_by = user.id;
         item.partner_id = partner_id;
         insertedItems.push(item);
         updatedItems.push(txMemo.id);
