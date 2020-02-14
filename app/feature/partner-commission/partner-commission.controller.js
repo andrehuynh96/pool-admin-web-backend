@@ -36,12 +36,12 @@ commission.create = async (req, res, next) => {
     let insertedItems = [];
     for (let item of items) {
       if (!item.id) {
-        item.created_by = user;
-        item.updated_by = user;
+        item.created_by = user.id;
+        item.updated_by = user.id;
         item.partner_id = partner_id;
         insertedItems.push(item);
       } else {
-        item.updated_by = user; 
+        item.updated_by = user.id; 
         let [_ , updatedCommission] = await PartnerCommission.update(item, { where: {
           id: item.id
         }, returning: true }, { transaction });
@@ -52,9 +52,7 @@ commission.create = async (req, res, next) => {
     let partner_commissions =  insertedCommissions.concat(updatedCommissions);
     logger.info('partner-commission::update::partner-commission::', JSON.stringify(partner_commissions));
     await transaction.commit();
-    return res.ok({
-      items: partner_commissions.map(item => mapper(item))
-    });
+    return res.ok(partner_commissions.map(item => mapper(item)));
   } catch (error) {
     logger.error(error);
     await transaction.rollback();

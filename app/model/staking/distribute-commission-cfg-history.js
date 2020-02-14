@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("distribute_commission_cfg_his", {
+  return sequelize.define("distribute_commission_cfgs_histories", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
