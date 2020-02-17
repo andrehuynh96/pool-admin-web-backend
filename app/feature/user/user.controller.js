@@ -118,7 +118,7 @@ module.exports = {
     try {
       let result = await User.findOne({
         where: {
-          email: req.body.email,
+          email: req.body.email.toLowerCase(),
           deleted_flg: false
         }
       })
@@ -139,7 +139,7 @@ module.exports = {
 
       let passWord = bcrypt.hashSync("Abc@123456", 10);
       let user = await User.create({
-        email: req.body.email,
+        email: req.body.email.toLowerCase(),
         password_hash: passWord,
         user_sts: UserStatus.UNACTIVATED,
       }, { transaction });
