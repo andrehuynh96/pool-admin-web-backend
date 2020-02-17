@@ -32,19 +32,19 @@ module.exports = async (req, res, next) => {
     if (!user) {
       return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
     }
-
-    if (user.user_sts == UserStatus.UNACTIVATED) {
-      return res.forbidden(res.__("UNCONFIRMED_ACCOUNT", "UNCONFIRMED_ACCOUNT"));
-    }
-
+    
     if (user.user_sts == UserStatus.LOCKED) {
       return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
     }
 
     let passWord = bcrypt.hashSync(req.body.password, 10);
-    let [_, response] = await User.update({
-      password_hash: passWord,
-    }, {
+
+    let data = { password_hash: passWord };
+
+    if (user.user_sts == UserStatus.UNACTIVATED) {
+      data.user_sts = UserStatus.ACTIVATED;
+    } 
+    let [_, response] = await User.update(data, {
         where: {
           id: user.id
         },
