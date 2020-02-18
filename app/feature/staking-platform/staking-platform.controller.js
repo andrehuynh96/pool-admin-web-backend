@@ -71,6 +71,7 @@ module.exports = {
       let result = await StakingPlatform.findOne({
         where: {
           deleted_flg: false,
+          updated_by: req.user.id,
           id: req.params.id
         }
       })
@@ -123,7 +124,9 @@ module.exports = {
         req.body.updated_by = req.user.id;
       }
       let response = await StakingPlatform.create({
-        ...req.body
+        ...req.body,
+        updated_by: req.user.id,
+        created_by: req.user.id
       });
 
       return res.ok(response);

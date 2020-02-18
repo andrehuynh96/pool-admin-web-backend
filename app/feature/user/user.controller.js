@@ -95,7 +95,8 @@ module.exports = {
       }
 
       let [_, response] = await User.update({
-        deleted_flg: true
+        deleted_flg: true,
+        updated_by: req.user.id
       }, {
           where: {
             id: req.params.id
@@ -142,6 +143,8 @@ module.exports = {
         email: req.body.email.toLowerCase(),
         password_hash: passWord,
         user_sts: UserStatus.UNACTIVATED,
+        updated_by: req.user.id,
+        created_by: req.user.id
       }, { transaction });
 
       if (!user) {
@@ -224,6 +227,7 @@ module.exports = {
 
       let [_, response] = await User.update({
         user_sts: req.body.user_sts,
+        updated_by: req.user.id
       }, {
           where: {
             id: req.params.id

@@ -9,14 +9,14 @@ var key = {};
 key.all = async (req, res, next) => {
   try {
     logger.info('api key::all');
-    const { query: { offset, limit, actived_flg}, params: { partner_id } } = req;
-    const where = { partner_id: partner_id};
+    const { query: { offset, limit, actived_flg }, params: { partner_id } } = req;
+    const where = { partner_id: partner_id };
     if (actived_flg) {
       where.actived_flg = actived_flg;
     }
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_api_keys } = await ApiKey.findAndCountAll({offset: off, limit: lim, where: where, order: [['updatedAt', 'DESC']]});
+    const { count: total, rows: partner_api_keys } = await ApiKey.findAndCountAll({ offset: off, limit: lim, where: where, order: [['updatedAt', 'DESC']] });
     return res.ok({
       items: partner_api_keys.map(item => mapper(item)),
       offset: off,
@@ -51,9 +51,9 @@ key.create = async (req, res, next) => {
 key.delete = async (req, res, next) => {
   try {
     logger.info('api key::delete');
-    const { params: { id }} = req; 
-    await ApiKey.destroy({where: {id: id}});
-    return res.ok({deleted: true});
+    const { params: { id } } = req;
+    await ApiKey.destroy({ where: { id: id } });
+    return res.ok({ deleted: true });
   } catch (error) {
     logger.error(error);
     next(error);
