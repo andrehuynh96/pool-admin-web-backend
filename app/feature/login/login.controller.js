@@ -81,10 +81,13 @@ module.exports = async (req, res, next) => {
       });
       req.session.authenticated = true;
       req.session.user = user;
-      req.session.role = roles.map(role => role.role_id);
+      let roleList = roles.map(role => role.role_id);
+      req.session.role = roleList;
+      let response = userMapper(user); 
+      response.role = roleList;
       return res.ok({
         twofa: false,
-        user: userMapper(user)
+        user: response
       });
     }
   }
