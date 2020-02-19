@@ -84,6 +84,9 @@ module.exports = {
   },
   delete: async (req, res, next) => {
     try {
+      if (req.params.id == req.user.id) {
+        return res.badRequest(res.__("USER_NOT_DELETED"), "USER_NOT_DELETED");
+      }
       let result = await User.findOne({
         where: {
           id: req.params.id

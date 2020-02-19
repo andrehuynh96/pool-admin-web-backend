@@ -3,5 +3,6 @@
 	"UNAUTHORIZED": "UNAUTHORIZED",
 	"ACCOUNT_ACTIVATED_ALREADY": "ACCOUNT_ACTIVATED_ALREADY",
 	"USER_NOT_FOUND": "USER_NOT_FOUND",
-	"PASSWORD_EXIST": "New password cannot be the same as the old password"
+	"PASSWORD_EXIST": "New password cannot be the same as the old password",
+	"USER_NOT_DELETED": "You cannot delete yourself!"
 }
