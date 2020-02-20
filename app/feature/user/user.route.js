@@ -47,6 +47,13 @@ router.post(
   controller.resendEmailActive
 );
 
+router.post(
+  '/active-user',
+  authenticate,
+  authority(Permission.ACTIVE_USER),
+  controller.active
+);
+
 router.delete(
   '/users/:id',
   authenticate,
@@ -392,3 +399,55 @@ module.exports = router;
 
 
 /*********************************************************************/
+
+
+
+/*********************************************************************/
+
+/**
+ * @swagger
+ * /web/active-user:
+ *   post:
+ *     summary: active user
+ *     tags:
+ *       - Users
+ *     description:
+ *     parameters:
+ *       - name: data
+ *         in: body
+ *         required: true
+ *         description: submit data JSON to register.
+ *         schema:
+ *            type: object
+ *            example:
+ *                  {
+                          "verify_token":"fdfn%D(cxNCSDSKDSDSD",
+                          "password":"Asadsa@12"
+ *                  }
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         examples:
+ *           application/json:
+ *             {
+ *                  "data": true
+ *             }
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/400'
+ *       401:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/401'
+ *       404:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/404'
+ *       500:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/500'
+ */
