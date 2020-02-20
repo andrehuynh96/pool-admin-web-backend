@@ -53,6 +53,7 @@ const config = {
   enableSeed: process.env.ENABLE_SEED == "1",
   websiteUrl: process.env.WEBSITE_URL,
   linkWebsiteVerify: process.env.WEBSITE_URL + '/set-new-password',
+  linkWebsiteActiveUser: process.env.WEBSITE_URL + '/active-user',
   disableRecaptcha: true,
   CDN: {
     url: process.env.CDN_URL,

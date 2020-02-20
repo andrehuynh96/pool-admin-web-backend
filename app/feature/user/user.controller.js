@@ -179,7 +179,7 @@ module.exports = {
       }, {
           where: {
             user_id: user.id,
-            action_type: OtpType.FORGOT_PASSWORD
+            action_type: OtpType.CREATE_ACCOUNT
           },
           returning: true
         })
@@ -190,7 +190,7 @@ module.exports = {
         expired: false,
         expired_at: today,
         user_id: user.id,
-        action_type: OtpType.FORGOT_PASSWORD
+        action_type: OtpType.CREATE_ACCOUNT
       })
       await transaction.commit();
       _sendEmailCreateUser(user, verifyToken);
@@ -205,6 +205,7 @@ module.exports = {
       next(err);
     }
   },
+
   update: async (req, res, next) => {
     const transaction = await database.transaction();
     try {
@@ -269,6 +270,68 @@ module.exports = {
       next(err);
     }
   },
+  active: async (req, res, next) => {
+    try {
+      let otp = await OTP.findOne({
+        where: {
+          code: req.body.verify_token,
+          action_type: OtpType.CREATE_ACCOUNT
+        }
+      });
+      if (!otp) {
+        return res.badRequest(res.__("TOKEN_INVALID"), "TOKEN_INVALID", { fields: ["verify_token"] });
+      }
+
+      let today = new Date();
+      if (otp.expired_at < today || otp.expired || otp.used) {
+        return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED");
+      }
+
+      let user = await User.findOne({
+        where: {
+          id: otp.user_id
+        }
+      });
+      if (!user) {
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+      }
+
+      if (user.user_sts == UserStatus.LOCKED) {
+        return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
+      }
+
+      let passWord = bcrypt.hashSync(req.body.password, 10);
+      let [_, response] = await User.update({
+        password_hash: passWord,
+        user_sts: UserStatus.ACTIVATED
+      }, {
+          where: {
+            id: user.id
+          },
+          returning: true
+        });
+      if (!response || response.length == 0) {
+        return res.serverInternalError();
+      }
+
+      await OTP.update({
+        used: true
+      }, {
+          where: {
+            user_id: user.id,
+            code: req.body.verify_token,
+            action_type: OtpType.CREATE_ACCOUNT
+          },
+          returning: true
+        })
+
+      return res.ok(true);
+    }
+    catch (err) {
+      logger.error("set new password fail: ", err);
+      next(err);
+    }
+  },
   resendEmailActive: async (req, res, next) => {
     try {
       let userId = req.params.id;
@@ -299,7 +362,7 @@ module.exports = {
       }, {
           where: {
             user_id: user.id,
-            action_type: OtpType.FORGOT_PASSWORD
+            action_type: OtpType.CREATE_ACCOUNT
           },
           returning: true
         })
@@ -310,7 +373,7 @@ module.exports = {
         expired: false,
         expired_at: today,
         user_id: user.id,
-        action_type: OtpType.FORGOT_PASSWORD
+        action_type: OtpType.CREATE_ACCOUNT
       })
       _sendEmailCreateUser(user, verifyToken);
       return res.ok(true);
@@ -330,7 +393,7 @@ async function _sendEmailCreateUser(user, verifyToken) {
       email: user.email,
       fullname: user.email,
       site: config.websiteUrl,
-      link: `${config.linkWebsiteVerify}/${verifyToken}`,
+      link: `${config.linkWebsiteActiveUser}/${verifyToken}`,
       hours: config.expiredVefiryToken
     }
     data = Object.assign({}, data, config.email);
