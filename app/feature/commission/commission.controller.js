@@ -1,6 +1,6 @@
 const logger = require('app/lib/logger');
 const DistributeCommissionCfg = require("app/model/staking").distribute_commission_cfgs;
-const DistributeCommissionCfgHis = require("app/model/staking").distribute_commission_cfgs_histories;
+const DistributeCommissionCfgHis = require("app/model/staking").distribute_commission_cfgs_his;
 const config = require('app/config');
 const database = require('app/lib/database').db().staking;
 const mapper = require('app/feature/response-schema/distribute-commission-cfg.response-schema');
@@ -8,11 +8,11 @@ const mapper = require('app/feature/response-schema/distribute-commission-cfg.re
 module.exports = {
   get: async (req, res, next) => {
     try {
-      const { query: { offset, limit} } = req;
+      const { query: { offset, limit } } = req;
       const off = parseInt(offset) || 0;
       const lim = parseInt(limit) || parseInt(config.appLimit);
 
-      const { count: total, rows: items } = await DistributeCommissionCfg.findAndCountAll({offset: off, limit: lim, order: [['platform', 'ASC']]});
+      const { count: total, rows: items } = await DistributeCommissionCfg.findAndCountAll({ offset: off, limit: lim, order: [['platform', 'ASC']] });
       return res.ok({
         items: mapper(items),
         offset: off,
@@ -28,11 +28,11 @@ module.exports = {
 
   getHistory: async (req, res, next) => {
     try {
-      const { query: { offset, limit} } = req;
+      const { query: { offset, limit } } = req;
       const off = parseInt(offset) || 0;
       const lim = parseInt(limit) || parseInt(config.appLimit);
 
-      const { count: total, rows: items } = await DistributeCommissionCfgHis.findAndCountAll({offset: off, limit: lim, order: [['platform', 'ASC']]});
+      const { count: total, rows: items } = await DistributeCommissionCfgHis.findAndCountAll({ offset: off, limit: lim, order: [['platform', 'ASC']] });
       return res.ok({
         items: mapper(items),
         offset: off,
@@ -52,11 +52,13 @@ module.exports = {
       const { body: { items }, user } = req;
       let results = [];
       for (let item of items) {
-          item.updated_by = user.id; 
-          let [_ , updatedCommission] = await DistributeCommissionCfg.update(item, { where: {
+        item.updated_by = user.id;
+        let [_, updatedCommission] = await DistributeCommissionCfg.update(item, {
+          where: {
             id: item.id
-          }, returning: true }, { transaction });
-          results.push(updatedCommission);
+          }, returning: true
+        }, { transaction });
+        results.push(updatedCommission);
       }
       logger.info('distribute-commission::update::distribute-commission::', JSON.stringify(results));
       await transaction.commit();

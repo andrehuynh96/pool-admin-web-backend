@@ -1,7 +1,7 @@
 const logger = require('app/lib/logger');
 const config = require('app/config');
 const PartnerCommission = require('app/model/staking').partner_commissions;
-const History = require('app/model/staking').partner_commissions_histories;
+const History = require('app/model/staking').partner_commissions_his;
 const mapper = require('app/feature/response-schema/partner-commission.response-schema');
 const database = require('app/lib/database').db().staking;
 var commission = {};
@@ -13,7 +13,7 @@ commission.all = async (req, res, next) => {
     const where = { partner_id: partner_id };
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_commissions } = await PartnerCommission.findAndCountAll({offset: off, limit: lim, where: where, order: [['platform', 'ASC']]});
+    const { count: total, rows: partner_commissions } = await PartnerCommission.findAndCountAll({ offset: off, limit: lim, where: where, order: [['platform', 'ASC']] });
     return res.ok({
       items: partner_commissions.map(item => mapper(item)),
       offset: off,
@@ -41,15 +41,17 @@ commission.create = async (req, res, next) => {
         item.partner_id = partner_id;
         insertedItems.push(item);
       } else {
-        item.updated_by = user.id; 
-        let [_ , updatedCommission] = await PartnerCommission.update(item, { where: {
-          id: item.id
-        }, returning: true }, { transaction });
+        item.updated_by = user.id;
+        let [_, updatedCommission] = await PartnerCommission.update(item, {
+          where: {
+            id: item.id
+          }, returning: true
+        }, { transaction });
         updatedCommissions.push(updatedCommission);
       }
     }
     let insertedCommissions = await PartnerCommission.bulkCreate(insertedItems, { transaction });
-    let partner_commissions =  insertedCommissions.concat(updatedCommissions);
+    let partner_commissions = insertedCommissions.concat(updatedCommissions);
     logger.info('partner-commission::update::partner-commission::', JSON.stringify(partner_commissions));
     await transaction.commit();
     return res.ok(partner_commissions.map(item => mapper(item)));
@@ -67,9 +69,9 @@ commission.getHis = async (req, res, next) => {
     const where = { partner_id: partner_id };
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_commissions_histories } = await History.findAndCountAll({offset: off, limit: lim, where: where, order: [['platform', 'ASC']]});
+    const { count: total, rows: partner_commissions_his } = await History.findAndCountAll({ offset: off, limit: lim, where: where, order: [['platform', 'ASC']] });
     return res.ok({
-      items: partner_commissions_histories.map(item => mapper(item)),
+      items: partner_commissions_his.map(item => mapper(item)),
       offset: off,
       limit: lim,
       total: total
