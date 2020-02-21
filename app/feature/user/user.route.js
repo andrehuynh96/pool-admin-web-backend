@@ -48,8 +48,7 @@ router.post(
 );
 
 router.post(
-  '/active-user',
-  authority(Permission.ACTIVE_USER),
+  '/active-user', 
   controller.active
 );
 
