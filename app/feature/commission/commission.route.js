@@ -180,8 +180,7 @@ router.post(
  *            type: array
  *            example:
  *               { items: [{
-                        "id": "a92b913c-256a-11ea-978f-2e728ce88125",     
-                        "platform":"IRIS",
+                        "id": 1, 
                         "cycle":1000,
                         "min_amount": 1000000
                     }]
