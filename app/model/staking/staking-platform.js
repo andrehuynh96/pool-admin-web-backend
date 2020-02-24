@@ -1,6 +1,7 @@
 
 const timeUnit = require("./value-object/time-unit");
 const StakingType = require("./value-object/staking-type");
+const StakingPlatformStatus = require("./value-object/staking-platform-status");
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("staking_platforms", {
@@ -56,10 +57,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: timeUnit.DAY
     },
-    actived_flg: {
-      type: DataTypes.BOOLEAN,
+    status: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      default: true
+      defaultValue: StakingPlatformStatus.COMMING_SOON
     },
     confirmation_block: {
       type: DataTypes.INTEGER,
@@ -86,17 +87,17 @@ module.exports = (sequelize, DataTypes) => {
     deleted_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: false
+      defaultValue: false
     },
     created_by: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      default: 0
+      defaultValue: 0
     },
     updated_by: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      default: 0
+      defaultValue: 0
     }
   }, {
       underscored: true,

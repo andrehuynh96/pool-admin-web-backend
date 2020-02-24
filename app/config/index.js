@@ -53,6 +53,7 @@ const config = {
   enableSeed: process.env.ENABLE_SEED == "1",
   websiteUrl: process.env.WEBSITE_URL,
   linkWebsiteVerify: process.env.WEBSITE_URL + '/set-new-password',
+  linkWebsiteActiveUser: process.env.WEBSITE_URL + '/active-user',
   disableRecaptcha: true,
   CDN: {
     url: process.env.CDN_URL,
@@ -65,7 +66,8 @@ const config = {
     fileSize: process.env.CDN_FILE_SIZE ? parseFloat(process.env.CDN_FILE_SIZE) : 5242880
   },
   enableDocsLink: process.env.ENABLE_DOCS_LINK == "1",
-  appLimit: process.env.APP_LIMIT || 10
+  appLimit: process.env.APP_LIMIT || 10,
+  corsDomain: process.env.CORS_DOMAINS
 };
 
 module.exports = config;

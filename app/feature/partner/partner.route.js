@@ -2,33 +2,46 @@ const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const { create, update } = require('./validator');
 const controller = require('./partner.controller');
+const authenticate = require('app/middleware/authenticate.middleware');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.post(
   '/partners',
+  authenticate,
+  authority(Permission.CREATE_PARTNER),
   validator(create),
   controller.create
 );
 
 router.get(
   '/partners',
+  authenticate,
+  authority(Permission.VIEW_LIST_PARTNER),
   controller.all
 );
 
 router.put(
   '/partners/:partner_id',
+  authenticate,
+  authority(Permission.UPDATE_PARTNER),
   validator(update),
   controller.update
 );
 
 router.get(
   '/partners/:partner_id',
+  authenticate,
+  authority(Permission.VIEW_PARTNER),
   controller.get
 );
 
 router.delete(
   '/partners/:partner_id',
+  authenticate,
+  authority(Permission.DELETE_PARTNER),
   controller.delete
 );
 
@@ -117,6 +130,9 @@ module.exports = router;
  *       - name: actived_flg
  *         in: query
  *         type: boolean
+ *       - name: root
+ *         in: query
+ *         type: boolean
  *     produces:
  *       - application/json
  *     responses:
@@ -124,8 +140,9 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *             {
- *                 "items": [{
+ *             {  
+               "data": {
+                 "items": [{
                       "id": 1,
                       "email":"infinito@blockchainlabs.asia",
                       "name": "Infinito",
@@ -135,6 +152,7 @@ module.exports = router;
                     "offset": 0,
                     "limit": 10,
                     "total": 1
+                  }
  *             }
  *       400:
  *         description: Error

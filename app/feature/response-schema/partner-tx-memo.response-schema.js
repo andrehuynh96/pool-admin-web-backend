@@ -5,8 +5,8 @@ const destObject = {
   platform: 'platform',
   memo: 'memo',
   default_flg: 'default_flg',
-  created_by: 'created_by',
-  updatedAt: 'updated_at'
+  created_by: 'updated_by',
+  createdAt: 'updated_at'
 };
 
 module.exports = srcObject => {

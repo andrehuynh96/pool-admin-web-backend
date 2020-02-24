@@ -26,8 +26,8 @@ module.exports = {
       if (req.query.staking_type) {
         where.staking_type = req.query.staking_type
       }
-      if (req.query.actived_flg != undefined) {
-        where.actived_flg = req.query.actived
+      if (req.query.status != undefined) {
+        where.status = req.query.status
       }
 
       const { count: total, rows: items } = await StakingPlatform.findAndCountAll({ limit, offset, where: where, order: [['created_at', 'DESC']] });
@@ -55,7 +55,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.notFound(res.__("NOT_FOUND"), "NOT_FOUND");
+        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND");
       }
 
       return res.ok(result);
@@ -71,12 +71,13 @@ module.exports = {
       let result = await StakingPlatform.findOne({
         where: {
           deleted_flg: false,
+          updated_by: req.user.id,
           id: req.params.id
         }
       })
 
       if (!result) {
-        return res.notFound(res.__("NOT_FOUND"), "NOT_FOUND");
+        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND");
       }
 
       if (req.body.icon) {
@@ -123,7 +124,9 @@ module.exports = {
         req.body.updated_by = req.user.id;
       }
       let response = await StakingPlatform.create({
-        ...req.body
+        ...req.body,
+        updated_by: req.user.id,
+        created_by: req.user.id
       });
 
       return res.ok(response);

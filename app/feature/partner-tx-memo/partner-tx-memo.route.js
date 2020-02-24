@@ -2,21 +2,30 @@ const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const { create } = require('./validator');
 const controller = require('./partner-tx-memo.controller');
+const authenticate = require('app/middleware/authenticate.middleware');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/partners/:partner_id/memos',
+  authenticate,
+  authority(Permission.VIEW_LIST_MEMO_PARTNER),
   controller.all
 );
 
 router.post(
   '/partners/:partner_id/memos',
+  authenticate,
+  authority(Permission.CREATE_MEMO_PARTNER),
   validator(create),
   controller.create
 );
 router.get(
   '/partners/:partner_id/memos/histories',
+  authenticate,
+  authority(Permission.VIEW_HISTORY_MEMO_PARTNER),
   controller.getHis
 );
 
@@ -47,8 +56,7 @@ module.exports = router;
  *            example:
  *               { items: [{     
                         "platform":"ATOM",
-                        "memo":"Infinito:ATOM",
-                        "default_flg": true
+                        "memo":"Infinito:ATOM"
                     }]
                   }
  *     produces:
@@ -64,7 +72,8 @@ module.exports = router;
                         "platform":"ATOM",
                         "memo":"Infinito:ATOM",
                         "default_flg": true,
-                        "updated_at": "2020-01-07T11:22:04.602Z"
+                        "updated_at": "2020-01-07T11:22:04.602Z",
+                        "updated_by": 0
                     }]
  *             }
  *       400:
@@ -108,16 +117,19 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *             {
- *                 "data":[{
-                      "id": "5cbe2366-1a55-11ea-978f-2e728ce88125",
+ *             {  "data": {
+ *                 "items":[{
+                        "id": "5cbe2366-1a55-11ea-978f-2e728ce88125",
                         "platform":"ATOM",
                         "memo":"Infinito:ATOM",
-                        "default_flg": true
+                        "default_flg": true,
+                        "updated_at": "2020-01-07T11:22:04.602Z",
+                        "updated_by": 0
                     }],
                     "offset": 0,
                     "limit": 10,
                     "total": 1
+                  }
  *             }
  *       400:
  *         description: Error
@@ -166,17 +178,19 @@ module.exports = router;
  *         description: Ok
  *         examples:
  *           application/json:
- *             {
- *                 "data":[{
+ *             {  "data": {
+ *                 "items":[{
                       "id": "5cbe2366-1a55-11ea-978f-2e728ce88125",
                         "platform":"ATOM",
                         "memo":"Infinito:ATOM",
-                        "default_flg": true,
-                        "updated_at": "2020-01-07 20:22:04.728+09"
+                        "default_flg": false,
+                        "updated_at": "2020-01-07 20:22:04.728+09",
+                        "updated_by": 0
                     }],
                     "offset": 0,
                     "limit": 10,
                     "total": 1
+                  }
  *             }
  *       400:
  *         description: Error

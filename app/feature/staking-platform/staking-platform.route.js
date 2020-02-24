@@ -4,24 +4,29 @@ const authenticate = require('app/middleware/authenticate.middleware');
 const parseformdata = require('app/middleware/parse-formdata.middleware');
 const { create, update } = require('./validator');
 const controller = require('./staking-platform.controller');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/staking-platforms/time-unit',
   authenticate,
+  authority(Permission.VIEW_TIME_UNIT_STAKING_PLATFORM),
   controller.timeUnit
 );
 
 router.get(
   '/staking-platforms',
   authenticate,
+  authority(Permission.VIEW_LIST_STAKING_PLATFORM),
   controller.getAll
 );
 
 router.get(
   '/staking-platforms/:id',
   authenticate,
+  authority(Permission.VIEW_STAKING_PLATFORM),
   controller.get
 );
 
@@ -29,6 +34,7 @@ router.put(
   '/staking-platforms/:id',
   parseformdata,
   authenticate,
+  authority(Permission.UPDATE_STAKING_PLATFORM),
   validator(update),
   controller.update
 );
@@ -37,6 +43,7 @@ router.post(
   '/staking-platforms',
   parseformdata,
   authenticate,
+  authority(Permission.CREATE_STAKING_PLATFORM),
   validator(create),
   controller.create
 );
@@ -107,9 +114,9 @@ module.exports = router;
  *       - name: staking_type
  *         in: query
  *         type: string
- *       - name: actived_flg
+ *       - name: status
  *         in: query
- *         type: boolean
+ *         type: integer
  *     produces:
  *       - application/json
  *     responses:
@@ -132,7 +139,7 @@ module.exports = router;
                           "lockup_unvote_unit":"DAY",
                           "payout_reward":0,
                           "payout_reward_unit":"DAY",
-                          "actived_flg":true,
+                          "status":1,
                           "confirmation_block":5,
                           "staking_type":"CONTRACT",
                           "sc_lookup_addr":"0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
@@ -201,7 +208,7 @@ module.exports = router;
                       "lockup_unvote_unit":"DAY",
                       "payout_reward":0,
                       "payout_reward_unit":"DAY",
-                      "actived_flg":true,
+                      "status":1,
                       "confirmation_block":5,
                       "staking_type":"CONTRACT",
                       "sc_lookup_addr":"0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
@@ -281,8 +288,8 @@ module.exports = router;
  *                type: number
  *              payout_reward_unit:
  *                type: string
- *              actived_flg:
- *                type: boolean
+ *              status:
+ *                type: number
  *              confirmation_block:
  *                type: number
  *              staking_type:
@@ -305,7 +312,7 @@ module.exports = router;
                           "lockup_unvote_unit":"DAY",
                           "payout_reward":0,
                           "payout_reward_unit":"DAY",
-                          "actived_flg":true,
+                          "status":1,
                           "confirmation_block":5,
                           "staking_type":"CONTRACT",
                           "sc_lookup_addr":"0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
@@ -333,7 +340,7 @@ module.exports = router;
                       "lockup_unvote_unit":"DAY",
                       "payout_reward":0,
                       "payout_reward_unit":"DAY",
-                      "actived_flg":true,
+                      "status":1,
                       "confirmation_block":5,
                       "staking_type":"CONTRACT",
                       "sc_lookup_addr":"0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
@@ -413,8 +420,8 @@ module.exports = router;
  *                type: number
  *              payout_reward_unit:
  *                type: string
- *              actived_flg:
- *                type: boolean
+ *              status:
+ *                type: number
  *              confirmation_block:
  *                type: number
  *              staking_type:
@@ -437,7 +444,7 @@ module.exports = router;
                           "lockup_unvote_unit":"DAY",
                           "payout_reward":0,
                           "payout_reward_unit":"DAY",
-                          "actived_flg":true,
+                          "status":1,
                           "confirmation_block":5,
                           "staking_type":"CONTRACT",
                           "sc_lookup_addr":"0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
@@ -465,7 +472,7 @@ module.exports = router;
                       "lockup_unvote_unit":"DAY",
                       "payout_reward":0,
                       "payout_reward_unit":"DAY",
-                      "actived_flg":true,
+                      "status":1,
                       "confirmation_block":5,
                       "staking_type":"CONTRACT",
                       "sc_lookup_addr":"0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",

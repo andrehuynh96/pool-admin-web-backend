@@ -1,6 +1,6 @@
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("roles", {
+  const Role = sequelize.define("roles", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -12,15 +12,20 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.STRING(512),
-      allowNull: false
+      allowNull: true
     },
     deleted_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: false
+      defaultValue: false
     }
   }, {
       underscored: true,
       timestamps: true,
     });
+  Role.associate = (models) => {
+    // associations can be defined here
+    Role.hasMany(models.user_roles, {foreignKey: 'user_id'})
+  };
+  return Role;
 } 
