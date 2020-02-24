@@ -7,6 +7,7 @@ let types = Object.keys(StakingType);
 
 const schema = Joi.object().keys({
   name: Joi.string().required(),
+  platform: Joi.string().optional(),
   symbol: Joi.string().required(),
   icon: Joi.any().optional().allow(null),
   description: Joi.string().optional().allow(""),
