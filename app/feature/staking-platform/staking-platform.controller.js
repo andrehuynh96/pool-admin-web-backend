@@ -151,7 +151,7 @@ async function _uploadFile(req, res) {
         logger.error("Minio::upload file fail", error);
         reject("upload file fail");
       }
-      resolve(`${config.CDN.url}/${config.CDN.bucket}/${uploadName}`);
+      resolve(`https://${config.CDN.url}/${config.CDN.bucket}/${uploadName}`);
     });
   })
 }

@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4(),
     },
+    platform: {
+      type: DataTypes.STRING(32),
+      allowNull: true
+    },
     name: {
       type: DataTypes.STRING(256),
       allowNull: false
