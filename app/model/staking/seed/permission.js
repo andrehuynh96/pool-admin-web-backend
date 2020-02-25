@@ -1,0 +1,31 @@
+const Model = require("app/model/staking").permissions;
+const PermissionKey = require("app/model/staking/value-object/permission-key");
+
+(async () => {
+  let models = [];
+  let permissions = Object.keys(PermissionKey).map(key => {
+    return PermissionKey[key]
+  })
+  for (let permission of permissions) {
+    let m = await Model.findOne({
+      where: {
+        name: permission
+      }
+    })
+    if (!m) {
+      let model = {
+        name: permission,
+        description: permission,
+        deleted_flg: false,
+        created_by: 0,
+        updated_by: 0
+      }
+      models.push(model);
+    }
+  }
+  await Model.bulkCreate(
+  models, {
+      returning: true
+    });
+  
+})();

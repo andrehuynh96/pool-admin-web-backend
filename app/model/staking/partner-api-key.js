@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false
     },
+    name: {
+      type: DataTypes.STRING(64),
+      allowNull: false
+    },
     api_key: {
       type: DataTypes.STRING(36),
       allowNull: false
@@ -22,12 +26,12 @@ module.exports = (sequelize, DataTypes) => {
     actived_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: true
+      defaultValue: true
     },
     created_by: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      default: 0
+      defaultValue: 0
     },
   }, {
       underscored: true,
