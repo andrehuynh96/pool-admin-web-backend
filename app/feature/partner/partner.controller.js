@@ -11,7 +11,7 @@ partner.all = async (req, res, next) => {
   try {
     logger.info('partner::all');
     const { query: { offset, limit, name, email, actived_flg, root} } = req;
-    const where = { deleted_flg: false };
+    const where = { deleted_flg: false, parent_id: null};
     if (name) {
       where.name = {[Op.iLike]: `%${name}%`};
     }
