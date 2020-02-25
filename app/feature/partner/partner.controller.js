@@ -10,13 +10,8 @@ var partner = {};
 partner.all = async (req, res, next) => {
   try {
     logger.info('partner::all');
-<<<<<<< HEAD
-    const { query: { offset, limit, name, email, actived_flg, root } } = req;
-    const where = { deleted_flg: false };
-=======
     const { query: { offset, limit, name, email, actived_flg, root} } = req;
     const where = { deleted_flg: false, parent_id: null};
->>>>>>> agent
     if (name) {
       where.name = { [Op.iLike]: `%${name}%` };
     }
