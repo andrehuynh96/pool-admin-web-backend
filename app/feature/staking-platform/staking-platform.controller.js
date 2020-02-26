@@ -74,7 +74,6 @@ module.exports = {
       let result = await StakingPlatform.findOne({
         where: {
           deleted_flg: false,
-          updated_by: req.user.id,
           id: req.params.id
         }
       })
