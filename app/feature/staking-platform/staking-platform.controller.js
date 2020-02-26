@@ -2,7 +2,7 @@ const logger = require('app/lib/logger');
 const StakingPlatform = require("app/model/staking").staking_platforms;
 const TimeUnit = require("app/model/staking/value-object/time-unit");
 const Minio = require("app/lib/cdn/minio");
-const { put, get } = require('app/service/s3.service');
+const s3 = require('app/service/s3.service');
 const path = require("path");
 const config = require('app/config');
 const toArray = require('stream-to-array');
@@ -151,7 +151,7 @@ async function _uploadFile(req, res, next) {
       const buffers = parts.map(part => util.isBuffer(part) ? part : Buffer.from(part));
       return Buffer.concat(buffers);
     });
-    let putObject = await put(uploadName, buff, next);
+    let putObject = await s3.put(uploadName, buff, next);
     if (putObject) {
       let uploadUrl = encodeURI(`https://${config.aws.bucket}.${config.aws.endpoint.slice(config.aws.endpoint.lastIndexOf('//') + 2)}/${uploadName}`);
       resolve(uploadUrl);
