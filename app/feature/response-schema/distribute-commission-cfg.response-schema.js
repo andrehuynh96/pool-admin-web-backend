@@ -9,7 +9,9 @@ const destObject = {
     '[].min_amount': '[].min_amount',
     '[].amount_unit': '[].amount_unit',
     '[].createdAt': '[].created_at',
-    '[].created_by': '[].created_by'
+    '[].updatedAt': '[].updated_at',
+    '[].created_by': '[].created_by',
+    '[].updated_by': '[].updated_by'
   },
   single: {
     id: 'id',
@@ -19,12 +21,18 @@ const destObject = {
     min_amount: 'min_amount',
     amount_unit: 'amount_unit',
     createdAt: 'created_at',
-    created_by: 'created_by'
+    updatedAt: 'updated_at',
+    created_by: 'created_by',
+    updated_by: 'updated_by'
   }
 };
 module.exports = srcObject => {
   if (Array.isArray(srcObject)) {
-    return objectMapper(srcObject, destObject.array);
+    if (srcObject === undefined || srcObject.length == 0) {
+      return srcObject;
+    } else {
+      return objectMapper(srcObject, destObject.array);
+    }
   }
   else {
     return objectMapper(srcObject, destObject.single);
