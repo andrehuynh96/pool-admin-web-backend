@@ -42,6 +42,14 @@ partner.all = async (req, res, next) => {
 
 partner.create = async (req, res, next) => {
   try {
+    let child = await Partner.findOne({
+      where: {
+        email: req.body.email
+      }
+    })
+    if(child){
+      return res.badRequest(res.__("EMAIL_EXIST_ALREADY"), "EMAIL_EXIST_ALREADY")
+    }
     logger.info('partner::create');
     req.body.created_by = req.user.id;
     req.body.updated_by = req.user.id;
