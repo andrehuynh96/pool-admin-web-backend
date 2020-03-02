@@ -10,21 +10,24 @@ var partner = {};
 partner.all = async (req, res, next) => {
   try {
     logger.info('partner::all');
-    const { query: { offset, limit, name, email, actived_flg} } = req;
-    const where = { deleted_flg: false };
+    const { query: { offset, limit, name, email, actived_flg, root} } = req;
+    const where = { deleted_flg: false, parent_id: null};
     if (name) {
-      where.name = {[Op.iLike]: `%${name}%`};
+      where.name = { [Op.iLike]: `%${name}%` };
     }
     if (email) {
-      where.email = {[Op.iLike]: `%${email}%`};
+      where.email = { [Op.iLike]: `%${email}%` };
     }
-
     if (actived_flg) {
       where.actived_flg = actived_flg;
     }
+    if (root && (root == 1 || root == true || root == 'true')) {
+      where.parent_id = { [Op.eq]: null };
+    }
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partners } = await Partner.findAndCountAll({lim, off, where: where, order: [['name', 'ASC']]});
+
+    const { count: total, rows: partners } = await Partner.findAndCountAll({ offset: off, limit: lim, where: where, order: [['name', 'ASC']] });
     return res.ok({
       items: partners.map(item => mapper(item)),
       offset: off,
@@ -39,9 +42,17 @@ partner.all = async (req, res, next) => {
 
 partner.create = async (req, res, next) => {
   try {
+    let child = await Partner.findOne({
+      where: {
+        email: req.body.email
+      }
+    })
+    if(child){
+      return res.badRequest(res.__("EMAIL_EXIST_ALREADY"), "EMAIL_EXIST_ALREADY")
+    }
     logger.info('partner::create');
-    req.body.created_by = req.user;
-    req.body.updated_by = req.user;
+    req.body.created_by = req.user.id;
+    req.body.updated_by = req.user.id;
     let partner = await Partner.create(req.body);
     return res.ok(mapper(partner));
   } catch (error) {
@@ -53,8 +64,9 @@ partner.create = async (req, res, next) => {
 partner.update = async (req, res, next) => {
   try {
     logger.info('partner::update');
-    const { params: { partner_id }, body } = req; 
-    let [_ , partner] = await Partner.update(body, {where: {id: partner_id}, returning: true});
+    const { params: { partner_id }, body } = req;
+    body.updated_by = req.user.id;
+    let [_, partner] = await Partner.update(body, { where: { id: partner_id }, returning: true });
     logger.info('partner::update::partner::', JSON.stringify(partner));
     return res.ok(mapper(partner));
   } catch (error) {
@@ -66,8 +78,8 @@ partner.update = async (req, res, next) => {
 partner.get = async (req, res, next) => {
   try {
     logger.info('partner::get');
-    const { params: { partner_id }} = req;
-    let partner = await Partner.findOne({where: {id: partner_id, deleted_flg: false}});
+    const { params: { partner_id } } = req;
+    let partner = await Partner.findOne({ where: { id: partner_id, deleted_flg: false } });
     if (!partner) {
       return res.badRequest();
     } else {
@@ -82,9 +94,9 @@ partner.get = async (req, res, next) => {
 partner.delete = async (req, res, next) => {
   try {
     logger.info('partner::delete');
-    const { params: { partner_id }, user} = req; 
-    await Partner.update({deleted_flg : true, updated_by: user}, {where: {id: partner_id}});
-    return res.ok({deleted: true});
+    const { params: { partner_id }, user } = req;
+    await Partner.update({ deleted_flg: true, updated_by: user.id }, { where: { id: partner_id } });
+    return res.ok({ deleted: true });
   } catch (error) {
     logger.error(error);
     next(error);

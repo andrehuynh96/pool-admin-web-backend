@@ -13,17 +13,17 @@ module.exports = (sequelize, DataTypes) => {
     used: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: false
+      defaultValue: false
     },
     expired: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: false
+      defaultValue: false
     },
     expired_at: {
       type: DataTypes.DATE,
       allowNull: false,
-      default: 0
+      defaultValue: 0
     },
     user_id: {
       type: DataTypes.INTEGER,

@@ -1,6 +1,6 @@
-
+const ActionType = require("./value-object/user-activity-action-type");
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("user_login_his", {
+  return sequelize.define("user_activity_logs", {
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -9,7 +9,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(32),
       allowNull: true
     },
+    action: {
+      type: DataTypes.STRING(32),
+      allowNull: false,
+      defaultValue: ActionType.LOGIN
+    },
     user_agent: {
+      type: DataTypes.STRING(1024),
+      allowNull: true
+    },
+    data: {
       type: DataTypes.STRING(1024),
       allowNull: true
     }
