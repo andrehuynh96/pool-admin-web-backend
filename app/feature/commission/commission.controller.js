@@ -32,7 +32,7 @@ module.exports = {
       const off = parseInt(offset) || 0;
       const lim = parseInt(limit) || parseInt(config.appLimit);
 
-      const { count: total, rows: items } = await DistributeCommissionCfgHis.findAndCountAll({ offset: off, limit: lim, order: [['platform', 'ASC']] });
+      const { count: total, rows: items } = await DistributeCommissionCfgHis.findAndCountAll({ offset: off, limit: lim, order: [['updatedAt', 'DESC']] });
       return res.ok({
         items: mapper(items),
         offset: off,
