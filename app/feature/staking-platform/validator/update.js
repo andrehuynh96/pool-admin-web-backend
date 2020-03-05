@@ -11,7 +11,7 @@ const schema = Joi.object().keys({
   icon: Joi.any().optional().allow(null),
   description: Joi.string().optional().allow(""),
   order_index: Joi.number().optional(),
-  estimate_earn_per_year: Joi.number().optional(),
+  estimate_earn_per_year: Joi.number().min(0).max(100).optional(),
   lockup_unvote: Joi.number().optional(),
   lockup_unvote_unit: Joi.string().optional().allow("").valid(times),
   payout_reward: Joi.number().optional(),
