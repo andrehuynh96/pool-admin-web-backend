@@ -20,6 +20,7 @@ router.use(require('./partner-api-key/partner-api-key.route'));
 router.use(require('./partner/child/partner-child.route'));
 router.use(require('./staking-plan/staking-plan.route'));
 router.use(require('./stat/stat.route'));
+router.use(require('./check-token/check-token.route'));
 
 module.exports = router;
 
