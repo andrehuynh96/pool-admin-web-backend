@@ -154,7 +154,7 @@ module.exports = {
         await transaction.rollback();
         return res.serverInternalError();
       }
-
+      user.roleName = role.name
       await UserRole.destroy({
         where: {
           user_id: user.id,
@@ -165,7 +165,6 @@ module.exports = {
         user_id: user.id,
         role_id: role.id
       }, { transaction });
-
       if (!userRole) {
         await transaction.rollback();
         return res.serverInternalError();
@@ -387,17 +386,18 @@ module.exports = {
 
 async function _sendEmailCreateUser(user, verifyToken) {
   try {
-    let subject = 'Listco Account - Create Account';
-    let from = `Listco <${config.mailSendAs}>`;
+    let subject = 'Moonstake - Activate Account';
+    let from = `Moonstake <${config.mailSendAs}>`;
     let data = {
       email: user.email,
-      fullname: user.email,
+      role: user.roleName,
+      imageUrl: config.urlImages,
       site: config.websiteUrl,
       link: `${config.linkWebsiteActiveUser}/${verifyToken}`,
       hours: config.expiredVefiryToken
     }
     data = Object.assign({}, data, config.email);
-    await mailer.sendWithTemplate(subject, from, user.email, data, "create-user.ejs");
+    await mailer.sendWithTemplate(subject, from, user.email, data, "activate-account.ejs");
   } catch (err) {
     logger.error("send email create account fail", err);
   }

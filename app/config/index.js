@@ -52,6 +52,7 @@ const config = {
   expiredVefiryToken: process.env.EXPIRED_VERIFY_TOKEN ? parseInt(process.env.EXPIRED_VERIFY_TOKEN) : 2,
   enableSeed: process.env.ENABLE_SEED == "1",
   websiteUrl: process.env.WEBSITE_URL,
+  urlImages: process.env.WEBSITE_URL + '/images',
   linkWebsiteVerify: process.env.WEBSITE_URL + '/set-new-password',
   linkWebsiteActiveUser: process.env.WEBSITE_URL + '/active-user',
   disableRecaptcha: true,
