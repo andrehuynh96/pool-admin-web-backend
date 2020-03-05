@@ -27,7 +27,7 @@ partner.all = async (req, res, next) => {
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
 
-    const { count: total, rows: partners } = await Partner.findAndCountAll({ offset: off, limit: lim, where: where, order: [['name', 'ASC']] });
+    const { count: total, rows: partners } = await Partner.findAndCountAll({ offset: off, limit: lim, where: where, order: [['updatedAt', 'DESC']] });
     return res.ok({
       items: partners.map(item => mapper(item)),
       offset: off,
@@ -42,6 +42,14 @@ partner.all = async (req, res, next) => {
 
 partner.create = async (req, res, next) => {
   try {
+    let child = await Partner.findOne({
+      where: {
+        email: req.body.email
+      }
+    })
+    if(child){
+      return res.badRequest(res.__("EMAIL_EXIST_ALREADY"), "EMAIL_EXIST_ALREADY")
+    }
     logger.info('partner::create');
     req.body.created_by = req.user.id;
     req.body.updated_by = req.user.id;

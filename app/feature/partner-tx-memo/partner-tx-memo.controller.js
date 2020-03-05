@@ -47,13 +47,13 @@ memo.create = async (req, res, next) => {
         item.updated_by = user.id;
         item.partner_id = partner_id;
         insertedItems.push(item);
-        updatedItems.push(txMemo.id);
+        if (txMemo && txMemo.id) updatedItems.push(txMemo.id);
       } 
     }
     let partner_tx_memos = await TxMemo.bulkCreate(insertedItems, { transaction });
     await TxMemo.update({
       default_flg: false,
-      updated_by: user
+      updated_by: user.id
     }, {
         where: {
           id: updatedItems
