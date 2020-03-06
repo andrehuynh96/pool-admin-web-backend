@@ -11,7 +11,7 @@ partner.all = async (req, res, next) => {
   try {
     logger.info('partner::all');
     const { query: { offset, limit, name, email, actived_flg, root} } = req;
-    const where = { deleted_flg: false, parent_id: null};
+    const where = { deleted_flg: false};
     if (name) {
       where.name = { [Op.iLike]: `%${name}%` };
     }
@@ -27,7 +27,7 @@ partner.all = async (req, res, next) => {
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
 
-    const { count: total, rows: partners } = await Partner.findAndCountAll({ offset: off, limit: lim, where: where, order: [['name', 'ASC']] });
+    const { count: total, rows: partners } = await Partner.findAndCountAll({ offset: off, limit: lim, where: where, order: [['updatedAt', 'DESC']] });
     return res.ok({
       items: partners.map(item => mapper(item)),
       offset: off,
