@@ -1,27 +1,19 @@
 const { Temporalize } = require('sequelize-temporalize');
 
 module.exports = (sequelize, DataTypes) => {
-  const partner_commission = sequelize.define("partner_commissions", {
+  const partner_commission = sequelize.define("settings", {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false,
-      defaultValue: DataTypes.UUIDV4(),
+      autoIncrement: true
     },
-    partner_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    commission: {
-      type: DataTypes.DOUBLE,
-      allowNull: false
-    },
-    platform: {
+    key: {
       type: DataTypes.STRING(16),
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
-    reward_address: {
-      type: DataTypes.STRING(128),
+    value: {
+      type: DataTypes.STRING(256),
       allowNull: false
     },
     created_by: {
@@ -33,10 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
-    },
-    staking_platform_id: {
-      type: DataTypes.UUID,
-    },
+    }
   }, {
       underscored: true,
       timestamps: true,

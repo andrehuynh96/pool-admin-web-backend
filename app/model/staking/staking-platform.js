@@ -84,6 +84,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(128),
       allowNull: true
     },
+    validator_fee: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
     validator_address: {
       type: DataTypes.STRING(128),
       allowNull: true
