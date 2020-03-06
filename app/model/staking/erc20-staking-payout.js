@@ -5,6 +5,11 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
+    staking_platform_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      defaultValue: DataTypes.UUIDV4(),
+    },
     erc20_payout_id: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -44,7 +49,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
-    }
+    },
+    tx_id: {
+      type: DataTypes.STRING(256),
+      allowNull: true
+    },
+    wait_blockchain_confirm_status_flg: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
   }, {
       underscored: true,
       timestamps: true,

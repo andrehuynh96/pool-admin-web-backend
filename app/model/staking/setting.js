@@ -1,7 +1,5 @@
-const { Temporalize } = require('sequelize-temporalize');
-
 module.exports = (sequelize, DataTypes) => {
-  const partner_commission = sequelize.define("settings", {
+  return sequelize.define("settings", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -31,14 +29,4 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
     });
 
-  Temporalize({
-    model: partner_commission,
-    sequelize,
-    temporalizeOptions: {
-      blocking: false,
-      full: false,
-      modelSuffix: "_his"
-    }
-  });
-  return partner_commission;
 }

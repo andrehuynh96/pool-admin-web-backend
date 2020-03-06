@@ -106,7 +106,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
-    }
+    },
+    tx_id: {
+      type: DataTypes.STRING(256),
+      allowNull: true
+    },
+    wait_blockchain_confirm_status_flg: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
   }, {
       underscored: true,
       timestamps: true,

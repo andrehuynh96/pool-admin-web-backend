@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("erc20_payout_cfgs", {
+  let Model = sequelize.define("erc20_payout_cfgs", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -35,9 +35,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
-    }
+    },
+    tx_id: {
+      type: DataTypes.STRING(256),
+      allowNull: true
+    },
+    wait_blockchain_confirm_status_flg: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
   }, {
       underscored: true,
       timestamps: true,
     });
+
+  return Model;
 }

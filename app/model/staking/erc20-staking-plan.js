@@ -1,7 +1,7 @@
 const StakingPlatformStatus = require("./value-object/staking-platform-status");
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("erc20_staking_plans", {
+  let Model = sequelize.define("erc20_staking_plans", {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -45,8 +45,19 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0
     },
+    tx_id: {
+      type: DataTypes.STRING(256),
+      allowNull: true
+    },
+    wait_blockchain_confirm_status_flg: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
   }, {
       underscored: true,
       timestamps: true,
     });
+
+  return Model;
 } 
