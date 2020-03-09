@@ -129,6 +129,7 @@ module.exports = router;
                       "items": [
                         {
                           "id":"96b7f440-1a3b-11ea-978f-2e728ce88125",
+                          "platform": "ETH",
                           "name":"Ethereum",
                           "symbol":"ETH",
                           "icon":"https://static.chainservices.info/staking/platforms/eth.png",
@@ -198,6 +199,7 @@ module.exports = router;
  *             {
  *                 "data":{
                       "id":"96b7f440-1a3b-11ea-978f-2e728ce88125",
+                      "platform": "ETH",
                       "name":"Ethereum",
                       "symbol":"ETH",
                       "icon":"https://static.chainservices.info/staking/platforms/eth.png",
@@ -269,6 +271,8 @@ module.exports = router;
  *            - staking_type
  *            properties:
  *              name:
+ *                type: string
+ *              platform:
  *                type: string
  *              symbol:
  *                type: string
@@ -402,6 +406,8 @@ module.exports = router;
  *            properties:
  *              name:
  *                type: string
+ *              platform:
+ *                type: string
  *              symbol:
  *                type: string
  *              icon:
@@ -435,6 +441,7 @@ module.exports = router;
  *            example:
  *                  {
                           "name":"Ethereum",
+                          "platform":"Ethereum",
                           "symbol":"ETH",
                           "icon":"https://static.chainservices.info/staking/platforms/eth.png",
                           "description":"AWS token",
@@ -450,7 +457,6 @@ module.exports = router;
                           "sc_lookup_addr":"0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
                           "sc_token_address":"0x423822D571Bb697dDD993c04B507dD40E754cF05",
                           "validator_address":null
-
  *                  }
  *     produces:
  *       - application/json

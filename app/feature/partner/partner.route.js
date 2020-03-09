@@ -72,7 +72,7 @@ module.exports = router;
  *               {
                         "email":"infinito@blockchainlabs.asia",
                         "name":"Infinito",
-                        "parent_id": "1223",
+                        "parent_id": null,
                         "partner_type": "AFFILIATE"
                   }
  *     produces:

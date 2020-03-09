@@ -1,29 +1,32 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("staking_reward_cfg_his", {
+  return sequelize.define("settings", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    staking_platform_id: {
-      type: DataTypes.UUID,
+    key: {
+      type: DataTypes.STRING(16),
       allowNull: false,
-      defaultValue: DataTypes.UUIDV4(),
+      unique: true
     },
-    platform: {
-      type: DataTypes.STRING(32),
-      allowNull: false
-    },
-    commission: {
-      type: DataTypes.DOUBLE(4, 2),
+    value: {
+      type: DataTypes.STRING(256),
       allowNull: false
     },
     created_by: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
+    },
+    updated_by: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
     }
   }, {
       underscored: true,
       timestamps: true,
     });
+
 }

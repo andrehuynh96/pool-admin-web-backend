@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4(),
     },
+    platform: {
+      type: DataTypes.STRING(32),
+      allowNull: true
+    },
     name: {
       type: DataTypes.STRING(256),
       allowNull: false
@@ -80,6 +84,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(128),
       allowNull: true
     },
+    validator_fee: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
     validator_address: {
       type: DataTypes.STRING(128),
       allowNull: true
@@ -98,7 +106,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
-    }
+    },
+    tx_id: {
+      type: DataTypes.STRING(256),
+      allowNull: true
+    },
+    wait_blockchain_confirm_status_flg: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
   }, {
       underscored: true,
       timestamps: true,

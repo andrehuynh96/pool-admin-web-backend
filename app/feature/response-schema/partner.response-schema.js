@@ -6,7 +6,8 @@ const destObject = {
   email: 'email',
   parent_id: 'parent_id',
   partner_type: 'partner_type',
-  createdAt: 'created_at'
+  createdAt: 'created_at',
+  updatedAt: 'updated_at'
 };
 
 module.exports = srcObject => {

@@ -2,8 +2,11 @@ const logger = require('app/lib/logger');
 const StakingPlatform = require("app/model/staking").staking_platforms;
 const TimeUnit = require("app/model/staking/value-object/time-unit");
 const Minio = require("app/lib/cdn/minio");
+const s3 = require('app/service/s3.service');
 const path = require("path");
 const config = require('app/config');
+const toArray = require('stream-to-array');
+const util = require('util');
 
 module.exports = {
 
@@ -31,7 +34,7 @@ module.exports = {
       }
 
       const { count: total, rows: items } = await StakingPlatform.findAndCountAll({ limit, offset, where: where, order: [['created_at', 'DESC']] });
-
+      
       return res.ok({
         items: items,
         offset: offset,
@@ -71,7 +74,6 @@ module.exports = {
       let result = await StakingPlatform.findOne({
         where: {
           deleted_flg: false,
-          updated_by: req.user.id,
           id: req.params.id
         }
       })
@@ -86,7 +88,7 @@ module.exports = {
           return res.badRequest(res.__("UNSUPPORT_FILE_EXTENSION"), "UNSUPPORT_FILE_EXTENSION", { fields: ["icon"] });
         }
 
-        req.body.icon = await _uploadFile(req, res);
+        req.body.icon = await _uploadFile(req, res, next);
       }
 
       if (req.user) {
@@ -117,7 +119,7 @@ module.exports = {
         if (config.CDN.exts.indexOf(file.ext.toLowerCase()) == -1) {
           return res.badRequest(res.__("UNSUPPORT_FILE_EXTENSION"), "UNSUPPORT_FILE_EXTENSION", { fields: ["icon"] });
         }
-        req.body.icon = await _uploadFile(req, res);
+        req.body.icon = await _uploadFile(req, res, next);
       }
       if (req.user) {
         req.body.created_by = req.user.id;
@@ -138,20 +140,22 @@ module.exports = {
   }
 }
 
-
-async function _uploadFile(req, res) {
-  return new Promise((resolve, reject) => {
+async function _uploadFile(req, res, next) {
+  return new Promise(async (resolve, reject) => {
     let file = path.parse(req.body.icon.file.name);
     if (config.CDN.exts.indexOf(file.ext.toLowerCase()) == -1) {
       reject("unsupport file ext");
     }
     let uploadName = `${config.CDN.folderPlatform}/${file.name}-${Date.now()}${file.ext}`;
-    Minio.putObject(config.CDN.bucket, uploadName, req.body.icon.data, function (error, etag) {
-      if (error) {
-        logger.error("Minio::upload file fail", error);
-        reject("upload file fail");
-      }
-      resolve(`${config.CDN.url}/${config.CDN.bucket}/${uploadName}`);
+    let buff = await toArray(req.body.icon.data).then(function (parts) {
+      const buffers = parts.map(part => util.isBuffer(part) ? part : Buffer.from(part));
+      return Buffer.concat(buffers);
     });
+    let putObject = await s3.put(uploadName, buff, next);
+    if (putObject) {
+      let uploadUrl = encodeURI(`https://${config.aws.bucket}.${config.aws.endpoint.slice(config.aws.endpoint.lastIndexOf('//') + 2)}/${uploadName}`);
+      resolve(uploadUrl);
+    }
+    else reject("upload file fail");
   })
 }
