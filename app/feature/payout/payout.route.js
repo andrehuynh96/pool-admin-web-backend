@@ -104,6 +104,10 @@ router.put(
  *       - Pay out
  *     description:
  *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
  *       - in: body
  *         name: data
  *         description: Data for update.
