@@ -97,7 +97,7 @@ router.put(
 
 /**
  * @swagger
- * /web/payouts/:id:
+ * /web/payouts/{id}:
  *   put:
  *     summary: update pay out
  *     tags:
