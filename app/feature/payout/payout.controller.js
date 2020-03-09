@@ -24,40 +24,39 @@ module.exports = {
     }
   },
 
-  // update: async (req, res, next) => {
-  //   try {
-  //     let payoutId = req.params.id
-  //     let payout = await Payoutayout.findOne({
-  //       where: {
-  //         id: payoutId
-  //       }
-  //     })
-  //     if(!payout){
-  //       return res.badRequest(res.__("PAYOUT_FOUND"), "PAYOUT_FOUND", { fields: ["id"] });
-  //     }
-  //     await Payout.update(
-  //       {
-  //         token_name: req.body.token_name,
-  //         token_symbol: req.body.token_symbol,
-  //         activate_flg: req.body.activate_flg
-  //       },
-  //       {
-  //         where:
-  //         { 
-  //           id: payout.id
-  //         }
-  //       })
-  //     return res.ok(true);
-  //   }
-  //   catch (err) {
-  //     logger.error("update payout fail: ", err);
-  //     next(err);
-  //   }
-  // },
+  update: async (req, res, next) => {
+    try {
+      let payoutId = req.params.id
+      let payout = await Payout.findOne({
+        where: {
+          id: payoutId
+        }
+      })
+      if(!payout){
+        return res.badRequest(res.__("PAYOUT_FOUND"), "PAYOUT_FOUND", { fields: ["id"] });
+      }
+      await Payout.update(
+        {
+          token_name: req.body.token_name,
+          token_symbol: req.body.token_symbol,
+          activate_flg: req.body.activate_flg
+        },
+        {
+          where:
+          { 
+            id: payout.id
+          }
+        })
+      return res.ok(true);
+    }
+    catch (err) {
+      logger.error("update payout fail: ", err);
+      next(err);
+    }
+  },
   create: async (req, res, next) => {
     try {
       let payoutCfgs = req.body
-      console.log(payoutCfgs)
       let valid = WAValidator.validate(payoutCfgs.token_address, payoutCfgs.platform);
       if(!valid){
         return res.badRequest(res.__("TOKEN_ADDRESS_INVALID"), "TOKEN_ADDRESS_INVALID", { fields: ["token_address"] });
@@ -70,10 +69,13 @@ module.exports = {
       if(payout){
         return res.badRequest(res.__("TOKEN_ADDRESS_EXISTS_ALREADY"), "TOKEN_ADDRESS_EXISTS_ALREADY", { fields: ["token_address"] });
       }
-      // let payoutToken = await Payout.create(payoutCfgs)
-      // if(!payoutToken){
-      //   return res.serverInternalError();
-      // }
+      let payoutToken = await Payout.create({
+        ...payoutCfgs,
+        created_by: req.user.id
+      })
+      if(!payoutToken){
+        return res.serverInternalError();
+      }
       return res.ok(true);
     }
     catch (err) {

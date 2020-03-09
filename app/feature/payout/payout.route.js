@@ -68,15 +68,13 @@ router.get(
  *           $ref: '#/definitions/500'
  */
 
-// router.put(
-//   'payouts/:id',
-//   validator(update),
-//   authenticate,
-//   authority(Permission.UPDATE_PAYOUT_STAKING_PLATFORM),
-//   controller.update
-// );
-
-// module.exports = router;
+router.put(
+  '/payouts/:id',
+  validator(update),
+  authenticate,
+  authority(Permission.UPDATE_PAYOUT_STAKING_PLATFORM),
+  controller.update
+);
 
 
 
