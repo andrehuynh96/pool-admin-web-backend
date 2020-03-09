@@ -1,6 +1,7 @@
+const StakingPlatformStatus = require("./value-object/staking-platform-status");
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("staking_plans", {
+  let Model = sequelize.define("erc20_staking_plans", {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -12,10 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4(),
     },
-    staking_plan_code: {
-      type: DataTypes.STRING(8),
-      allowNull: false
-    },
     duration: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -25,30 +22,42 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'DAY'
     },
-    reward_per_year: {
+    reward_percentage: {
       type: DataTypes.DOUBLE(4, 2),
       allowNull: false
     },
-    actived_flg: {
-      type: DataTypes.BOOLEAN,
+    status: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: true
+      defaultValue: StakingPlatformStatus.COMMING_SOON
     },
-    reward_in_diff_platform_flg: {
+    reward_diff_token_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false
     },
-    reward_platform: {
-      type: DataTypes.STRING(16),
+    erc20_staking_payout_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    diff_token_rate: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      defaultValue: 0
+    },
+    tx_id: {
+      type: DataTypes.STRING(256),
       allowNull: true
     },
-    reward_token_address: {
-      type: DataTypes.STRING(64),
-      allowNull: true
+    wait_blockchain_confirm_status_flg: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
   }, {
       underscored: true,
       timestamps: true,
     });
+
+  return Model;
 } 

@@ -17,7 +17,7 @@ const schema = Joi.object().keys({
   lockup_unvote_unit: Joi.string().optional().allow("").valid(times),
   payout_reward: Joi.number().optional(),
   payout_reward_unit: Joi.string().optional().allow("").valid(times),
-  status: Joi.number().valid([-1, 0, 1]),
+  status: Joi.number().valid([-2, -1, 0, 1]),
   confirmation_block: Joi.number().optional(),
   staking_type: Joi.string().required().valid(types),
   validator_address: Joi.string().optional().allow(""),

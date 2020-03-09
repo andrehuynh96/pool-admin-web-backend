@@ -73,7 +73,10 @@ const config = {
     accessKey: process.env.AWS_ACCESS_KEY,
     secretKey: process.env.AWS_SECRET_KEY,
     bucket: process.env.AWS_BUCKET
-  }
+  },
+  schedule: {
+    checkTransaction: process.env.SCHEDULE_ERC20_CHECK_TRANSACTION
+  },
 };
 
 module.exports = config;
