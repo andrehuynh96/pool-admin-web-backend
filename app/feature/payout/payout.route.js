@@ -21,9 +21,9 @@ router.get(
  * @swagger
  * /web/payouts:
  *   get:
- *     summary: get pay out
+ *     summary: get payout
  *     tags:
- *       - Pay out
+ *       - Payout
  *     description:
  *     parameters:
  *       - name: offset
@@ -99,9 +99,9 @@ router.put(
  * @swagger
  * /web/payouts/{id}:
  *   put:
- *     summary: update pay out
+ *     summary: update payout
  *     tags:
- *       - Pay out
+ *       - Payout
  *     description:
  *     parameters:
  *       - in: path
@@ -169,9 +169,9 @@ module.exports = router;
  * @swagger
  * /web/payouts:
  *   post:
- *     summary: update pay out
+ *     summary: update payout
  *     tags:
- *       - Pay out
+ *       - Payout
  *     description:
  *     parameters:
  *       - in: body

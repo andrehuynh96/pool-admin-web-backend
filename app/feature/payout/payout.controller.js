@@ -8,8 +8,7 @@ module.exports = {
       let offset = req.query.offset ? parseInt(req.query.offset) : 0;
       let { count: total, rows: items } = await Payout.findAndCountAll({
         limit,
-        offset,
-        order: [['actived_flg', 'DESC']]
+        offset
       })
       return res.ok({
         items: items,
