@@ -7,10 +7,10 @@ const Permission = require('app/model/staking/value-object/permission-key');
 const router = express.Router();
 
 router.get(
-  '/staking-payouts',
+  '/staking-platform/:staking_platform_id/payouts',
   authenticate,
   authority(Permission.VIEW_LIST_PAYOUT_STAKING_PLATFORM),
-  controller.getAll
+  controller.get
 );
 
 module.exports = router;
@@ -19,21 +19,17 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/staking-payouts:
+ * /web/staking-platform/{staking_platform_id}/payouts:
  *   get:
  *     summary: get staking-payout
  *     tags:
  *       - staking-payout
  *     description:
  *     parameters:
- *       - name: offset
- *         in: query
- *         type: integer
- *         format: int32
- *       - name: limit
- *         in: query
- *         type: integer
- *         format: int32
+ *       - name: staking_platform_id
+ *         in: path
+ *         type: string
+ *         required: true
  *     produces:
  *       - application/json
  *     responses:
@@ -42,8 +38,7 @@ module.exports = router;
  *         examples:
  *           application/json:
  *             {
-                "data": {
-                    "items": [
+                    "data": [
                         {
                             "id": 2,
                             "staking_platform_id": "96b7f440-1a3b-11ea-978f-2e728ce88125",
@@ -61,12 +56,8 @@ module.exports = router;
                             "createdAt": "2020-03-09T09:23:50.627Z",
                             "updatedAt": "2020-03-09T09:23:50.627Z"
                         }
-                    ],
-                    "offset": 0,
-                    "limit": 10,
-                    "total": 1
+                    ]
                 }
-            }
  *       400:
  *         description: Error
  *         schema:
