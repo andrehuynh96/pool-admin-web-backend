@@ -7,7 +7,7 @@ const Permission = require('app/model/staking/value-object/permission-key');
 const router = express.Router();
 
 router.get(
-  '/staking-platform/:staking_platform_id/payouts',
+  '/staking-platforms/:staking_platform_id/payouts',
   authenticate,
   authority(Permission.VIEW_LIST_PAYOUT_STAKING_PLATFORM),
   controller.get
@@ -19,7 +19,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/staking-platform/{staking_platform_id}/payouts:
+ * /web/staking-platforms/{staking_platform_id}/payouts:
  *   get:
  *     summary: get staking-payout
  *     tags:
