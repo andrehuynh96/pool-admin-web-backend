@@ -23,7 +23,7 @@ module.exports = router;
  *   get:
  *     summary: get staking-payout
  *     tags:
- *       - Staking-payout
+ *       - staking-payout
  *     description:
  *     parameters:
  *       - name: offset
