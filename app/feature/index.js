@@ -21,6 +21,8 @@ router.use(require('./partner/child/partner-child.route'));
 router.use(require('./staking-plan/staking-plan.route'));
 router.use(require('./stat/stat.route'));
 router.use(require('./check-token/check-token.route'));
+router.use(require('./setting/setting.route'));
+router.use(require('./staking-payout/staking-payout.route'));
 
 module.exports = router;
 
