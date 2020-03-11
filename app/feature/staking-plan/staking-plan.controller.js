@@ -105,7 +105,7 @@ module.exports = {
         tx_id: '',
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = 1, tx_id = ${1} WHERE id = '${plan.id}'`,
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, name= '${req.body.name}', status = ${req.body.status} , tx_id = ${1} WHERE id = '${plan.id}'`,
         fail_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false WHERE id = '${plan.id}'`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent,{ transaction });
@@ -193,7 +193,7 @@ module.exports = {
         tx_id: '',
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = 1, tx_id = ${1} WHERE id = '${createPlanResponse.id}' `,
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = ${1} WHERE id = '${createPlanResponse.id}' `,
         fail_event: `DELETE FROM public.staking_plans where id = '${createPlanResponse.id}'`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent,{ transaction });
