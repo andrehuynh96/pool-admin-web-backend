@@ -176,7 +176,11 @@ const config = {
     XTZ: {
       keyId: process.env.TX_CREATOR_TEZOS_KEY_ID,
       serviceId: process.env.TX_CREATOR_TEZOS_SERVICE_ID,
+<<<<<<< feature/staking-plan
       index: process.env.TX_CREATOR_TEZOS_INDEX,
+=======
+      index: process.env.TX_CREATOR_TEZOS_INDEX,  
+>>>>>>> update staking platforms
       testNet: process.env.TX_CREATOR_TEZOS_TESTNET,
       fee: process.env.TX_CREATOR_TEZOS_FEE
     },
@@ -186,8 +190,12 @@ const config = {
       index: process.env.ERC20_TX_CREATOR_INDEX,
       testNet: process.env.ERC20_TX_CREATOR_TESTNET,
       fee: process.env.ERC20_ETH_GAS_PRICE,
+<<<<<<< feature/staking-plan
       getAddressUrl: process.env.ERC20_GET_ADDRESS,
       signTxUrl: process.env.ERC20_SIGN_TX
+=======
+      gasLimit: process.env.ERC20_ETH_GAS_LIMIT
+>>>>>>> update staking platforms
     }
   },
   schedule: {
@@ -210,6 +218,14 @@ const config = {
       distributionCommission: process.env.SCHEDULE_ERC20_COMMISSION_DISTRIBUTION,
       checkTransaction: process.env.SCHEDULE_ERC20_CHECKTRANSACTION
     }
+<<<<<<< feature/staking-plan
+=======
+  },
+  sdk: {
+    apiKey: process.env.SDK_API_KEY,
+    secret: process.env.SDK_SECRET_KEY,
+    url: process.env.SDK_URL
+>>>>>>> update staking platforms
   }
 };
 
