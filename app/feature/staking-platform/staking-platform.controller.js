@@ -3,6 +3,8 @@ const { Op } = require("sequelize");
 const StakingPlatform = require("app/model/staking").staking_platforms;
 const Settings = require("app/model/staking").settings;
 const ERC20EventPool = require("app/model/staking").erc20_event_pools;
+const ERC20PayoutCfg = require("app/model/staking").erc20_payout_cfgs;
+const ERC20Payout = require("app/model/staking").erc20_staking_payouts;
 const TimeUnit = require("app/model/staking/value-object/time-unit");
 const PlatformConfig = require("app/model/staking/value-object/platform");
 const StakingType = require("app/model/staking/value-object/staking-type");
@@ -186,6 +188,7 @@ module.exports = {
         }
       });
       lockingAddress = lockingAddress.value;
+
       if (req.body.icon) {
         let file = path.parse(req.body.icon.file.name);
         if (config.CDN.exts.indexOf(file.ext.toLowerCase()) == -1) {
@@ -201,7 +204,7 @@ module.exports = {
         // wait_blockchain_confirm_status_flg: true
       });
 
-      if (!createERC20EventResponse) return res.serverInternalError();
+      if (!createPlatformResponse) return res.serverInternalError();
 
       // let getAddressUrl = `${config.txCreator.host}/api/sign/${config.txCreator.ETH.keyId}/${req.body.symbol}/address/0`;
       // let address = await axios.get(getAddressUrl, {
