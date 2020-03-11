@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4(),
     },
+    name:{
+      type: DataTypes.STRING(32) ,
+      allowNull: false
+    },
     duration: {
       type: DataTypes.INTEGER,
       allowNull: false

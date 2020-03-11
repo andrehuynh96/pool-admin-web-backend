@@ -76,41 +76,13 @@ const config = {
   },
   txCreator: {
     host: process.env.TX_CREATOR_HOST,
-    ATOM: {
-      gas: process.env.TX_CREATOR_ATOM_GAS_LIMIT ? parseInt(process.env.TX_CREATOR_ATOM_GAS_LIMIT) : 250000
-    },
-      keyId: process.env.TX_CREATOR_ATOM_KEY_ID,
-      serviceId: process.env.TX_CREATOR_ATOM_SERVICE_ID,
-      index: process.env.TX_CREATOR_ATOM_INDEX,
-      feeDenom: process.env.TX_CREATOR_ATOM_FEEDENOM || 'uatom',
-      testNet: process.env.TX_CREATOR_ATOM_TESTNET,
-    },
-    IRIS: {
-      keyId: process.env.TX_CREATOR_IRIS_KEY_ID,
-      serviceId: process.env.TX_CREATOR_IRIS_SERVICE_ID,
-      index: process.env.TX_CREATOR_IRIS_INDEX,
-      testNet: process.env.TX_CREATOR_IRIS_TESTNET,
-      feeDenom: process.env.TX_CREATOR_IRIS_FEEDENOM || 'iris-atto',
-      gas: process.env.TX_CREATOR_IRIS_GAS_LIMIT ? parseInt(process.env.TX_CREATOR_IRIS_GAS_LIMIT) : 50000,
-      rateGasPrice: process.env.TX_CREATOR_IRIS_RATE_GAS_PRICE ? parseInt(process.env.TX_CREATOR_IRIS_RATE_GAS_PRICE) : 1e9
-    XTZ: {
-      keyId: process.env.TX_CREATOR_TEZOS_KEY_ID,
-      serviceId: process.env.TX_CREATOR_TEZOS_SERVICE_ID,
-      index: process.env.TX_CREATOR_TEZOS_INDEX,  
-      testNet: process.env.TX_CREATOR_TEZOS_TESTNET,
-      fee: process.env.TX_CREATOR_TEZOS_FEE
     ETH: {
       keyId: process.env.ERC20_TX_CREATOR_KEY_ID,
       serviceId: process.env.ERC20_TX_CREATOR_SERVICE_ID,
       index: process.env.ERC20_TX_CREATOR_INDEX,
       testNet: process.env.ERC20_TX_CREATOR_TESTNET,
       fee: process.env.ERC20_ETH_GAS_PRICE,
-<<<<<<< feature/staking-plan
-      getAddressUrl: process.env.ERC20_GET_ADDRESS,
-      signTxUrl: process.env.ERC20_SIGN_TX
-=======
       gasLimit: process.env.ERC20_ETH_GAS_LIMIT
->>>>>>> update staking platforms
     }
   },
   schedule: {
@@ -119,14 +91,11 @@ const config = {
       distributionCommission: process.env.SCHEDULE_ERC20_COMMISSION_DISTRIBUTION,
       checkTransaction: process.env.SCHEDULE_ERC20_CHECKTRANSACTION
     }
-<<<<<<< feature/staking-plan
-=======
   },
   sdk: {
     apiKey: process.env.SDK_API_KEY,
     secret: process.env.SDK_SECRET_KEY,
     url: process.env.SDK_URL
->>>>>>> update staking platforms
   }
 };
 
