@@ -239,7 +239,7 @@ module.exports = {
         updated_by: req.user.id,
         created_by: req.user.id,
         wait_blockchain_confirm_status_flg: false // TODO: remove hardcode
-        // wait_blockchain_confirm_status_flg: true 
+        // wait_blockchain_confirm_status_flg: true
       }, { transaction });
 
       // let getAddressUrl = `${config.txCreator.host}/api/sign/${config.txCreator.ETH.keyId}/${req.body.symbol}/address/0`;
@@ -297,8 +297,8 @@ module.exports = {
         updated_by: req.user.id,
         created_by: req.user.id,
         // TODO: care about string params in queries, need quotes
-        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = ${req.body.status}}, tx_id = '${1}' WHERE id = ${createPlatformResponse.id};UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, tx_id = '${1}' WHERE id = ${payout.id};UPDATE public.erc20_payout_cfgs SET wait_blockchain_confirm_status_flg = false, tx_id = '${1}' WHERE id = ${payoutCfg.id};`,
-        fail_event: `DELETE FROM public.staking_platforms WHERE id = ${createPlatformResponse.id}; DELETE FROM public.erc20_staking_payouts WHERE id = ${payout.id};`
+        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = ${req.body.status}, tx_id = '${1}' WHERE id = '${createPlatformResponse.id}';UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, tx_id = '${1}' WHERE id = ${payout.id};UPDATE public.erc20_payout_cfgs SET wait_blockchain_confirm_status_flg = false, tx_id = '${1}' WHERE id = ${payoutCfg.id};`,
+        fail_event: `DELETE FROM public.staking_platforms WHERE id = '${createPlatformResponse.id}'; DELETE FROM public.erc20_staking_payouts WHERE id = ${payout.id};`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
       await transaction.commit();
@@ -365,8 +365,8 @@ module.exports = {
         updated_by: req.user.id,
         created_by: req.user.id,
         // TODO: care about string params in queries, need quotes
-        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false${updateContent} WHERE id = ${result.id}`,
-        fail_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false WHERE id = ${result.id}`
+        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false WHERE id = '${result.id}'`,
+        fail_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false${updateContent} WHERE id = '${result.id}'`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
       await transaction.commit();
