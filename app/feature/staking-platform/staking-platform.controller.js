@@ -238,7 +238,8 @@ module.exports = {
         actived_flg: true,
         updated_by: req.user.id,
         created_by: req.user.id,
-        wait_blockchain_confirm_status_flg: true
+        wait_blockchain_confirm_status_flg: false // TODO: remove hardcode
+        // wait_blockchain_confirm_status_flg: true 
       }, { transaction });
 
       // let getAddressUrl = `${config.txCreator.host}/api/sign/${config.txCreator.ETH.keyId}/${req.body.symbol}/address/0`;
@@ -364,8 +365,8 @@ module.exports = {
         updated_by: req.user.id,
         created_by: req.user.id,
         // TODO: care about string params in queries, need quotes
-        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false WHERE id = ${result.id}`,
-        fail_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false${updateContent} WHERE id = ${result.id}`
+        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false${updateContent} WHERE id = ${result.id}`,
+        fail_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false WHERE id = ${result.id}`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
       await transaction.commit();
