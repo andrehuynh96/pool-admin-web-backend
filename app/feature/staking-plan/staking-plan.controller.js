@@ -88,8 +88,16 @@ module.exports = {
         return res.badRequest(res.__("STAKING_PLAN_NOT_FOUND"), "STAKING_PLAN_NOT_FOUND", { fields: ["plan_id"] });
       }
       if(plan.wait_blockchain_confirm_status_flg){
-        return res.badRequest(res.__("EVENT_NOT_READY"), "EVENT_NOT_READY");
+        return res.badRequest(res.__("PLAN_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLAN_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
       }
+      //
+      await StakingPlan.update({
+        wait_blockchain_confirm_status_flg: true
+      },{
+        where: {
+          id: planId
+        }
+      },{transaction})
       //Update hardcode no call blockchain
       let newEvent = {
         name: 'UPDATE_ERC20_STAKING_PLAN',
@@ -97,7 +105,8 @@ module.exports = {
         tx_id: '',
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = 1, tx_id = ${1} WHERE id = ${plan.id}`
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = 1, tx_id = ${1} WHERE id = '${plan.id}'`,
+        fail_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false WHERE id = '${plan.id}'`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent,{ transaction });
       if(!createERC20EventResponse) {
@@ -184,8 +193,8 @@ module.exports = {
         tx_id: '',
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = 1, tx_id = ${1} WHERE id = ${createPlanResponse.id}`,
-        fail_event: `DELETE FROM public.staking_plans where id = ${createPlanResponse.id}`
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = 1, tx_id = ${1} WHERE id = '${createPlanResponse.id}' `,
+        fail_event: `DELETE FROM public.staking_plans where id = '${createPlanResponse.id}'`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent,{ transaction });
       if(!createERC20EventResponse) {
