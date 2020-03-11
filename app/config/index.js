@@ -76,7 +76,6 @@ const config = {
   },
   txCreator: {
     host: process.env.TX_CREATOR_HOST,
-<<<<<<< HEAD
     ATOM: {
       gas: process.env.TX_CREATOR_ATOM_GAS_LIMIT ? parseInt(process.env.TX_CREATOR_ATOM_GAS_LIMIT) : 250000
     },
@@ -100,24 +99,18 @@ const config = {
       index: process.env.TX_CREATOR_TEZOS_INDEX,  
       testNet: process.env.TX_CREATOR_TEZOS_TESTNET,
       fee: process.env.TX_CREATOR_TEZOS_FEE
-=======
->>>>>>> develop
     ETH: {
       keyId: process.env.ERC20_TX_CREATOR_KEY_ID,
       serviceId: process.env.ERC20_TX_CREATOR_SERVICE_ID,
       index: process.env.ERC20_TX_CREATOR_INDEX,
       testNet: process.env.ERC20_TX_CREATOR_TESTNET,
       fee: process.env.ERC20_ETH_GAS_PRICE,
-<<<<<<< HEAD
 <<<<<<< feature/staking-plan
       getAddressUrl: process.env.ERC20_GET_ADDRESS,
       signTxUrl: process.env.ERC20_SIGN_TX
 =======
       gasLimit: process.env.ERC20_ETH_GAS_LIMIT
 >>>>>>> update staking platforms
-=======
-      gasLimit: process.env.ERC20_ETH_GAS_LIMIT
->>>>>>> develop
     }
   },
   schedule: {
@@ -126,20 +119,14 @@ const config = {
       distributionCommission: process.env.SCHEDULE_ERC20_COMMISSION_DISTRIBUTION,
       checkTransaction: process.env.SCHEDULE_ERC20_CHECKTRANSACTION
     }
-<<<<<<< HEAD
 <<<<<<< feature/staking-plan
 =======
-=======
->>>>>>> develop
   },
   sdk: {
     apiKey: process.env.SDK_API_KEY,
     secret: process.env.SDK_SECRET_KEY,
     url: process.env.SDK_URL
-<<<<<<< HEAD
 >>>>>>> update staking platforms
-=======
->>>>>>> develop
   }
 };
 
