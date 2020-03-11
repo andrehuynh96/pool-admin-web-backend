@@ -10,7 +10,7 @@ let addressRegex = /^0x[a-fA-F0-9]{40}$/g;
 const schema = Joi.object().keys({
   name: Joi.string().required(),
   platform: Joi.string().valid(PlatformName).optional(),
-  symbol: Joi.string().valid(PlatformSymbol).required(),
+  symbol: Joi.string().required(),
   icon: Joi.any().required(),
   description: Joi.string().optional().allow(""),
   order_index: Joi.number().optional(),

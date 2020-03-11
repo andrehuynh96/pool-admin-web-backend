@@ -1,5 +1,6 @@
 const logger = require('app/lib/logger');
 const { Op } = require("sequelize");
+const database = require('app/lib/database').db().staking;
 const StakingPlatform = require("app/model/staking").staking_platforms;
 const Settings = require("app/model/staking").settings;
 const ERC20EventPool = require("app/model/staking").erc20_event_pools;
@@ -27,7 +28,7 @@ const opts = {
   apiKey: config.sdk.apiKey,
   secret: config.sdk.secret,
   baseUrl: config.sdk.url
-}; 
+};
 const api = new InfinitoApi(opts);
 let coinAPI = api.ETH;
 let privKey = Buffer.from('a5fbd094cc939973432d5440739e28cba132701730583218641ab3d90aba8360', 'hex');
@@ -98,7 +99,7 @@ module.exports = {
       if (!result) {
         return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND");
       }
-      
+
       return res.ok(result);
     }
     catch (err) {
@@ -181,6 +182,7 @@ module.exports = {
   },
 
   createERC20: async (req, res, next) => {
+    const transaction = await database.transaction();
     try {
       let lockingAddress = await Settings.findOne({
         where: {
@@ -189,6 +191,26 @@ module.exports = {
       });
       lockingAddress = lockingAddress.value;
 
+      let platform = PlatformConfig.filter(ele => ele.name === req.body.platform);
+      let payoutCfg = await ERC20PayoutCfg.findOne({
+        where: {
+          platform: platform[0].symbol,
+          token_name: req.body.name,
+          token_symbol: req.body.symbol,
+          token_address: req.body.sc_token_address
+        }
+      })
+      if (!payoutCfg) payoutCfg = await ERC20PayoutCfg.create({
+        platform: platform[0].symbol,
+        token_name: req.body.name,
+        token_symbol: req.body.symbol,
+        token_address: req.body.sc_token_address,
+        actived_flg: true,
+        updated_by: req.user.id,
+        created_by: req.user.id,
+        wait_blockchain_confirm_status_flg: false,
+      }, { transaction })
+
       if (req.body.icon) {
         let file = path.parse(req.body.icon.file.name);
         if (config.CDN.exts.indexOf(file.ext.toLowerCase()) == -1) {
@@ -196,15 +218,28 @@ module.exports = {
         }
         req.body.icon = await _uploadFile(req, res, next);
       }
+
       let createPlatformResponse = await StakingPlatform.create({
         ...req.body,
         updated_by: req.user.id,
         created_by: req.user.id,
-        // status: -1,
+        // status: -1, // TODO: remove hardcode
         // wait_blockchain_confirm_status_flg: true
-      });
+      }, { transaction });
 
-      if (!createPlatformResponse) return res.serverInternalError();
+      let payout = await ERC20Payout.create({
+        staking_platform_id: createPlatformResponse.id,
+        erc20_payout_id: payoutCfg.id,
+        platform: platform[0].symbol,
+        token_name: req.body.name,
+        token_symbol: req.body.symbol,
+        token_address: req.body.sc_token_address,
+        max_payout: req.body.max_payout,
+        actived_flg: true,
+        updated_by: req.user.id,
+        created_by: req.user.id,
+        wait_blockchain_confirm_status_flg: true
+      }, { transaction });
 
       // let getAddressUrl = `${config.txCreator.host}/api/sign/${config.txCreator.ETH.keyId}/${req.body.symbol}/address/0`;
       // let address = await axios.get(getAddressUrl, {
@@ -230,12 +265,11 @@ module.exports = {
       // tx = new Transaction(txParams, { chain: 'ropsten', hardfork: 'petersburg' });
       // console.log('0x' + tx.serialize().toString('hex'));
       // tx.sign(privKey);
-      
       // var serializedTx = tx.serialize();
       // console.log(tx.validate());
-      
+
       // await eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).on('receipt', console.log);
-  
+
 
 
       // let signTxUrl = `${config.txCreator.host}/api/sign/${config.txCreator.ETH.serviceId}/${config.txCreator.ETH.keyId}/${req.body.symbol}/address/0`;
@@ -257,25 +291,27 @@ module.exports = {
 
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLATFORM',
-        description: 'Create new ERC20 staking id ' + createPlatformResponse.id,
+        description: 'Create new ERC20 staking platform id ' + createPlatformResponse.id,
         tx_id: '',
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = 1, tx_id = ${1} WHERE id = ${createPlatformResponse.id}`,
-        fail_event: `DELETE FROM public.staking_platforms where id = ${createPlatformResponse.id}`
+        // TODO: care about string params in queries, need quotes
+        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = ${req.body.status}}, tx_id = '${1}' WHERE id = ${createPlatformResponse.id};UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, tx_id = '${1}' WHERE id = ${payout.id};UPDATE public.erc20_payout_cfgs SET wait_blockchain_confirm_status_flg = false, tx_id = '${1}' WHERE id = ${payoutCfg.id};`,
+        fail_event: `DELETE FROM public.staking_platforms WHERE id = ${createPlatformResponse.id}; DELETE FROM public.erc20_staking_payouts WHERE id = ${payout.id};`
       };
-      let createERC20EventResponse = await ERC20EventPool.create(newEvent);
-
-      if (createERC20EventResponse) return res.ok(createPlatformResponse);
-      else return res.serverInternalError();
+      let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
+      await transaction.commit();
+      return res.ok(createPlatformResponse);
     }
     catch (err) {
       logger.error('get staking platform fail:', err);
+      await transaction.rollback();
       next(err);
     }
   },
 
   updateERC20: async (req, res, next) => {
+    const transaction = await database.transaction();
     try {
       let result = await StakingPlatform.findOne({
         where: {
@@ -305,18 +341,39 @@ module.exports = {
       }
 
       let [_, response] = await StakingPlatform.update({
-        ...req.body
+        ...req.body, // TODO: remove hardcode
+        // wait_blockchain_confirm_status_flg: true
       }, {
         where: {
           id: result.id
         },
         returning: true
-      })
+      }, { transaction })
 
+
+      
+      let updateContent = '';
+      Object.keys(req.body).forEach(key => {
+        if (StakingPlatform.tableAttributes[key].type.constructor.key == 'STRING') updateContent += ' , ' + key + ' = \'' + req.body[key] + '\'';
+        else updateContent += ' , ' + key + ' = ' + req.body[key];
+      });
+      let newEvent = {
+        name: 'UPDATE_NEW_ERC20_STAKING_PLATFORM',
+        description: 'Update ERC20 staking platform id ' + result.id,
+        tx_id: '',
+        updated_by: req.user.id,
+        created_by: req.user.id,
+        // TODO: care about string params in queries, need quotes
+        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false WHERE id = ${result.id}`,
+        fail_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false${updateContent} WHERE id = ${result.id}`
+      };
+      let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
+      await transaction.commit();
       return res.ok(response[0]);
     }
     catch (err) {
       logger.error('get staking platform fail:', err);
+      await transaction.rollback();
       next(err);
     }
   },
