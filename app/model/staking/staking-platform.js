@@ -1,4 +1,3 @@
-
 const timeUnit = require("./value-object/time-unit");
 const StakingType = require("./value-object/staking-type");
 const StakingPlatformStatus = require("./value-object/staking-platform-status");
@@ -84,7 +83,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(128),
       allowNull: true
     },
-    validator_fee: {
+    erc20_duration: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
+    erc20_reward_estimate: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
+    erc20_validator_fee: {
       type: DataTypes.STRING(128),
       allowNull: true
     },
@@ -120,4 +127,4 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
-} 
+}
