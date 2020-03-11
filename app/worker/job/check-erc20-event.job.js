@@ -56,7 +56,7 @@ module.exports = {
             }
             if (e.event_type == EventType.DB_SCRIPT) {
               logger.info('sql query: ', sql);
-              await database.sequelize.query(sql, {transaction});
+              await db.sequelize.query(sql, {transaction});
             }
           }
           await transaction.commit();
