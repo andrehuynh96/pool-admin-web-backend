@@ -11,20 +11,14 @@ const schema = Joi.object().keys({
   name: Joi.string().required(),
   platform: Joi.string().valid(PlatformName).optional(),
   symbol: Joi.string().required(),
+  sc_token_address: Joi.string().optional().allow(""),
   icon: Joi.any().required(),
-  description: Joi.string().optional().allow(""),
-  order_index: Joi.number().optional(),
-  estimate_earn_per_year: Joi.number().min(0).max(100).optional(),
-  lockup_unvote: Joi.number().optional(),
-  lockup_unvote_unit: Joi.string().optional().allow("").valid(times),
-  payout_reward: Joi.number().optional(),
-  payout_reward_unit: Joi.string().optional().allow("").valid(times),
+  staking_type: Joi.string().required().valid(StakingType.CONTRACT),
+  erc20_validator_fee: Joi.number().optional().allow(""),
+  erc20_reward_estimate: Joi.string().optional().allow(""),
+  erc20_duration: Joi.string().optional().allow(""),
   status: Joi.number().valid([-2, -1, 0, 1]),
-  confirmation_block: Joi.number().min(5).optional(),
-  staking_type: Joi.string().required().valid(StakingType.NATIVE),
-  validator_address: Joi.string().optional().allow(""),
-  sc_lookup_addr: Joi.string().optional().allow(""),
-  sc_token_address: Joi.string().optional().allow("")
+  max_payout: Joi.number().required()
 });
 
 module.exports = schema;

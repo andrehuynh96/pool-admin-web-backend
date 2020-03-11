@@ -23,7 +23,7 @@ module.exports = router;
  *   get:
  *     summary: get staking-payout
  *     tags:
- *       - staking-payout
+ *       - Staking Payout
  *     description:
  *     parameters:
  *       - name: staking_platform_id

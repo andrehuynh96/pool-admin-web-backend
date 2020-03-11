@@ -84,8 +84,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(128),
       allowNull: true
     },
-    validator_fee: {
+    erc20_duration: {
       type: DataTypes.STRING(128),
+      allowNull: true
+    },
+    erc20_reward_estimate: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
+    erc20_validator_fee: {
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     validator_address: {

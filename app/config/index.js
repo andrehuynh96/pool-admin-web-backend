@@ -74,9 +74,29 @@ const config = {
     secretKey: process.env.AWS_SECRET_KEY,
     bucket: process.env.AWS_BUCKET
   },
-  schedule: {
-    checkTransaction: process.env.SCHEDULE_ERC20_CHECK_TRANSACTION
+  txCreator: {
+    host: process.env.TX_CREATOR_HOST,
+    ETH: {
+      keyId: process.env.ERC20_TX_CREATOR_KEY_ID,
+      serviceId: process.env.ERC20_TX_CREATOR_SERVICE_ID,
+      index: process.env.ERC20_TX_CREATOR_INDEX,
+      testNet: process.env.ERC20_TX_CREATOR_TESTNET,
+      fee: process.env.ERC20_ETH_GAS_PRICE,
+      gasLimit: process.env.ERC20_ETH_GAS_LIMIT
+    }
   },
+  schedule: {
+    erc20: {
+      distributionReward: process.env.SCHEDULE_ERC20_REWARD_DISTRIBUTION,
+      distributionCommission: process.env.SCHEDULE_ERC20_COMMISSION_DISTRIBUTION,
+      checkTransaction: process.env.SCHEDULE_ERC20_CHECKTRANSACTION
+    }
+  },
+  sdk: {
+    apiKey: process.env.SDK_API_KEY,
+    secret: process.env.SDK_SECRET_KEY,
+    url: process.env.SDK_URL
+  }
 };
 
 module.exports = config;
