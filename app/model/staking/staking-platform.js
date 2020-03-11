@@ -93,7 +93,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     erc20_validator_fee: {
-      type: DataTypes.STRING(128),
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     validator_address: {
