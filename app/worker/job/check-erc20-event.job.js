@@ -31,6 +31,7 @@ module.exports = {
         const transaction = await database.transaction();
         try {
           let tx = await service.getTransaction(e.tx_id);
+          logger.info('tx.data: ', tx.data);
           if (tx.data && tx.data.status != undefined) {
             let sql = '';
             if (tx.data.status) {
@@ -54,6 +55,7 @@ module.exports = {
               sql = e.fail_event;
             }
             if (e.event_type == EventType.DB_SCRIPT) {
+              logger.info('sql query: ', sql);
               await database.sequelize.query(sql, {transaction});
             }
           }
