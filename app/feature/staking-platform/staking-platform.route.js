@@ -619,8 +619,8 @@ module.exports = router;
  *                type: string
  *            example:
  *                  {
-                      "name": "ETH_testttttttt",
-                      "symbol": "ETH",
+                      "name": "Infinitooooooooo",
+                      "symbol": "INFT",
                       "icon": "https://static.chainservices.info/staking/platforms/eth.png",
                       "staking_type": "CONTRACT",
                       "erc20_validator_fee": 20,
@@ -707,6 +707,8 @@ module.exports = router;
  *            - name
  *            - symbol
  *            - staking_type
+ *            - icon
+ *            - max_payout
  *            properties:
  *              name:
  *                type: string
@@ -728,18 +730,21 @@ module.exports = router;
  *                type: string
  *              status:
  *                type: number
+ *              max_payout:
+ *                type: number
  *            example:
  *                  {
-                      "name": "ETH_testttttttt",
+                      "name": "Infinitooooooooooooo",
                       "platform": "Ethereum",
-                      "symbol": "ETH",
+                      "symbol": "INFT",
                       "icon": "https://static.chainservices.info/staking/platforms/eth.png",
                       "staking_type": "CONTRACT",
-                      "sc_token_address": "0x423822D571Bb697dDD993c04B507dD40E754cF05",
+                      "sc_token_address": "0x5c1e0136B1D5781C9a5978e7dd059158Eb895BBB",
                       "erc20_validator_fee": 20,
                       "erc20_reward_estimate": "10%~20%",
                       "erc20_duration": "10 ~ 20 days",
-                      "status": 1
+                      "status": 1,
+                      "max_payout": 110
  *                  }
  *     produces:
  *       - application/json
@@ -750,7 +755,7 @@ module.exports = router;
  *           application/json:
  *             {
  *                 "data": {
-                      "id": "061fc95f-7a84-4e03-8756-a482b390bd3d",
+                      "id": "23ed17e4-61cd-4c01-b594-4d84a6f65ea8",
                       "order_index": 0,
                       "estimate_earn_per_year": "0",
                       "lockup_unvote": 0,
@@ -759,21 +764,21 @@ module.exports = router;
                       "payout_reward_unit": "DAY",
                       "confirmation_block": 5,
                       "deleted_flg": false,
-                      "name": "ETH_testttttttt",
+                      "wait_blockchain_confirm_status_flg": false,
+                      "name": "Infinitooooooooooooo",
                       "platform": "Ethereum",
-                      "symbol": "ETH",
+                      "symbol": "INFT",
                       "staking_type": "CONTRACT",
-                      "sc_token_address": "0x423822D571Bb697dDD993c04B507dD40E754cF05",
+                      "sc_token_address": "0x5c1e0136B1D5781C9a5978e7dd059158Eb895BBB",
                       "erc20_validator_fee": "20",
                       "erc20_reward_estimate": "10%~20%",
                       "erc20_duration": "10 ~ 20 days",
-                      "icon": "https://terraform-state-web-wallet.s3.ap-southeast-1.amazonaws.com/images/default-1583898984222.jpg",
+                      "status": 1,
+                      "icon": "https://terraform-state-web-wallet.s3.ap-southeast-1.amazonaws.com/images/default-1583909639932.jpg",
                       "updated_by": 64,
                       "created_by": 64,
-                      "status": -1,
-                      "wait_blockchain_confirm_status_flg": true,
-                      "updatedAt": "2020-03-11T03:56:24.844Z",
-                      "createdAt": "2020-03-11T03:56:24.844Z",
+                      "updatedAt": "2020-03-11T06:54:00.429Z",
+                      "createdAt": "2020-03-11T06:54:00.429Z",
                       "description": null,
                       "sc_lookup_addr": null,
                       "validator_address": null,
