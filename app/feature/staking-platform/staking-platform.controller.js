@@ -60,8 +60,7 @@ module.exports = {
       let limit = req.query.limit ? parseInt(req.query.limit) : 10;
       let offset = req.query.offset ? parseInt(req.query.offset) : 0;
       let where = {
-        deleted_flg: false,
-        wait_blockchain_confirm_status_flg: false
+        deleted_flg: false
       };
       if (req.query.staking_type) {
         where.staking_type = req.query.staking_type
@@ -90,8 +89,7 @@ module.exports = {
       let result = await StakingPlatform.findOne({
         where: {
           deleted_flg: false,
-          id: req.params.id,
-          wait_blockchain_confirm_status_flg: false
+          id: req.params.id
         }
       })
 
@@ -112,14 +110,16 @@ module.exports = {
       let result = await StakingPlatform.findOne({
         where: {
           deleted_flg: false,
-          id: req.params.id,
-          wait_blockchain_confirm_status_flg: false
+          id: req.params.id
         }
       })
 
       if (!result) {
         return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND");
       }
+
+      if (result.wait_blockchain_confirm_status_flg)
+        return res.badRequest(res.__("PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
 
       if (req.body.icon) {
         let file = path.parse(req.body.icon.file.name);
@@ -180,7 +180,7 @@ module.exports = {
 
   createERC20: async (req, res, next) => {
     try {
-      let lockingAddress = await Settings.findAll({
+      let lockingAddress = await Settings.findOne({
         where: {
           key: 'LOCKING_CONTRACT'
         }
