@@ -89,7 +89,7 @@ const config = {
     erc20: {
       distributionReward: process.env.SCHEDULE_ERC20_REWARD_DISTRIBUTION,
       distributionCommission: process.env.SCHEDULE_ERC20_COMMISSION_DISTRIBUTION,
-      checkTransaction: process.env.SCHEDULE_ERC20_CHECKTRANSACTION
+      checkTransaction: process.env.SCHEDULE_ERC20_CHECK_TRANSACTION
     }
   },
   sdk: {
