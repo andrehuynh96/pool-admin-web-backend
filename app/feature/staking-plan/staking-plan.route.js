@@ -176,7 +176,7 @@ router.put(
   '/staking-platforms/:staking_platform_id/plans/:plan_id',
   authenticate,
   authority(Permission.UPDATE_PLAN_STAKING_PLATFORM),
-  // validator(update),
+  validator(update),
   controller.update
 )
 
@@ -241,7 +241,7 @@ router.post(
   '/staking-platforms/:staking_platform_id/plans',
   authenticate,
   authority(Permission.CREATE_PLAN_STAKING_PLATFORM),
-  // validator(create),
+  validator(create),
   controller.create
 )
 
