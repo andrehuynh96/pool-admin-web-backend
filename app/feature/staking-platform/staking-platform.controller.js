@@ -46,11 +46,11 @@ module.exports = {
 
   config: (req, res, next) => {
     try {
-      let result = Object.values(PlatformConfig);
+      let result = PlatformConfig;
       return res.ok(result);
     }
     catch (err) {
-      logger.error('get timeUnit fail:', err);
+      logger.error('get config fail:', err);
       next(err);
     }
   },
@@ -197,37 +197,39 @@ module.exports = {
         ...req.body,
         updated_by: req.user.id,
         created_by: req.user.id,
-        status: -1,
-        wait_blockchain_confirm_status_flg: true
+        // status: -1,
+        // wait_blockchain_confirm_status_flg: true
       });
 
-      let getAddressUrl = `${config.txCreator.host}/api/sign/${config.txCreator.ETH.keyId}/${req.body.symbol}/address/0`;
-      let address = await axios.get(getAddressUrl, {
-        params: {
-          testnet: config.txCreator.ETH.testNet
-        }
-      });
-      address = address.data.data.address;
-      let balance = await eth.getBalance(myAddress);
-      console.log(address);
-      console.log('Account balance:', balance);
-      let transaction = new Transaction();
-      const txParams = {
-        nonce: await eth.getTransactionCount(address),
-        gasPrice: config.txCreator.ETH.fee,
-        gasLimit: config.txCreator.ETH.gasLimit,
-        from: address,
-        to: myAddress,
-        value: '0x100',
-        data: '0x'
-      };
-      console.log(txParams);
-      tx = new Transaction(txParams, { chain: 'ropsten', hardfork: 'petersburg' });
-      console.log('0x' + tx.serialize().toString('hex'));
-      tx.sign(privKey);
+      if (!createERC20EventResponse) return res.serverInternalError();
+
+      // let getAddressUrl = `${config.txCreator.host}/api/sign/${config.txCreator.ETH.keyId}/${req.body.symbol}/address/0`;
+      // let address = await axios.get(getAddressUrl, {
+      //   params: {
+      //     testnet: config.txCreator.ETH.testNet
+      //   }
+      // });
+      // address = address.data.data.address;
+      // let balance = await eth.getBalance(myAddress);
+      // console.log(address);
+      // console.log('Account balance:', balance);
+      // let transaction = new Transaction();
+      // const txParams = {
+      //   nonce: await eth.getTransactionCount(address),
+      //   gasPrice: config.txCreator.ETH.fee,
+      //   gasLimit: config.txCreator.ETH.gasLimit,
+      //   from: address,
+      //   to: myAddress,
+      //   value: '0x100',
+      //   data: '0x'
+      // };
+      // console.log(txParams);
+      // tx = new Transaction(txParams, { chain: 'ropsten', hardfork: 'petersburg' });
+      // console.log('0x' + tx.serialize().toString('hex'));
+      // tx.sign(privKey);
       
-      var serializedTx = tx.serialize();
-      console.log(tx.validate());
+      // var serializedTx = tx.serialize();
+      // console.log(tx.validate());
       
       // await eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).on('receipt', console.log);
   
@@ -250,20 +252,19 @@ module.exports = {
       // // console.log(result);
       // console.log(result);
 
-      // let newEvent = {
-      //   name: 'CREATE_NEW_ERC20_STAKING_PLATFORM',
-      //   description: 'Create new ERC20 staking id ' + createPlatformResponse.id,
-      //   tx_id: '',
-      //   updated_by: req.user.id,
-      //   created_by: req.user.id,
-      //   successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = 1, tx_id = ${1} WHERE id = ${createPlatformResponse.id}`,
-      //   fail_event: `DELETE FROM public.staking_platforms where id = ${createPlatformResponse.id}`
-      // };
-      // let createERC20EventResponse = await ERC20EventPool.create(newEvent);
+      let newEvent = {
+        name: 'CREATE_NEW_ERC20_STAKING_PLATFORM',
+        description: 'Create new ERC20 staking id ' + createPlatformResponse.id,
+        tx_id: '',
+        updated_by: req.user.id,
+        created_by: req.user.id,
+        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = 1, tx_id = ${1} WHERE id = ${createPlatformResponse.id}`,
+        fail_event: `DELETE FROM public.staking_platforms where id = ${createPlatformResponse.id}`
+      };
+      let createERC20EventResponse = await ERC20EventPool.create(newEvent);
 
-      // if (createPlatformResponse && createERC20EventResponse) return res.ok(createPlatformResponse);
-      // else return res.serverInternalError();
-      return res.ok(createPlatformResponse);
+      if (createERC20EventResponse) return res.ok(createPlatformResponse);
+      else return res.serverInternalError();
     }
     catch (err) {
       logger.error('get staking platform fail:', err);
@@ -277,13 +278,15 @@ module.exports = {
         where: {
           deleted_flg: false,
           id: req.params.id,
-          wait_blockchain_confirm_status_flg: false
         }
       })
 
       if (!result) {
         return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND");
       }
+
+      if (result.wait_blockchain_confirm_status_flg)
+        return res.badRequest(res.__("PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
 
       if (req.body.icon) {
         let file = path.parse(req.body.icon.file.name);
@@ -333,11 +336,5 @@ async function _uploadFile(req, res, next) {
       resolve(uploadUrl);
     }
     else reject("upload file fail");
-  });
-}
-
-async function broadcast() {
-  return new Promise(async (resolve, reject) => {
-
   });
 }
