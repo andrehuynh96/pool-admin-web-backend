@@ -23,6 +23,7 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "email-templates": "^6.1.1",
+    "ethereumjs-tx": "^2.1.2",
     "express": "^4.17.1",
     "express-rate-limit": "^5.0.0",
     "express-recaptcha": "^5.0.1",
@@ -38,6 +39,7 @@
     "morgan": "^1.9.1",
     "multicoin-address-validator": "^0.4.1",
     "node-cron": "^2.0.3",
+    "node-infinito-api": "^1.7.1",
     "nodemailer": "^6.4.2",
     "object-mapper": "^6.2.0",
     "pg": "^7.17.0",
@@ -50,7 +52,9 @@
     "stream-to-array": "^2.3.0",
     "swagger-jsdoc": "^3.5.0",
     "swagger-ui-express": "^4.1.2",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "web3": "^1.2.6",
+    "web3-eth": "^1.2.6"
   },
   "devDependencies": {
     "chai": "^4.2.0",
