@@ -2,6 +2,7 @@ const logger = require('app/lib/logger');
 const stakingPayout = require("app/model/staking").erc20_staking_payouts;
 const ERC20EventPool = require("app/model/staking").erc20_event_pools;
 const database = require('app/lib/database').db().staking;
+const constructTxData = require("app/lib/locking-contract");
 
 module.exports = {
   get: async (req, res, next) => {
@@ -38,8 +39,8 @@ module.exports = {
       }
 
       let [_, response] = await stakingPayout.update({
-        ...req.body, // TODO: remove hardcode
-        // wait_blockchain_confirm_status_flg: true
+        // ...req.body, // TODO: remove hardcode
+        wait_blockchain_confirm_status_flg: true
       }, {
         where: {
           id: payout.id
@@ -47,13 +48,18 @@ module.exports = {
         returning: true
       }, { transaction })
 
+      let { tx_raw, tx_id } = await constructTxData.updateStakingMaxPayout(
+        platformId,
+        req.body.max_payout
+      );
+      console.log(tx_id);
+
       let newEvent = {
         name: 'UPDATE_STAKING_PAYOUT',
         description: 'Update staking platform max payout id ' + payout.id,
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        // TODO: care about string params in queries, need quotes
         successful_event: `UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, max_payout = ${req.body.max_payout}, tx_id = '${tx_id}' WHERE id = ${payout.id}`,
         fail_event: `UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false WHERE id = ${payout.id}`
       };
