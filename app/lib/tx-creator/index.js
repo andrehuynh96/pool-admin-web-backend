@@ -4,7 +4,11 @@ module.exports = {
   getAddress: async (platform = 'ETH') => {
     try {
       let result = await axios.get(
-        `${config.txCreator.host}/api/sign/${config.txCreator[platform].keyId}/${platform}/address/0`
+        `${config.txCreator.host}/api/sign/${config.txCreator[platform].keyId}/${platform}/address/0`, {
+            params: {
+                testnet: config.txCreator[platform].testNet
+            }
+        }
       );
       return result.data.data.address;
     } catch (err) {
