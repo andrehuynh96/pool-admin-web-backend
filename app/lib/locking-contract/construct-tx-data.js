@@ -58,10 +58,45 @@ module.exports = {
         return ret;
     },
     createStakingPlan: async (_poolId, _planId, _lockDuration, _annualInterestRate) => {
-
+        duration= await secondDurationTime(..._lockDuration);
+        let durationSecond = new BN(_lockDuration, 16);
+        let interestRate = new BN(_annualInterestRate * 100, 10);
+        let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlan).inputs.map(ele => ele.type);
+        let sig = abi.methodID(
+            config.lockingContract.createStakingPlan, 
+            paramTypeList
+        );
+        let paramList = [
+            "0x" + _poolId.replace(/-/g, ''),
+            "0x" + _planId.replace(/-/g, ''),
+            "0x" + durationSecond.toString('hex'),
+            "0x" + interestRate.toString('hex')
+        ];
+        console.log(paramTypeList)
+        console.log(paramList);
+        let encoded = abi.rawEncode(paramTypeList, paramList);
+        let data = '0x' + sig.toString('hex') + encoded.toString('hex');
+        console.log(data);
+        let ret = await _constructAndSignTx(data);
+        return ret;
     },
     updateStakingPlan: async (_planId, _isClosed) => {
-
+        let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.updateStakingPlan).inputs.map(ele => ele.type);
+        let sig = abi.methodID(
+            config.lockingContract.updateStakingPlan, 
+            paramTypeList
+        );
+        let paramList = [
+            "0x" + _planId.replace(/-/g, ''),
+            _isClosed
+        ];
+        console.log(paramTypeList)
+        console.log(paramList);
+        let encoded = abi.rawEncode(paramTypeList, paramList);
+        let data = '0x' + sig.toString('hex') + encoded.toString('hex');
+        console.log(data);
+        let ret = await _constructAndSignTx(data);
+        return ret;
     },
 }
 
@@ -108,3 +143,15 @@ async function _constructAndSignTx(data, value = '0x0') {
         await coinAPI.sendTransaction({ rawtx: tx_raw });
     })
 }
+async function secondDurationTime(number, type){
+    let SECOND_TYPE_DAY = number * 24 * 60 *60
+    switch(type){
+      case 'DAY': return SECOND_TYPE_DAY
+       break;
+      case 'WEEK': return SECOND_TYPE_DAY * 7
+       break;
+      case 'MONTH': return SECOND_TYPE_DAY * 30
+       break;
+      case 'YEAR' : return SECOND_TYPE_DAY* 365
+    }
+  }
