@@ -32,7 +32,7 @@ database.init(async err => {
     server.listen(process.env.PORT, function () {
       console.log(`server start successfully on port: ${process.env.PORT}`);
       var exec = require('child_process').exec;
-      var cmd = 'sequelize db:migrate';
+      var cmd = 'npx sequelize-cli db:migrate';
 
       exec(cmd, function(error, stdout, stderr) {
         // console.log('error', error);
