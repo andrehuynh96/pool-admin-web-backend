@@ -236,7 +236,6 @@ module.exports = {
       if (req.body.name) {
         data.name = req.body.name;
       }
-      body.updated_by = req.user.id;
       let [_, response] = await User.update(data, {
           where: {
             id: req.params.id
