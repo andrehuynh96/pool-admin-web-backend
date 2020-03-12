@@ -8,16 +8,12 @@ const database = require('app/lib/database').db().staking;
 const axios = require("axios");
 const Transaction = require('ethereumjs-tx').Transaction;
 const InfinitoApi = require('node-infinito-api');
-const Web3 = require('web3');
-const Eth = require('web3-eth');
-
-const web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/ccb2e224843840dc99f3261937eb1900"));
-const eth = new Eth(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/ccb2e224843840dc99f3261937eb1900"));
+const txCreator = require('app/lib/tx-creator');
 
 const opts = {
-  apiKey: config.sdk.apiKey,
-  secret: config.sdk.secret,
-  baseUrl: config.sdk.url
+  apiKey: config.infinito.apiKey,
+  secret: config.infinito.secret,
+  baseUrl: config.infinito.url
 }; 
 const api = new InfinitoApi(opts);
 let coinAPI = api.ETH;
@@ -143,65 +139,44 @@ module.exports = {
         return res.badRequest(res.__("STAKING_PAYOUT_NOT FOUND"), "STAKING_PAYOUT_NOT", { fields: ["staking_platform_id"] });
       }
 
-      // let getAddressUrl = `${config.txCreator.host}/api/sign/${config.txCreator.ETH.keyId}/${platform.symbol}/address/0`;
-      // let address = await axios.get(getAddressUrl, {
-      //   params: {
-      //     testnet: config.txCreator.ETH.testNet
-      //   }
-      // });
-      // address = address.data.data.address;
-      // let balance = await eth.getBalance(myAddress);
-      // console.log(address);
-      // console.log('Account balance:', balance);
-      // let transaction = new Transaction();
-      // const txParams = {
-      //   nonce: await eth.getTransactionCount(address),
-      //   gasPrice: config.txCreator.ETH.fee,
-      //   gasLimit: config.txCreator.ETH.gasLimit,
-      //   from: address,
-      //   to: myAddress,
-      //   value: '0x100',
-      //   data: '0x'
-      // };
-      // console.log(txParams);
-      // tx = new Transaction(txParams, { chain: 'ropsten', hardfork: 'petersburg' });
-      // console.log('0x' + tx.serialize().toString('hex'));
-      // tx.sign(privKey);
-      
-      // var serializedTx = tx.serialize();
-      // console.log(tx.validate());
-      //SET PARAMS FOR staking-plan
-      planParams = {
-        ...req.body,
-        staking_platform_id : platform.id,
-        erc20_staking_payout_id : payout.id,
-        reward_diff_token_flg : false,
-        diff_token_rate : 0,
-        wait_blockchain_confirm_status_flg : true
-      }
+      let address = await txCreator.getAddress(platform.symbol)
+      let nonceObj = await coinAPI.getNonce(address)
+      const txParams = {
+        nonce: nonceObj.data.nonce,
+        gasPrice: config.txCreator.ETH.fee,
+        gasLimit: config.txCreator.ETH.gasLimit,
+        from: address,
+        to: myAddress,
+        value: '0x100',
+        data: '0x'
+      };
+      const tx = new Transaction(txParams, { chain: 'ropsten', hardfork: 'petersburg' });
+      let { tx_raw, tx_id } = await txCreator.sign({ raw: tx.serialize().toString('hex')})
+      tx_id = '0x' + tx_id;
+      console.log(tx_raw, tx_id)
       // INSERT staking-plan
-      let createPlanResponse = await StakingPlan.create(planParams,{ transaction })
-      if(!createPlanResponse) {
-        await transaction.rollback();
-        return res.serverInternalError();
-      }
+      // let createPlanResponse = await StakingPlan.create(planParams,{ transaction })
+      // if(!createPlanResponse) {
+      //   await transaction.rollback();
+      //   return res.serverInternalError();
+      // }
 
       // INSERT event pool
-      let newEvent = {
-        name: 'CREATE_NEW_ERC20_STAKING_PLAN',
-        description: 'Create new ERC20 staking plan id ' + createPlanResponse.id,
-        tx_id: '',
-        updated_by: req.user.id,
-        created_by: req.user.id,
-        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = ${1} WHERE id = '${createPlanResponse.id}' `,
-        fail_event: `DELETE FROM public.staking_plans where id = '${createPlanResponse.id}'`
-      };
-      let createERC20EventResponse = await ERC20EventPool.create(newEvent,{ transaction });
-      if(!createERC20EventResponse) {
-        await transaction.rollback();
-        return res.serverInternalError();
-      }
-      await transaction.commit();
+      // let newEvent = {
+      //   name: 'CREATE_NEW_ERC20_STAKING_PLAN',
+      //   description: 'Create new ERC20 staking plan id ' + createPlanResponse.id,
+      //   tx_id: '',
+      //   updated_by: req.user.id,
+      //   created_by: req.user.id,
+      //   successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = ${tx_id} WHERE id = '${createPlanResponse.id}' `,
+      //   fail_event: `DELETE FROM public.staking_plans where id = '${createPlanResponse.id}'`
+      // };
+      // let createERC20EventResponse = await ERC20EventPool.create(newEvent,{ transaction });
+      // if(!createERC20EventResponse) {
+      //   await transaction.rollback();
+      //   return res.serverInternalError();
+      // }
+      // await transaction.commit();
       return res.ok(true)
     }
     catch (err) {
