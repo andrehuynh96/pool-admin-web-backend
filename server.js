@@ -37,7 +37,7 @@ database.init(async err => {
       exec(cmd, function(error, stdout, stderr) {
         // console.log('error', error);
         console.log('stdout ', stdout);
-        console.log('stderr ', stderr);
+        // console.log('stderr ', stderr);
       })
     });
 
