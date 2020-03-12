@@ -144,6 +144,7 @@ module.exports = {
       let passWord = bcrypt.hashSync("Abc@123456", 10);
       let user = await User.create({
         email: req.body.email.toLowerCase(),
+        name: req.body.name,
         password_hash: passWord,
         user_sts: UserStatus.UNACTIVATED,
         updated_by: req.user.id,
@@ -228,11 +229,15 @@ module.exports = {
       if (!role) {
         return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND");
       }
-
-      let [_, response] = await User.update({
+      let data = {
         user_sts: req.body.user_sts,
         updated_by: req.user.id
-      }, {
+      };
+      if (req.body.name) {
+        data.name = req.body.name;
+      }
+      body.updated_by = req.user.id;
+      let [_, response] = await User.update(data, {
           where: {
             id: req.params.id
           },

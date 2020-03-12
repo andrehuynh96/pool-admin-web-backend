@@ -104,6 +104,7 @@ module.exports = router;
                         {
                           "id": 1,
                           "email":"example@gmail.com",
+                          "name": "example",
                           "twofa_enable_flg": true,
                           "create_at":"",
                           "user_sts":"ACTIVATED",
@@ -162,6 +163,7 @@ module.exports = router;
  *                 "data": {
                         "id": 1,
                         "email":"example@gmail.com",
+                        "name": "example",
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED",
@@ -251,6 +253,7 @@ module.exports = router;
  *            example:
  *                  {
                           "email":"example@gmail.com",
+                          "name": "example",
                           "role_id":1
  *                  }
  *     produces:
@@ -264,6 +267,7 @@ module.exports = router;
  *                 "data": {
                         "id": 1,
                         "email":"example@gmail.com",
+                        "name": "example",
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED",
@@ -325,6 +329,7 @@ module.exports = router;
  *                 "data": {
                         "id": 1,
                         "email":"example@gmail.com",
+                        "name": "example",
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED",
