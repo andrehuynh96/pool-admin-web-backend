@@ -316,6 +316,7 @@ module.exports = router;
  *            example:
  *                  {
                           "user_sts":"UNACTIVATED|ACTIVATED|LOCKED",
+                          "name": "example",
                           "role_id":1
  *                  }
  *     produces:
