@@ -50,11 +50,11 @@ module.exports = {
       let newEvent = {
         name: 'UPDATE_STAKING_PAYOUT',
         description: 'Update staking platform max payout id ' + payout.id,
-        tx_id: '',
+        tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
         // TODO: care about string params in queries, need quotes
-        successful_event: `UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, max_payout = ${req.body.max_payout} WHERE id = ${payout.id}`,
+        successful_event: `UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, max_payout = ${req.body.max_payout}, tx_id = '${tx_id}' WHERE id = ${payout.id}`,
         fail_event: `UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false WHERE id = ${payout.id}`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
