@@ -1,4 +1,3 @@
-
 const timeUnit = require("./value-object/time-unit");
 const StakingType = require("./value-object/staking-type");
 const StakingPlatformStatus = require("./value-object/staking-platform-status");
@@ -128,4 +127,4 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
-} 
+}
