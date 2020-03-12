@@ -1,4 +1,4 @@
-const StakingPlatformStatus = require("./value-object/staking-platform-status");
+const StakingPlanStatus = require("./value-object/staking-plan-status");
 
 module.exports = (sequelize, DataTypes) => {
   let Model = sequelize.define("erc20_staking_plans", {
@@ -13,9 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4(),
     },
-    name: {
-      type: DataTypes.STRING(16),
-      allowNull : false,
+    name:{
+      type: DataTypes.STRING(32) ,
+      allowNull: false
     },
     duration: {
       type: DataTypes.INTEGER,
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: StakingPlatformStatus.COMMING_SOON
+      defaultValue: StakingPlanStatus.DEACTIVE
     },
     reward_diff_token_flg: {
       type: DataTypes.BOOLEAN,

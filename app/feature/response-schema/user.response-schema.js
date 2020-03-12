@@ -4,6 +4,7 @@ const destObject = {
   array: {
     '[].id': '[].id',
     '[].email': '[].email',
+    '[].name': '[].name',
     '[].user_roles[].role.name': '[].role',
     //  '[].twofa_secret': '[].twofa_secret',
     '[].twofa_enable_flg': '[].twofa_enable_flg',
@@ -13,6 +14,7 @@ const destObject = {
   single: {
     id: 'id',
     email: 'email',
+    name: 'name',
     'user_roles[].role.name': 'role',
    // twofa_secret: 'twofa_secret',
     twofa_enable_flg: 'twofa_enable_flg',

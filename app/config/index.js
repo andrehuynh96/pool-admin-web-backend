@@ -89,13 +89,13 @@ const config = {
     erc20: {
       distributionReward: process.env.SCHEDULE_ERC20_REWARD_DISTRIBUTION,
       distributionCommission: process.env.SCHEDULE_ERC20_COMMISSION_DISTRIBUTION,
-      checkTransaction: process.env.SCHEDULE_ERC20_CHECKTRANSACTION
+      checkTransaction: process.env.SCHEDULE_ERC20_CHECK_TRANSACTION
     }
   },
-  sdk: {
-    apiKey: process.env.SDK_API_KEY,
-    secret: process.env.SDK_SECRET_KEY,
-    url: process.env.SDK_URL
+  infinito: {
+    apiKey: process.env.INFINITO_API_KEY,
+    secret: process.env.INFINITO_SECRET_KEY,
+    url: process.env.INFINITO_BASE_URL
   }
 };
 
