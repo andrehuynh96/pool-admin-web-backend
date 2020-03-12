@@ -16,25 +16,46 @@ let coinAPI = api.ETH;
 
 module.exports = {
     createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist) => {
-        // var encoded = abi.encode(locking, "createPool(uint256,string,address,uint256,bool)", ['1','1','1','1','1'])
-        // _getTestToken();
         let max_payout = new BN(_reserveTokenAmount, 10);
         console.log('max_payout', max_payout.toString('hex'));
-        let sig = abi.methodID('createPool', ['uint256', 'string', 'address', 'uint256', 'bool']);
-        let encoded = abi.rawEncode(['uint256', 'string', 'address', 'uint256', 'bool'], [
+        let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlatform).inputs.map(ele => ele.type);
+        let sig = abi.methodID(
+            config.lockingContract.createStakingPlatform, 
+            paramTypeList
+        );
+        let paramList = [
             "0x" + _poolId.replace(/-/g, ''),
             _poolName,
             _tokenAddr,
-            max_payout.toString('hex'),
+            "0x" + max_payout.toString('hex'),
             _needWhitelist
-        ]);
-        console.log(_poolId);
-        sig = sig.toString('hex') + encoded.toString('hex');
-        let ret = await _constructAndSignTx('0x' + sig);
+        ];
+        console.log(paramTypeList)
+        console.log(paramList);
+        let encoded = abi.rawEncode(paramTypeList, paramList);
+        let data = '0x' + sig.toString('hex') + encoded.toString('hex');
+        console.log(data);
+        let ret = await _constructAndSignTx(data);
         return ret;
     },
     updateStakingMaxPayout: async (_poolId, _newAmount) => {
-
+        let ammount = new BN(_newAmount, 10);
+        let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.updateStakingMaxPayout).inputs.map(ele => ele.type);
+        let sig = abi.methodID(
+            config.lockingContract.updateStakingMaxPayout, 
+            paramTypeList
+        );
+        let paramList = [
+            "0x" + _poolId.replace(/-/g, ''),
+            "0x" + ammount.toString('hex')
+        ];
+        console.log(paramTypeList);
+        console.log(paramList);
+        let encoded = abi.rawEncode(paramTypeList, paramList);
+        let data = '0x' + sig.toString('hex') + encoded.toString('hex');
+        console.log(data);
+        let ret = await _constructAndSignTx(data);
+        return ret;
     },
     createStakingPlan: async (_poolId, _planId, _lockDuration, _annualInterestRate) => {
 
