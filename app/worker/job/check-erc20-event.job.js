@@ -11,7 +11,7 @@ const InfinitoApi = require('node-infinito-api');
 const opts = {
   apiKey: config.sdk.apiKey,
   secret: config.sdk.secret,
-  baseUrl: config.sdk.baseUrl
+  baseUrl: config.sdk.url
 };
 const api = new InfinitoApi(opts);
 const service = api.getChainService().ETH;
