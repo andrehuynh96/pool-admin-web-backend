@@ -85,8 +85,8 @@ module.exports = {
       let { tx_raw, tx_id } = await constructTxData.updateStakingPlan(
         plan.id,
         req.body.status
-      ) //TODO:
-
+      )
+      //Create event pool
       let newEvent = {
         name: 'UPDATE_ERC20_STAKING_PLAN',
         description: 'Update ERC20 staking plan id ' + plan.id,
@@ -103,7 +103,7 @@ module.exports = {
         await transaction.rollback();
         return res.serverInternalError();
       }
-      await transaction.rollback();
+      await transaction.commit();
       return res.ok(true)
     }
     catch (err) {
@@ -136,7 +136,6 @@ module.exports = {
       planParams = {
         ...req.body,
         staking_platform_id : platform.id,
-        // staking_platform_id : "f86308af-0c03-4eae-9291-05de30533c64",
         erc20_staking_payout_id : payout.id,
         reward_diff_token_flg : false,
         diff_token_rate : 0,
@@ -150,15 +149,12 @@ module.exports = {
       }
       let durationTime = {timeNumber: planParams.duration, type: planParams.duration_type}
       let { tx_raw, tx_id } = await constructTxData.createStakingPlan(
-        platformId,
+        planParams.staking_platform_id,
         createPlanResponse.id,
         durationTime,
         planParams.reward_percentage
-       )//TODO: 
-       console.log(tx_id)
-      
-
-      // INSERT event pool
+       )
+             // INSERT event pool
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLAN',
         description: 'Create new ERC20 staking plan id ' + createPlanResponse.id,
