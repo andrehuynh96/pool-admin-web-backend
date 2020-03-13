@@ -402,30 +402,36 @@ module.exports = router;
  *         examples:
  *           application/json:
  *             {
- *                 "data":{
-                      "id":"96b7f440-1a3b-11ea-978f-2e728ce88125",
-                      "name":"Ethereum",
-                      "symbol":"ETH",
-                      "icon":"https://static.chainservices.info/staking/platforms/eth.png",
-                      "description":"AWS token",
-                      "order_index":99,
-                      "estimate_earn_per_year":"10",
-                      "lockup_unvote":21,
-                      "lockup_unvote_unit":"DAY",
-                      "payout_reward":0,
-                      "payout_reward_unit":"DAY",
-                      "status":1,
-                      "confirmation_block":5,
-                      "staking_type":"CONTRACT",
-                      "sc_lookup_addr":"0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
-                      "sc_token_address":"0x423822D571Bb697dDD993c04B507dD40E754cF05",
-                      "validator_address":null,
-                      "deleted_flg":false,
-                      "created_by":0,
-                      "updated_by":0,
-                      "createdAt":"2020-01-13T06:47:41.248Z",
-                      "updatedAt":"2020-01-13T06:47:41.248Z"
-                    }
+ *                 "data": {
+                      "id": "061fc95f-7a84-4e03-8756-a482b390bd3d",
+                      "order_index": 0,
+                      "estimate_earn_per_year": "0",
+                      "lockup_unvote": 0,
+                      "lockup_unvote_unit": "DAY",
+                      "payout_reward": 0,
+                      "payout_reward_unit": "DAY",
+                      "confirmation_block": 5,
+                      "deleted_flg": false,
+                      "name": "ETH_testttttttt",
+                      "platform": "Ethereum",
+                      "symbol": "ETH",
+                      "staking_type": "CONTRACT",
+                      "sc_token_address": "0x423822D571Bb697dDD993c04B507dD40E754cF05",
+                      "erc20_validator_fee": "20",
+                      "erc20_reward_estimate": "10%~20%",
+                      "erc20_duration": "10 ~ 20 days",
+                      "icon": "https://terraform-state-web-wallet.s3.ap-southeast-1.amazonaws.com/images/default-1583898984222.jpg",
+                      "updated_by": 64,
+                      "created_by": 64,
+                      "status": -1,
+                      "wait_blockchain_confirm_status_flg": true,
+                      "updatedAt": "2020-03-11T03:56:24.844Z",
+                      "createdAt": "2020-03-11T03:56:24.844Z",
+                      "description": null,
+                      "sc_lookup_addr": null,
+                      "validator_address": null,
+                      "tx_id": null
+                  }
 
  *             }
  *       400:
@@ -536,30 +542,36 @@ module.exports = router;
  *         examples:
  *           application/json:
  *             {
- *                 "data":{
-                      "id":"96b7f440-1a3b-11ea-978f-2e728ce88125",
-                      "name":"Ethereum",
-                      "symbol":"ETH",
-                      "icon":"https://static.chainservices.info/staking/platforms/eth.png",
-                      "description":"AWS token",
-                      "order_index":99,
-                      "estimate_earn_per_year":"10",
-                      "lockup_unvote":21,
-                      "lockup_unvote_unit":"DAY",
-                      "payout_reward":0,
-                      "payout_reward_unit":"DAY",
-                      "status":1,
-                      "confirmation_block":5,
-                      "staking_type":"CONTRACT",
-                      "sc_lookup_addr":"0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
-                      "sc_token_address":"0x423822D571Bb697dDD993c04B507dD40E754cF05",
-                      "validator_address":null,
-                      "deleted_flg":false,
-                      "created_by":0,
-                      "updated_by":0,
-                      "createdAt":"2020-01-13T06:47:41.248Z",
-                      "updatedAt":"2020-01-13T06:47:41.248Z"
-                    }
+ *                 "data": {
+                      "id": "061fc95f-7a84-4e03-8756-a482b390bd3d",
+                      "order_index": 0,
+                      "estimate_earn_per_year": "0",
+                      "lockup_unvote": 0,
+                      "lockup_unvote_unit": "DAY",
+                      "payout_reward": 0,
+                      "payout_reward_unit": "DAY",
+                      "confirmation_block": 5,
+                      "deleted_flg": false,
+                      "name": "ETH_testttttttt",
+                      "platform": "Ethereum",
+                      "symbol": "ETH",
+                      "staking_type": "CONTRACT",
+                      "sc_token_address": "0x423822D571Bb697dDD993c04B507dD40E754cF05",
+                      "erc20_validator_fee": "20",
+                      "erc20_reward_estimate": "10%~20%",
+                      "erc20_duration": "10 ~ 20 days",
+                      "icon": "https://terraform-state-web-wallet.s3.ap-southeast-1.amazonaws.com/images/default-1583898984222.jpg",
+                      "updated_by": 64,
+                      "created_by": 64,
+                      "status": -1,
+                      "wait_blockchain_confirm_status_flg": true,
+                      "updatedAt": "2020-03-11T03:56:24.844Z",
+                      "createdAt": "2020-03-11T03:56:24.844Z",
+                      "description": null,
+                      "sc_lookup_addr": null,
+                      "validator_address": null,
+                      "tx_id": null
+                  }
 
  *             }
  *       400:
@@ -601,7 +613,6 @@ module.exports = router;
  *            required:
  *            - name
  *            - symbol
- *            - staking_type
  *            properties:
  *              name:
  *                type: string
@@ -609,8 +620,6 @@ module.exports = router;
  *                type: string
  *              icon:
  *                type: image
- *              staking_type:
- *                type: string
  *              erc20_validator_fee:
  *                type: number
  *              erc20_reward_estimate:
@@ -622,7 +631,6 @@ module.exports = router;
                       "name": "Infinitooooooooo",
                       "symbol": "INFT",
                       "icon": "https://static.chainservices.info/staking/platforms/eth.png",
-                      "staking_type": "CONTRACT",
                       "erc20_validator_fee": 20,
                       "erc20_reward_estimate": "10%~20%",
                       "erc20_duration": "10 ~ 20 days"
@@ -706,7 +714,6 @@ module.exports = router;
  *            required:
  *            - name
  *            - symbol
- *            - staking_type
  *            - icon
  *            - max_payout
  *            properties:
@@ -718,8 +725,6 @@ module.exports = router;
  *                type: string
  *              icon:
  *                type: image
- *              staking_type:
- *                type: string
  *              sc_token_address:
  *                type: string
  *              erc20_validator_fee:
@@ -735,10 +740,9 @@ module.exports = router;
  *            example:
  *                  {
                       "name": "Infinitooooooooooooo",
-                      "platform": "Ethereum",
+                      "platform": "ETH",
                       "symbol": "INFT",
                       "icon": "https://static.chainservices.info/staking/platforms/eth.png",
-                      "staking_type": "CONTRACT",
                       "sc_token_address": "0x5c1e0136B1D5781C9a5978e7dd059158Eb895BBB",
                       "erc20_validator_fee": 20,
                       "erc20_reward_estimate": "10%~20%",

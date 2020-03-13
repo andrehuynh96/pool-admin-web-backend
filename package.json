@@ -23,6 +23,7 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "email-templates": "^6.1.1",
+    "ethereumjs-abi": "^0.6.8",
     "ethereumjs-tx": "^2.1.2",
     "express": "^4.17.1",
     "express-rate-limit": "^5.0.0",
@@ -55,7 +56,8 @@
     "swagger-ui-express": "^4.1.2",
     "uuid": "^3.3.3",
     "web3": "^1.2.6",
-    "web3-eth": "^1.2.6"
+    "web3-eth": "^1.2.6",
+    "web3-utils": "^1.2.6"
   },
   "devDependencies": {
     "chai": "^4.2.0",

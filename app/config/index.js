@@ -96,6 +96,14 @@ const config = {
     apiKey: process.env.SDK_API_KEY,
     secret: process.env.SDK_SECRET_KEY,
     url: process.env.SDK_URL
+  },
+  lockingContract: {
+    address: process.env.LOCKING_CONTRACT_ADDRESS,
+    createStakingPlatform: 'createPool',
+    updateStakingMaxPayout: 'changePoolReserveAmount',
+    createStakingPlan: 'addPlan',
+    updateStakingPlan: 'changePlanStatus',
+    getPoolInfo: 'getPoolInfo'
   }
 };
 

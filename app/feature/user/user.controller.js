@@ -301,7 +301,7 @@ module.exports = {
       }
 
       if (user.user_sts == UserStatus.LOCKED) {
-        return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
+        return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
       }
 
       let passWord = bcrypt.hashSync(req.body.password, 10);
@@ -350,11 +350,11 @@ module.exports = {
       }
 
       if (user.user_sts == UserStatus.ACTIVATED) {
-        return res.forbidden(res.__("ACCOUNT_ACTIVATED_ALREADY", "ACCOUNT_ACTIVATED_ALREADY"));
+        return res.forbidden(res.__("ACCOUNT_ACTIVATED_ALREADY"), "ACCOUNT_ACTIVATED_ALREADY");
       }
 
       if (user.user_sts == UserStatus.LOCKED) {
-        return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
+        return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
       }
 
 
