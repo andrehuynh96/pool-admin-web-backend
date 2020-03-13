@@ -114,9 +114,9 @@ module.exports = {
   },
 
   create: async (req, res, next) => {
+    const transaction = await database.transaction();
     try {
       let platformId = req.params.staking_platform_id
-      const transaction = await database.transaction();
       let platform = await StakingPlatform.findOne({
         where: {
           id: platformId
@@ -136,6 +136,7 @@ module.exports = {
       planParams = {
         ...req.body,
         staking_platform_id : platform.id,
+        // staking_platform_id : "f86308af-0c03-4eae-9291-05de30533c64",
         erc20_staking_payout_id : payout.id,
         reward_diff_token_flg : false,
         diff_token_rate : 0,
@@ -158,22 +159,21 @@ module.exports = {
       
 
       // INSERT event pool
-      // let newEvent = {
-      //   name: 'CREATE_NEW_ERC20_STAKING_PLAN',
-      //   description: 'Create new ERC20 staking plan id ' + createPlanResponse.id,
-      //   tx_id: tx_id,
-      //   updated_by: req.user.id,
-      //   created_by: req.user.id,
-      //   successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = '${tx_id}' WHERE id = '${createPlanResponse.id}' `,
-      //   fail_event: `DELETE FROM public.staking_plans where id = '${createPlanResponse.id}'`
-      // };
-      // let createERC20EventResponse = await ERC20EventPool.create(newEvent,{ transaction });
-      // if(!createERC20EventResponse) {
-      //   await transaction.rollback();
-      //   return res.serverInternalError();
-      // }
-      // await transaction.commit();
-      await transaction.rollback();
+      let newEvent = {
+        name: 'CREATE_NEW_ERC20_STAKING_PLAN',
+        description: 'Create new ERC20 staking plan id ' + createPlanResponse.id,
+        tx_id: tx_id,
+        updated_by: req.user.id,
+        created_by: req.user.id,
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = '${tx_id}' WHERE id = '${createPlanResponse.id}' `,
+        fail_event: `DELETE FROM public.staking_plans where id = '${createPlanResponse.id}'`
+      };
+      let createERC20EventResponse = await ERC20EventPool.create(newEvent,{ transaction });
+      if(!createERC20EventResponse) {
+        await transaction.rollback();
+        return res.serverInternalError();
+      }
+      await transaction.commit();
       return res.ok(true)
     }
     catch (err) {

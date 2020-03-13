@@ -13,7 +13,6 @@ const opts = {
 };
 const api = new InfinitoApi(opts);
 let coinAPI = api.ETH;
-
 module.exports = {
     createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist) => {
         let max_payout = new BN(_reserveTokenAmount, 10);
@@ -58,8 +57,8 @@ module.exports = {
         return ret;
     },
     createStakingPlan: async (_poolId, _planId, _lockDuration, _annualInterestRate) => {
-        duration= await secondDurationTime(..._lockDuration);
-        let durationSecond = new BN(_lockDuration, 16);
+        duration= await secondDurationTime(_lockDuration.timeNumber,_lockDuration.type);
+        let durationSecond = new BN(duration, 16);
         let interestRate = new BN(_annualInterestRate * 100, 10);
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlan).inputs.map(ele => ele.type);
         let sig = abi.methodID(
