@@ -191,7 +191,7 @@ module.exports = {
       });
       lockingAddress = lockingAddress.value;
 
-      let platform = PlatformConfig.filter(ele => ele.name === req.body.platform);
+      let platform = PlatformConfig.filter(ele => ele.symbol === req.body.platform);
       let payoutCfg = await ERC20PayoutCfg.findOne({
         where: {
           platform: platform[0].symbol,
