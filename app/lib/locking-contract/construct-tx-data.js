@@ -5,6 +5,7 @@ const BN = require('bn.js');
 const Transaction = require('ethereumjs-tx').Transaction;
 const locking = require('./Locking.json');
 const InfinitoApi = require('node-infinito-api');
+const utils = require('web3-utils');
 
 const opts = {
     apiKey: config.sdk.apiKey,
@@ -13,6 +14,7 @@ const opts = {
 };
 const api = new InfinitoApi(opts);
 let coinAPI = api.ETH;
+
 module.exports = {
     createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist) => {
         let max_payout = new BN(_reserveTokenAmount, 10);
@@ -24,10 +26,10 @@ module.exports = {
             paramTypeList
         );
         let paramList = [
-            "0x" + poolId.toString('hex'),
+            "0x" + utils.padLeft(poolId.toString('hex'), 64),
             _poolName,
             _tokenAddr,
-            "0x" + max_payout.toString('hex'),
+            "0x" + utils.padLeft(max_payout.toString('hex'), 64),
             _needWhitelist
         ];
         console.log(paramTypeList);
