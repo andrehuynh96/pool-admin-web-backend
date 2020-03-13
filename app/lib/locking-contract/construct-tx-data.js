@@ -18,18 +18,17 @@ let coinAPI = api.ETH;
 module.exports = {
     createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist) => {
         let max_payout = new BN(_reserveTokenAmount, 10);
-        let poolId = new BN(_poolId.replace(/-/g, ''));
-        console.log(_poolId);
+        let poolId = new BN(_poolId.replace(/-/g, ''), 16);
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlatform).inputs.map(ele => ele.type);
         let sig = abi.methodID(
             config.lockingContract.createStakingPlatform, 
             paramTypeList
         );
         let paramList = [
-            "0x" + utils.padLeft(poolId.toString('hex'), 64),
+            poolId.toString(),
             _poolName,
             _tokenAddr,
-            "0x" + utils.padLeft(max_payout.toString('hex'), 64),
+            max_payout.toString(),
             _needWhitelist
         ];
         console.log(paramTypeList);
@@ -42,14 +41,15 @@ module.exports = {
     },
     updateStakingMaxPayout: async (_poolId, _newAmount) => {
         let amount = new BN(_newAmount, 10);
+        let poolId = new BN(_poolId.replace(/-/g, ''), 16);
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.updateStakingMaxPayout).inputs.map(ele => ele.type);
         let sig = abi.methodID(
             config.lockingContract.updateStakingMaxPayout, 
             paramTypeList
         );
         let paramList = [
-            "0x" + _poolId.replace(/-/g, ''),
-            "0x" + amount.toString('hex')
+            poolId.toString(),
+            amount.toString()
         ];
         console.log(paramTypeList);
         console.log(paramList);
@@ -63,19 +63,21 @@ module.exports = {
         
     },
     createStakingPlan: async (_poolId, _planId, _lockDuration, _annualInterestRate) => {
-        duration= await secondDurationTime(_lockDuration.timeNumber,_lockDuration.type);
+        duration = await secondDurationTime(_lockDuration.timeNumber, _lockDuration.type);
         let durationSecond = new BN(duration, 16);
         let interestRate = new BN(_annualInterestRate * 100, 10);
+        let poolId = new BN(_poolId.replace(/-/g, ''), 16);
+        let planId = new BN(_planId.replace(/-/g, ''), 16);
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlan).inputs.map(ele => ele.type);
         let sig = abi.methodID(
             config.lockingContract.createStakingPlan, 
             paramTypeList
         );
         let paramList = [
-            "0x" + _poolId.replace(/-/g, ''),
-            "0x" + _planId.replace(/-/g, ''),
-            "0x" + durationSecond.toString('hex'),
-            "0x" + interestRate.toString('hex')
+            poolId.toString(),
+            planId.toString(),
+            durationSecond.toString(),
+            interestRate.toString()
         ];
         console.log(paramTypeList);
         console.log(paramList);
@@ -87,12 +89,13 @@ module.exports = {
     },
     updateStakingPlan: async (_planId, _isClosed) => {
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.updateStakingPlan).inputs.map(ele => ele.type);
+        let planId = new BN(_planId.replace(/-/g, ''), 16);
         let sig = abi.methodID(
             config.lockingContract.updateStakingPlan, 
             paramTypeList
         );
         let paramList = [
-            "0x" + _planId.replace(/-/g, ''),
+            planId.toString(),
             _isClosed
         ];
         console.log(paramTypeList);
