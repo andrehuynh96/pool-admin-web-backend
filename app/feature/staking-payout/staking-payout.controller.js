@@ -52,7 +52,7 @@ module.exports = {
         platformId,
         req.body.max_payout
       );
-      console.log(tx_id);
+      tx_id = '0x' + tx_id;
 
       let newEvent = {
         name: 'UPDATE_STAKING_PAYOUT',

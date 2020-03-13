@@ -229,7 +229,7 @@ module.exports = {
         req.body.max_payout,
         false
       );
-      console.log(tx_id);
+      tx_id = '0x' + tx_id;
 
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLATFORM',
