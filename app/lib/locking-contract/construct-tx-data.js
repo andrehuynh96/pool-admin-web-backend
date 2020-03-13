@@ -16,7 +16,6 @@ let coinAPI = api.ETH;
 module.exports = {
     createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist) => {
         let max_payout = new BN(_reserveTokenAmount, 10);
-        console.log('max_payout', max_payout.toString('hex'));
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlatform).inputs.map(ele => ele.type);
         let sig = abi.methodID(
             config.lockingContract.createStakingPlatform, 
@@ -29,7 +28,7 @@ module.exports = {
             "0x" + max_payout.toString('hex'),
             _needWhitelist
         ];
-        console.log(paramTypeList)
+        console.log(paramTypeList);
         console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
@@ -38,7 +37,7 @@ module.exports = {
         return ret;
     },
     updateStakingMaxPayout: async (_poolId, _newAmount) => {
-        let ammount = new BN(_newAmount, 10);
+        let amount = new BN(_newAmount, 10);
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.updateStakingMaxPayout).inputs.map(ele => ele.type);
         let sig = abi.methodID(
             config.lockingContract.updateStakingMaxPayout, 
@@ -46,7 +45,7 @@ module.exports = {
         );
         let paramList = [
             "0x" + _poolId.replace(/-/g, ''),
-            "0x" + ammount.toString('hex')
+            "0x" + amount.toString('hex')
         ];
         console.log(paramTypeList);
         console.log(paramList);
@@ -71,7 +70,7 @@ module.exports = {
             "0x" + durationSecond.toString('hex'),
             "0x" + interestRate.toString('hex')
         ];
-        console.log(paramTypeList)
+        console.log(paramTypeList);
         console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
@@ -89,7 +88,7 @@ module.exports = {
             "0x" + _planId.replace(/-/g, ''),
             _isClosed
         ];
-        console.log(paramTypeList)
+        console.log(paramTypeList);
         console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
@@ -145,12 +144,12 @@ async function _constructAndSignTx(data, value = '0x0') {
 async function secondDurationTime(number, type){
     let SECOND_TYPE_DAY = number * 24 * 60 *60
     switch(type){
-      case 'DAY': return SECOND_TYPE_DAY
-       break;
-      case 'WEEK': return SECOND_TYPE_DAY * 7
-       break;
-      case 'MONTH': return SECOND_TYPE_DAY * 30
-       break;
-      case 'YEAR' : return SECOND_TYPE_DAY* 365
+        case 'DAY': return SECOND_TYPE_DAY
+            break;
+        case 'WEEK': return SECOND_TYPE_DAY * 7
+            break;
+        case 'MONTH': return SECOND_TYPE_DAY * 30
+            break;
+        case 'YEAR' : return SECOND_TYPE_DAY* 365
     }
-  }
+}
