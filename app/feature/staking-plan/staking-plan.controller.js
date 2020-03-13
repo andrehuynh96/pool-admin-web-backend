@@ -86,6 +86,8 @@ module.exports = {
         plan.id,
         req.body.status
       )
+      tx_id = '0x' + tx_id;
+
       //Create event pool
       let newEvent = {
         name: 'UPDATE_ERC20_STAKING_PLAN',
@@ -153,8 +155,9 @@ module.exports = {
         createPlanResponse.id,
         durationTime,
         planParams.reward_percentage
-       )
-             // INSERT event pool
+      )
+      tx_id = '0x' + tx_id;
+      // INSERT event pool
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLAN',
         description: 'Create new ERC20 staking plan id ' + createPlanResponse.id,
