@@ -98,7 +98,7 @@ const config = {
     url: process.env.SDK_URL
   },
   lockingContract: {
-    address: '0x5dA1D9eC5DF67f3deFf8EC6aBa205F9c4638E04E',
+    address: process.env.LOCKING_CONTRACT_ADDRESS,
     createStakingPlatform: 'createPool',
     updateStakingMaxPayout: 'changePoolReserveAmount',
     createStakingPlan: 'addPlan',
