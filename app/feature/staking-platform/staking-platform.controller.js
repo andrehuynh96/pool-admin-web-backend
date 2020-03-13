@@ -218,7 +218,6 @@ module.exports = {
         actived_flg: true,
         updated_by: req.user.id,
         created_by: req.user.id,
-        // wait_blockchain_confirm_status_flg: false // TODO: remove hardcode
         wait_blockchain_confirm_status_flg: true
       }, { transaction });
 

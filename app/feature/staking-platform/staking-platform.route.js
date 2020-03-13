@@ -613,7 +613,6 @@ module.exports = router;
  *            required:
  *            - name
  *            - symbol
- *            - staking_type
  *            properties:
  *              name:
  *                type: string
@@ -621,8 +620,6 @@ module.exports = router;
  *                type: string
  *              icon:
  *                type: image
- *              staking_type:
- *                type: string
  *              erc20_validator_fee:
  *                type: number
  *              erc20_reward_estimate:
@@ -634,7 +631,6 @@ module.exports = router;
                       "name": "Infinitooooooooo",
                       "symbol": "INFT",
                       "icon": "https://static.chainservices.info/staking/platforms/eth.png",
-                      "staking_type": "CONTRACT",
                       "erc20_validator_fee": 20,
                       "erc20_reward_estimate": "10%~20%",
                       "erc20_duration": "10 ~ 20 days"
@@ -718,7 +714,6 @@ module.exports = router;
  *            required:
  *            - name
  *            - symbol
- *            - staking_type
  *            - icon
  *            - max_payout
  *            properties:
@@ -730,8 +725,6 @@ module.exports = router;
  *                type: string
  *              icon:
  *                type: image
- *              staking_type:
- *                type: string
  *              sc_token_address:
  *                type: string
  *              erc20_validator_fee:
@@ -750,7 +743,6 @@ module.exports = router;
                       "platform": "ETH",
                       "symbol": "INFT",
                       "icon": "https://static.chainservices.info/staking/platforms/eth.png",
-                      "staking_type": "CONTRACT",
                       "sc_token_address": "0x5c1e0136B1D5781C9a5978e7dd059158Eb895BBB",
                       "erc20_validator_fee": 20,
                       "erc20_reward_estimate": "10%~20%",
