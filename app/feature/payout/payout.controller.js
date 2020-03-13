@@ -32,7 +32,7 @@ module.exports = {
         }
       })
       if(!payout){
-        return res.badRequest(res.__("PAYOUT_FOUND"), "PAYOUT_FOUND", { fields: ["id"] });
+        return res.badRequest(res.__("PAYOUT_NOT_FOUND"), "PAYOUT_NOT_FOUND", { fields: ["id"] });
       }
       await Payout.update(
         {
