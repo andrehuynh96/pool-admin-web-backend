@@ -16,13 +16,15 @@ let coinAPI = api.ETH;
 module.exports = {
     createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist) => {
         let max_payout = new BN(_reserveTokenAmount, 10);
+        let poolId = new BN(_poolId.replace(/-/g, ''));
+        console.log(_poolId);
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlatform).inputs.map(ele => ele.type);
         let sig = abi.methodID(
             config.lockingContract.createStakingPlatform, 
             paramTypeList
         );
         let paramList = [
-            "0x" + _poolId.replace(/-/g, ''),
+            "0x" + poolId.toString('hex'),
             _poolName,
             _tokenAddr,
             "0x" + max_payout.toString('hex'),
@@ -54,6 +56,9 @@ module.exports = {
         console.log(data);
         let ret = await _constructAndSignTx(data);
         return ret;
+    },
+    getPoolInfo: async (_poolId, _newAmount) => {
+        
     },
     createStakingPlan: async (_poolId, _planId, _lockDuration, _annualInterestRate) => {
         duration= await secondDurationTime(_lockDuration.timeNumber,_lockDuration.type);

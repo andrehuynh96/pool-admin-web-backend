@@ -1,7 +1,6 @@
 const Joi = require('joi');
 const timeUnit = require("app/model/staking/value-object/time-unit");
 const StakingType = require("app/model/staking/value-object/staking-type");
-const PlatformName = require("app/model/staking/value-object/platform").map(ele => ele.name);
 const PlatformSymbol = require("app/model/staking/value-object/platform").map(ele => ele.symbol);
 
 let times = Object.keys(timeUnit);
@@ -9,7 +8,7 @@ let addressRegex = /^0x[a-fA-F0-9]{40}$/g;
 
 const schema = Joi.object().keys({
   name: Joi.string().required(),
-  platform: Joi.string().valid(PlatformName).optional(),
+  platform: Joi.string().valid(PlatformSymbol).optional(),
   symbol: Joi.string().required(),
   sc_token_address: Joi.string().optional().allow(""),
   icon: Joi.any().required(),

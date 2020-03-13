@@ -98,11 +98,12 @@ const config = {
     url: process.env.SDK_URL
   },
   lockingContract: {
-    address: process.env.LOCKING_CONTRACT_ADDRESS,
+    address: '0x5dA1D9eC5DF67f3deFf8EC6aBa205F9c4638E04E',
     createStakingPlatform: 'createPool',
     updateStakingMaxPayout: 'changePoolReserveAmount',
     createStakingPlan: 'addPlan',
     updateStakingPlan: 'changePlanStatus',
+    getPoolInfo: 'getPoolInfo'
   }
 };
 

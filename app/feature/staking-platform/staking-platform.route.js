@@ -747,7 +747,7 @@ module.exports = router;
  *            example:
  *                  {
                       "name": "Infinitooooooooooooo",
-                      "platform": "Ethereum",
+                      "platform": "ETH",
                       "symbol": "INFT",
                       "icon": "https://static.chainservices.info/staking/platforms/eth.png",
                       "staking_type": "CONTRACT",
