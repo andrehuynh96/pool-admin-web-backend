@@ -164,7 +164,7 @@ module.exports = {
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = '0x${tx_id}' WHERE id = '${createPlanResponse.id}' `,
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = '${tx_id}' WHERE id = '${createPlanResponse.id}' `,
         fail_event: `DELETE FROM public.staking_plans where id = '${createPlanResponse.id}'`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent,{ transaction });
