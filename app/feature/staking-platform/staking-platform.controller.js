@@ -218,7 +218,6 @@ module.exports = {
         actived_flg: true,
         updated_by: req.user.id,
         created_by: req.user.id,
-        // wait_blockchain_confirm_status_flg: false // TODO: remove hardcode
         wait_blockchain_confirm_status_flg: true
       }, { transaction });
 
@@ -229,7 +228,7 @@ module.exports = {
         req.body.max_payout,
         false
       );
-      console.log(tx_id);
+      tx_id = '0x' + tx_id;
 
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLATFORM',

@@ -12,7 +12,6 @@ const schema = Joi.object().keys({
   symbol: Joi.string().required(),
   sc_token_address: Joi.string().optional().allow(""),
   icon: Joi.any().required(),
-  staking_type: Joi.string().required().valid(StakingType.CONTRACT),
   erc20_validator_fee: Joi.number().optional().allow(""),
   erc20_reward_estimate: Joi.string().optional().allow(""),
   erc20_duration: Joi.string().optional().allow(""),
