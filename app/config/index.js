@@ -103,7 +103,8 @@ const config = {
     updateStakingMaxPayout: 'changePoolReserveAmount',
     createStakingPlan: 'addPlan',
     updateStakingPlan: 'changePlanStatus',
-    getPoolInfo: 'getPoolInfo'
+    getPoolInfo: 'getPoolInfo',
+    deposit: 'deposit'
   }
 };
 
