@@ -184,7 +184,7 @@ module.exports = {
         return res.serverInternalError();
       }
       await transaction.commit();
-      return res.ok(true)
+      return res.ok(true);
     }
     catch (err) {
       logger.error("create staking plan fail: ", err);
