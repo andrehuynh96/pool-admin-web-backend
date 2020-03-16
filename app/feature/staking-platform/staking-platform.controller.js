@@ -1,6 +1,7 @@
 const logger = require('app/lib/logger');
 const database = require('app/lib/database').db().staking;
 const StakingPlatform = require("app/model/staking").staking_platforms;
+const StakingType = require("app/model/staking/value-object/staking-type");
 const Settings = require("app/model/staking").settings;
 const ERC20EventPool = require("app/model/staking").erc20_event_pools;
 const ERC20PayoutCfg = require("app/model/staking").erc20_payout_cfgs;
@@ -13,6 +14,7 @@ const config = require('app/config');
 const toArray = require('stream-to-array');
 const util = require('util');
 const constructTxData = require("app/lib/locking-contract");
+const WAValidator = require('multicoin-address-validator');
 
 module.exports = {
 
@@ -164,6 +166,10 @@ module.exports = {
   createERC20: async (req, res, next) => {
     const transaction = await database.transaction();
     try {
+      let validAddress = WAValidator.validate(req.body.sc_token_address, 'eth');
+      if (!validAddress)
+        return res.badRequest(res.__("INVALID_TOKEN_ADDRESS"), "INVALID_TOKEN_ADDRESS", { fields: ["sc_token_address"] });
+
       let lockingAddress = await Settings.findOne({
         where: {
           key: 'LOCKING_CONTRACT'
@@ -201,6 +207,7 @@ module.exports = {
 
       let createPlatformResponse = await StakingPlatform.create({
         ...req.body,
+        staking_type: StakingType.CONTRACT,
         updated_by: req.user.id,
         created_by: req.user.id,
         status: -1,
@@ -230,13 +237,21 @@ module.exports = {
       );
       tx_id = '0x' + tx_id;
 
+      await StakingPlatform.update({
+        tx_id: tx_id
+      }, {
+        where: {
+          id: createPlatformResponse.id
+        }
+      }, { transaction })
+
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLATFORM',
         description: 'Create new ERC20 staking platform id ' + createPlatformResponse.id,
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = ${req.body.status}, tx_id = '${tx_id}' WHERE id = '${createPlatformResponse.id}';UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payout.id};UPDATE public.erc20_payout_cfgs SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payoutCfg.id};`,
+        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = ${req.body.status} WHERE id = '${createPlatformResponse.id}';UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payout.id};UPDATE public.erc20_payout_cfgs SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payoutCfg.id};`,
         fail_event: `DELETE FROM public.staking_platforms WHERE id = '${createPlatformResponse.id}'; DELETE FROM public.erc20_staking_payouts WHERE id = ${payout.id};`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });

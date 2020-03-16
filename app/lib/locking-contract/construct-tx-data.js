@@ -106,6 +106,28 @@ module.exports = {
         let ret = await _constructAndSignTx(data);
         return ret;
     },
+    // deposit: async (_poolId, _partnerId, _planId, _tokenAmount) => {
+    //     let poolId = new BN(_poolId.replace(/-/g, ''), 16);
+    //     let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.deposit).inputs.map(ele => ele.type);
+    //     let sig = abi.methodID(
+    //         config.lockingContract.deposit, 
+    //         paramTypeList
+    //     );
+    //     let paramList = [
+    //         poolId.toString(),
+    //         _poolName,
+    //         _tokenAddr,
+    //         max_payout.toString(),
+    //         _needWhitelist
+    //     ];
+    //     console.log(paramTypeList);
+    //     console.log(paramList);
+    //     let encoded = abi.rawEncode(paramTypeList, paramList);
+    //     let data = '0x' + sig.toString('hex') + encoded.toString('hex');
+    //     console.log(data);
+    //     let ret = await _constructAndSignTx(data);
+    //     return ret;
+    // }
 }
 
 async function _getTestToken() {
