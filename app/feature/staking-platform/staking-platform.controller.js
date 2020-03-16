@@ -233,9 +233,11 @@ module.exports = {
         req.body.name,
         req.body.sc_token_address,
         req.body.max_payout,
-        false
+        false,
+        req.body.sc_token_address
       );
       tx_id = '0x' + tx_id;
+      console.log(tx_id);
 
       await StakingPlatform.update({
         tx_id: tx_id
