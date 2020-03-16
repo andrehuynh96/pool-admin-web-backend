@@ -230,13 +230,21 @@ module.exports = {
       );
       tx_id = '0x' + tx_id;
 
+      let updatePlatformTxIdResult = await StakingPlatform.update({
+        tx_id: tx_id
+      }, {
+        where: {
+          id: createPlatformResponse.id
+        }
+      }, { transaction })
+
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLATFORM',
         description: 'Create new ERC20 staking platform id ' + createPlatformResponse.id,
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = ${req.body.status}, tx_id = '${tx_id}' WHERE id = '${createPlatformResponse.id}';UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payout.id};UPDATE public.erc20_payout_cfgs SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payoutCfg.id};`,
+        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = ${req.body.status} WHERE id = '${createPlatformResponse.id}';UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payout.id};UPDATE public.erc20_payout_cfgs SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payoutCfg.id};`,
         fail_event: `DELETE FROM public.staking_platforms WHERE id = '${createPlatformResponse.id}'; DELETE FROM public.erc20_staking_payouts WHERE id = ${payout.id};`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
