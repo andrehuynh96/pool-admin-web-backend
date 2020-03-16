@@ -155,6 +155,7 @@ module.exports = {
         createPlanResponse.id,
         durationTime,
         planParams.reward_percentage
+<<<<<<< Updated upstream
       )
       tx_id = '0x' + tx_id;
       // INSERT event pool
