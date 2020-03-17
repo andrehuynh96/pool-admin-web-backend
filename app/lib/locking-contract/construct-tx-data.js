@@ -16,8 +16,12 @@ const api = new InfinitoApi(opts);
 let coinAPI = api.ETH;
 
 module.exports = {
-    createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist) => {
+    createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist, tokenAddress) => {
         let max_payout = new BN(_reserveTokenAmount, 10);
+        let decimal = await coinAPI.getContractInfo(tokenAddress);
+        if (decimal) decimal = decimal.data.decimals;
+        else decimal = 1;
+        max_payout = max_payout.mul(new BN(decimal, 10));
         let poolId = new BN(_poolId.replace(/-/g, ''), 16);
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlatform).inputs.map(ele => ele.type);
         let sig = abi.methodID(
@@ -31,8 +35,8 @@ module.exports = {
             max_payout.toString(),
             _needWhitelist
         ];
-        console.log(paramTypeList);
-        console.log(paramList);
+        // console.log(paramTypeList);
+        // console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
         console.log(data);
@@ -51,8 +55,8 @@ module.exports = {
             poolId.toString(),
             amount.toString()
         ];
-        console.log(paramTypeList);
-        console.log(paramList);
+        // console.log(paramTypeList);
+        // console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
         console.log(data);
@@ -79,8 +83,8 @@ module.exports = {
             durationSecond.toString(),
             interestRate.toString()
         ];
-        console.log(paramTypeList);
-        console.log(paramList);
+        // console.log(paramTypeList);
+        // console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
         console.log(data);
@@ -98,8 +102,8 @@ module.exports = {
             planId.toString(),
             _isClosed
         ];
-        console.log(paramTypeList);
-        console.log(paramList);
+        // console.log(paramTypeList);
+        // console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
         console.log(data);
