@@ -39,7 +39,7 @@ module.exports = {
         // console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
-        console.log(data);
+        // console.log(data);
         let ret = await _constructAndSignTx(data);
         return ret;
     },
@@ -63,7 +63,7 @@ module.exports = {
         // console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
-        console.log(data);
+        // console.log(data);
         let ret = await _constructAndSignTx(data);
         return ret;
     },
@@ -91,7 +91,7 @@ module.exports = {
         // console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
-        console.log(data);
+        // console.log(data);
         let ret = await _constructAndSignTx(data);
         return ret;
     },
@@ -110,7 +110,7 @@ module.exports = {
         // console.log(paramList);
         let encoded = abi.rawEncode(paramTypeList, paramList);
         let data = '0x' + sig.toString('hex') + encoded.toString('hex');
-        console.log(data);
+        // console.log(data);
         let ret = await _constructAndSignTx(data);
         return ret;
     },

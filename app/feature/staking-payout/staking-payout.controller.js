@@ -44,6 +44,7 @@ module.exports = {
         payout.token_address
       );
       tx_id = '0x' + tx_id;
+      console.log(tx_id);
 
       let [_, response] = await stakingPayout.update({
         wait_blockchain_confirm_status_flg: true,

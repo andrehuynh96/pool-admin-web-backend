@@ -159,15 +159,6 @@ module.exports = {
       )
       tx_id = '0x' + tx_id;
 
-      await StakingPlan.update({
-        wait_blockchain_confirm_status_flg: true,
-        tx_id: tx_id
-      }, {
-        where: {
-          id: createPlanResponse.id
-        }
-      }, { transaction })
-
       // INSERT event pool
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLAN',
@@ -184,6 +175,14 @@ module.exports = {
         return res.serverInternalError();
       }
       await transaction.commit();
+      await StakingPlan.update({
+        wait_blockchain_confirm_status_flg: true,
+        tx_id: tx_id
+      }, {
+        where: {
+          id: createPlanResponse.id
+        }
+      }, { transaction })
       return res.ok(true);
     }
     catch (err) {
