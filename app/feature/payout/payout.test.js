@@ -11,10 +11,10 @@ describe('commission', function () {
     setTimeout(done, 3000)
   });
 
-  describe('/staking-platforms/:staking_platform_id/payouts', () => {
+  describe('/payouts', () => {
     it('it should GET ERC20 staking config', (done) => {
       chai.request(server)
-        .get('/web/staking-platforms/96b7f440-1a3b-11ea-978f-2e728ce88125/payouts')
+        .get('/web/payouts')
         .end((err, res) => {
           console.log(res.body)
           res.should.have.status(200);
@@ -25,11 +25,29 @@ describe('commission', function () {
 
     it.only('it should PUT ERC20 staking config', (done) => {
       chai.request(server)
-        .put('/web/staking-platforms/96b7f440-1a3b-11ea-978f-2e728ce88125/payouts')
+        .put('/web/payouts/3')
+        .send([{ 
+                token_name: "Infinito",
+                token_symbol: "INFT",
+                actived_flg: true
+              }])
+        .end((err, res) => {
+          console.log(res.body)
+          res.should.have.status(200);
+          res.body.should.be.a('object');
+          done();
+        });
+    });
+    it.only('it should PUT ERC20 staking config', (done) => {
+      chai.request(server)
+        .post('/web/payouts')
         .send([{
-          id: 1,
-          max_payout: 20
-        }])
+              platform: "ETH",
+              token_name: "Infinito",
+              token_symbol: "INFT",
+              token_address: "0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
+              actived_flg: true
+          }])
         .end((err, res) => {
           console.log(res.body)
           res.should.have.status(200);

@@ -24,15 +24,15 @@ module.exports = async (req, res, next) => {
     }
     const match = await bcrypt.compare(req.body.password, user.password_hash);
     if (!match) {
-      return res.unauthorized(res.__("LOGIN_FAIL", "LOGIN_FAIL"));
+      return res.unauthorized(res.__("LOGIN_FAIL"), "LOGIN_FAIL");
     }
 
     if (user.user_sts == UserStatus.UNACTIVATED) {
-      return res.forbidden(res.__("UNCONFIRMED_ACCOUNT", "UNCONFIRMED_ACCOUNT"));
+      return res.forbidden(res.__("UNCONFIRMED_ACCOUNT"), "UNCONFIRMED_ACCOUNT");
     }
 
     if (user.user_sts == UserStatus.LOCKED) {
-      return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
+      return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
     }
 
     if (user.twofa_enable_flg) {

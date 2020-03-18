@@ -144,6 +144,7 @@ module.exports = {
       let passWord = bcrypt.hashSync("Abc@123456", 10);
       let user = await User.create({
         email: req.body.email.toLowerCase(),
+        name: req.body.name,
         password_hash: passWord,
         user_sts: UserStatus.UNACTIVATED,
         updated_by: req.user.id,
@@ -227,11 +228,14 @@ module.exports = {
       if (!role) {
         return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND");
       }
-
-      let [_, response] = await User.update({
+      let data = {
         user_sts: req.body.user_sts,
         updated_by: req.user.id
-      }, {
+      };
+      if (req.body.name) {
+        data.name = req.body.name;
+      }
+      let [_, response] = await User.update(data, {
           where: {
             id: req.params.id
           },
@@ -296,7 +300,7 @@ module.exports = {
       }
 
       if (user.user_sts == UserStatus.LOCKED) {
-        return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
+        return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
       }
 
       let passWord = bcrypt.hashSync(req.body.password, 10);
@@ -345,11 +349,11 @@ module.exports = {
       }
 
       if (user.user_sts == UserStatus.ACTIVATED) {
-        return res.forbidden(res.__("ACCOUNT_ACTIVATED_ALREADY", "ACCOUNT_ACTIVATED_ALREADY"));
+        return res.forbidden(res.__("ACCOUNT_ACTIVATED_ALREADY"), "ACCOUNT_ACTIVATED_ALREADY");
       }
 
       if (user.user_sts == UserStatus.LOCKED) {
-        return res.forbidden(res.__("ACCOUNT_LOCKED", "ACCOUNT_LOCKED"));
+        return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
       }
 
 
@@ -386,18 +390,15 @@ module.exports = {
 
 async function _sendEmailCreateUser(user, verifyToken) {
   try {
-    let subject = 'Moonstake - Activate Account';
-    let from = `Moonstake <${config.mailSendAs}>`;
+    let subject = `${config.emailTemplate.partnerName} - Create Account`;
+    let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
     let data = {
-      email: user.email,
-      role: user.roleName,
-      imageUrl: config.urlImages,
-      site: config.websiteUrl,
-      link: `${config.linkWebsiteActiveUser}/${verifyToken}`,
+      imageUrl: config.website.urlImages,
+      link: `${config.linkWebsiteVerify}?token=${verifyToken}`,
       hours: config.expiredVefiryToken
     }
     data = Object.assign({}, data, config.email);
-    await mailer.sendWithTemplate(subject, from, user.email, data, "activate-account.ejs");
+    await mailer.sendWithTemplate(subject, from, user.email, data, config.emailTemplate.activateAccount);
   } catch (err) {
     logger.error("send email create account fail", err);
   }
