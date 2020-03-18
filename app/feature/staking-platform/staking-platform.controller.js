@@ -233,8 +233,7 @@ module.exports = {
         req.body.name,
         req.body.sc_token_address,
         req.body.max_payout,
-        false,
-        req.body.sc_token_address
+        false
       );
       tx_id = '0x' + tx_id;
       console.log(tx_id);

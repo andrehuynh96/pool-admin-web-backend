@@ -16,9 +16,9 @@ const api = new InfinitoApi(opts);
 let coinAPI = api.ETH;
 
 module.exports = {
-    createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist, tokenAddress) => {
+    createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist) => {
         let max_payout = new BN(_reserveTokenAmount, 10);
-        let decimal = await coinAPI.getContractInfo(tokenAddress);
+        let decimal = await coinAPI.getContractInfo(_tokenAddr);
         if (decimal) decimal = decimal.data.decimals;
         else decimal = 1;
         max_payout = max_payout.mul(new BN(decimal, 10));
@@ -45,6 +45,10 @@ module.exports = {
     },
     updateStakingMaxPayout: async (_poolId, _newAmount) => {
         let amount = new BN(_newAmount, 10);
+        let decimal = await coinAPI.getContractInfo(_tokenAddr);
+        if (decimal) decimal = decimal.data.decimals;
+        else decimal = 1;
+        amount = amount.mul(new BN(decimal, 10));
         let poolId = new BN(_poolId.replace(/-/g, ''), 16);
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.updateStakingMaxPayout).inputs.map(ele => ele.type);
         let sig = abi.methodID(

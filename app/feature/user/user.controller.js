@@ -13,6 +13,7 @@ const mailer = require('app/lib/mailer');
 const database = require('app/lib/database').db().staking;
 const Role = require("app/model/staking").roles;
 const UserRole = require("app/model/staking").user_roles;
+const { passwordEvaluator } = require('app/lib/utils');s
 
 module.exports = {
   search: async (req, res, next) => {
@@ -302,6 +303,10 @@ module.exports = {
 
       if (user.user_sts == UserStatus.LOCKED) {
         return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
+      }
+
+      if (!passwordEvaluator(req.body.password)) {
+        return res.badRequest(res.__("WEAK_PASSWORD"), "WEAK_PASSWORD");
       }
 
       let passWord = bcrypt.hashSync(req.body.password, 10);
