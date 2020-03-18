@@ -16,9 +16,9 @@ const api = new InfinitoApi(opts);
 let coinAPI = api.ETH;
 
 module.exports = {
-    createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist, tokenAddress) => {
+    createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist) => {
         let max_payout = new BN(_reserveTokenAmount, 10);
-        let decimal = await coinAPI.getContractInfo(tokenAddress);
+        let decimal = await coinAPI.getContractInfo(_tokenAddr);
         if (decimal) decimal = decimal.data.decimals;
         else decimal = 1;
         max_payout = max_payout.mul(new BN(decimal, 10));
@@ -45,6 +45,10 @@ module.exports = {
     },
     updateStakingMaxPayout: async (_poolId, _newAmount) => {
         let amount = new BN(_newAmount, 10);
+        let decimal = await coinAPI.getContractInfo(_tokenAddr);
+        if (decimal) decimal = decimal.data.decimals;
+        else decimal = 1;
+        amount = amount.mul(new BN(decimal, 10));
         let poolId = new BN(_poolId.replace(/-/g, ''), 16);
         let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.updateStakingMaxPayout).inputs.map(ele => ele.type);
         let sig = abi.methodID(
@@ -178,14 +182,17 @@ async function _constructAndSignTx(data, value = '0x0') {
     })
 }
 async function secondDurationTime(number, type){
-    let SECOND_TYPE_DAY = number * 24 * 60 *60
+    let SECOND_TYPE_HOUR = number * 60 *60
     switch(type){
-        case 'DAY': return SECOND_TYPE_DAY
+        case 'HOUR': return SECOND_TYPE_HOUR;
             break;
-        case 'WEEK': return SECOND_TYPE_DAY * 7
+        case 'DAY': return SECOND_TYPE_HOUR * 24;
             break;
-        case 'MONTH': return SECOND_TYPE_DAY * 30
+        case 'WEEK': return SECOND_TYPE_HOUR * 7 * 24;
             break;
-        case 'YEAR' : return SECOND_TYPE_DAY* 365
+        case 'MONTH': return SECOND_TYPE_HOUR * 30 * 24;
+            break;
+        case 'YEAR' : return SECOND_TYPE_HOUR * 365 * 24;
+            break;
     }
 }

@@ -13,6 +13,7 @@ const mailer = require('app/lib/mailer');
 const database = require('app/lib/database').db().staking;
 const Role = require("app/model/staking").roles;
 const UserRole = require("app/model/staking").user_roles;
+const { passwordEvaluator } = require('app/lib/utils');
 
 module.exports = {
   search: async (req, res, next) => {
@@ -155,7 +156,7 @@ module.exports = {
         await transaction.rollback();
         return res.serverInternalError();
       }
-
+      user.roleName = role.name
       await UserRole.destroy({
         where: {
           user_id: user.id,
@@ -166,7 +167,6 @@ module.exports = {
         user_id: user.id,
         role_id: role.id
       }, { transaction });
-
       if (!userRole) {
         await transaction.rollback();
         return res.serverInternalError();
@@ -304,6 +304,10 @@ module.exports = {
         return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
       }
 
+      if (!passwordEvaluator(req.body.password)) {
+        return res.badRequest(res.__("WEAK_PASSWORD"), "WEAK_PASSWORD");
+      }
+
       let passWord = bcrypt.hashSync(req.body.password, 10);
       let [_, response] = await User.update({
         password_hash: passWord,
@@ -391,17 +395,15 @@ module.exports = {
 
 async function _sendEmailCreateUser(user, verifyToken) {
   try {
-    let subject = 'Listco Account - Create Account';
-    let from = `Listco <${config.mailSendAs}>`;
+    let subject = `${config.emailTemplate.partnerName} - Create Account`;
+    let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
     let data = {
-      email: user.email,
-      fullname: user.email,
-      site: config.websiteUrl,
-      link: `${config.linkWebsiteActiveUser}/${verifyToken}`,
+      imageUrl: config.urlImages,
+      link: `${config.linkWebsiteVerify}?token=${verifyToken}`,
       hours: config.expiredVefiryToken
     }
     data = Object.assign({}, data, config.email);
-    await mailer.sendWithTemplate(subject, from, user.email, data, "create-user.ejs");
+    await mailer.sendWithTemplate(subject, from, user.email, data, config.emailTemplate.activateAccount);
   } catch (err) {
     logger.error("send email create account fail", err);
   }
