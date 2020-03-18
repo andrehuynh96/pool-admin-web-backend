@@ -72,7 +72,7 @@ module.exports = {
     },
     createStakingPlan: async (_poolId, _planId, _lockDuration, _annualInterestRate) => {
         duration = await secondDurationTime(_lockDuration.timeNumber, _lockDuration.type);
-        let durationSecond = new BN(BigInt(duration), 10);
+        let durationSecond = new BN(duration, 10);
         let interestRate = new BN(_annualInterestRate * 100, 10);
         let poolId = new BN(_poolId.replace(/-/g, ''), 16);
         let planId = new BN(_planId.replace(/-/g, ''), 16);
@@ -184,15 +184,15 @@ async function _constructAndSignTx(data, value = '0x0') {
 async function secondDurationTime(number, type){
     let SECOND_TYPE_HOUR = number * 60 *60
     switch(type){
-        case 'HOUR': return `${SECOND_TYPE_HOUR}`
+        case 'HOUR': return SECOND_TYPE_HOUR;
             break;
-        case 'DAY': return `${SECOND_TYPE_HOUR * 24}`
+        case 'DAY': return SECOND_TYPE_HOUR * 24;
             break;
-        case 'WEEK': return `${SECOND_TYPE_HOUR * 7 * 24}`
+        case 'WEEK': return SECOND_TYPE_HOUR * 7 * 24;
             break;
-        case 'MONTH': return `${SECOND_TYPE_HOUR * 30 * 24}`
+        case 'MONTH': return SECOND_TYPE_HOUR * 30 * 24;
             break;
-        case 'YEAR' : return `${SECOND_TYPE_HOUR * 365 * 24}`
+        case 'YEAR' : return SECOND_TYPE_HOUR * 365 * 24;
             break;
     }
 }
