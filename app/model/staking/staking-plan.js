@@ -1,7 +1,8 @@
 const StakingPlanStatus = require("./value-object/staking-plan-status");
+const timeUnit = require("./value-object/time-unit");
 
 module.exports = (sequelize, DataTypes) => {
-  let Model = sequelize.define("erc20_staking_plans", {
+  let Model = sequelize.define("staking_plans", {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -24,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     duration_type: {
       type: DataTypes.STRING(8),
       allowNull: false,
-      defaultValue: 'DAY'
+      defaultValue: timeUnit.DAY
     },
     reward_percentage: {
       type: DataTypes.DOUBLE(4, 2),
@@ -40,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: false
     },
-    erc20_staking_payout_id: {
+    staking_payout_id: {
       type: DataTypes.INTEGER,
       allowNull: false
     },

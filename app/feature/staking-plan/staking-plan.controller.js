@@ -1,6 +1,6 @@
 const logger = require('app/lib/logger');
-const StakingPlan = require("app/model/staking").erc20_staking_plans;
-const StakingPayout = require("app/model/staking").erc20_staking_payouts;
+const StakingPlan = require("app/model/staking").staking_plans;
+const StakingPayout = require("app/model/staking").staking_payouts;
 const StakingPlatform = require("app/model/staking").staking_platforms;
 const ERC20EventPool = require("app/model/staking").erc20_event_pools;
 const config = require('app/config');
@@ -96,8 +96,8 @@ module.exports = {
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.erc20_staking_plans SET wait_blockchain_confirm_status_flg = false, name= '${req.body.name}', status = ${req.body.status} , tx_id = '${tx_id}' WHERE id = '${plan.id}'`,
-        fail_event: `UPDATE public.erc20_staking_plans SET wait_blockchain_confirm_status_flg = false WHERE id = '${plan.id}'`
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, name= '${req.body.name}', status = ${req.body.status} , tx_id = '${tx_id}' WHERE id = '${plan.id}'`,
+        fail_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false WHERE id = '${plan.id}'`
       };
 
 
@@ -139,7 +139,7 @@ module.exports = {
       planParams = {
         ...req.body,
         staking_platform_id: platform.id,
-        erc20_staking_payout_id: payout.id,
+        staking_payout_id: payout.id,
         reward_diff_token_flg: false,
         diff_token_rate: 0,
         wait_blockchain_confirm_status_flg: true
@@ -166,8 +166,8 @@ module.exports = {
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.erc20_staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = '${tx_id}' WHERE id = '${createPlanResponse.id}' `,
-        fail_event: `DELETE FROM public.erc20_staking_plans where id = '${createPlanResponse.id}'`
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = '${tx_id}' WHERE id = '${createPlanResponse.id}' `,
+        fail_event: `DELETE FROM public.staking_plans where id = '${createPlanResponse.id}'`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
       if (!createERC20EventResponse) {
