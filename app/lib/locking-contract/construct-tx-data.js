@@ -43,7 +43,7 @@ module.exports = {
         let ret = await _constructAndSignTx(data);
         return ret;
     },
-    updateStakingMaxPayout: async (_poolId, _newAmount) => {
+    updateStakingMaxPayout: async (_poolId, _newAmount, _tokenAddr) => {
         let amount = new BN(_newAmount, 10);
         let decimal = await coinAPI.getContractInfo(_tokenAddr);
         if (decimal) decimal = decimal.data.decimals;
