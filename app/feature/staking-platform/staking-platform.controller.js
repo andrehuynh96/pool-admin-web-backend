@@ -238,14 +238,6 @@ module.exports = {
       tx_id = '0x' + tx_id;
       console.log(tx_id);
 
-      await StakingPlatform.update({
-        tx_id: tx_id
-      }, {
-        where: {
-          id: createPlatformResponse.id
-        }
-      }, { transaction })
-
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLATFORM',
         description: 'Create new ERC20 staking platform id ' + createPlatformResponse.id,
@@ -258,7 +250,16 @@ module.exports = {
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
       await transaction.commit();
 
-      return res.ok(createPlatformResponse);
+      let [_, response] = await StakingPlatform.update({
+        tx_id: tx_id
+      }, {
+        where: {
+          id: createPlatformResponse.id
+        },
+        returning: true
+      });
+      
+      return res.ok(response[0]);
     }
     catch (err) {
       logger.error('get staking platform fail:', err);
