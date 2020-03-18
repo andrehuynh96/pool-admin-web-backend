@@ -35,9 +35,9 @@ database.init(async err => {
       var cmd = 'npx sequelize-cli db:migrate';
 
       exec(cmd, function(error, stdout, stderr) {
-        // console.log('error', error);
+        console.log('error', error);
         console.log('stdout ', stdout);
-        // console.log('stderr ', stderr);
+        console.log('stderr ', stderr);
       })
     });
 
