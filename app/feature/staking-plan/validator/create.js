@@ -1,14 +1,14 @@
 const Joi = require('joi');
+const timeUnit = require("app/model/staking/value-object/time-unit")
+
+let times = Object.keys(timeUnit);
 
 const schema = Joi.object().keys({
-  staking_plan_code: Joi.string().required(),
-  duration: Joi.number().required(),
-  duration_type: Joi.string().required(),
-  reward_per_year: Joi.number().required(),
-  actived_flg: Joi.boolean().required(),
-  reward_in_diff_platform_flg: Joi.boolean().required(),
-  reward_platform: Joi.string().optional(),
-  reward_token_address: Joi.string().optional(),
+    name: Joi.string().required(),
+    duration: Joi.number().optional(),
+    duration_type: Joi.string().valid(times).optional(),
+    reward_percentage: Joi.number().min(0.00).max(1.00).optional(),
+    status: Joi.number().optional()
 });
 
 module.exports = schema;

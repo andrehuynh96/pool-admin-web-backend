@@ -1,6 +1,6 @@
 const express = require('express');
 const validator = require('app/middleware/validator.middleware');
-const requestSchema = require('./payout.request-schema');
+const { create, update } = require('./validator');
 const controller = require('./payout.controller');
 const authenticate = require('app/middleware/authenticate.middleware');
 const authority = require('app/middleware/authority.middleware');
@@ -9,9 +9,9 @@ const Permission = require('app/model/staking/value-object/permission-key');
 const router = express.Router();
 
 router.get(
-  '/staking-platforms/:staking_platform_id/payouts',
+  '/payouts',
   authenticate,
-  authority(Permission.VIEW_LIST_PAYOUT_STAKING_PLATFORM),
+  authority(Permission.VIEW_LIST_PAYOUT_CONFIG),
   controller.get
 );
 
@@ -19,12 +19,21 @@ router.get(
 
 /**
  * @swagger
- * /web/staking-platforms/:staking_platform_id/payouts:
+ * /web/payouts:
  *   get:
- *     summary: get pay out
+ *     summary: get payout
  *     tags:
- *       - Pay out
+ *       - Payout
  *     description:
+ *     parameters:
+ *       - name: offset
+ *         in: query
+ *         type: integer
+ *         format: int32
+ *       - name: limit
+ *         in: query
+ *         type: integer
+ *         format: int32
  *     produces:
  *       - application/json
  *     responses:
@@ -32,15 +41,29 @@ router.get(
  *         description: Ok
  *         examples:
  *           application/json:
- *             { data:
-   [ { id: 1,
-       staking_platform_id: '96b7f440-1a3b-11ea-978f-2e728ce88125',
-       reward_platform: 'ETH',
-       token_name: 'INFT',
-       token_address: 'dac17f958d2ee523',
-       reward_max_payout: 10,
-       createdAt: '2020-01-13T03:15:23.525Z',
-       updatedAt: '2020-01-13T03:15:23.525Z' } ] }
+ *             {
+                "data": {
+                    "items": [
+                        {
+                            "id": 3,
+                            "platform": "ETH",
+                            "token_name": "MYHN",
+                            "token_symbol": "ETH",
+                            "token_address": "0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
+                            "actived_flg": true,
+                            "created_by": 65,
+                            "updated_by": 0,
+                            "tx_id": null,
+                            "wait_blockchain_confirm_status_flg": false,
+                            "createdAt": "2020-03-09T09:23:50.627Z",
+                            "updatedAt": "2020-03-09T09:32:05.325Z"
+                        }
+                    ],
+                    "offset": 0,
+                    "limit": 20,
+                    "total": 1
+                }
+            }
  *       400:
  *         description: Error
  *         schema:
@@ -60,11 +83,79 @@ router.get(
  */
 
 router.put(
-  '/staking-platforms/:staking_platform_id/payouts',
-  validator(requestSchema),
+  '/payouts/:id',
+  validator(update),
   authenticate,
-  authority(Permission.UPDATE_PAYOUT_STAKING_PLATFORM),
+  authority(Permission.UPDATE_PAYOUT_CONFIG),
   controller.update
+);
+
+
+
+
+/*********************************************************************/
+
+/**
+ * @swagger
+ * /web/payouts/{id}:
+ *   put:
+ *     summary: update payout
+ *     tags:
+ *       - Payout
+ *     description:
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *       - in: body
+ *         name: data
+ *         description: Data for update.
+ *         schema:
+ *            type: object
+ *            required:
+ *            - token_name
+ *            - token_symbol
+ *            - activate_flg
+ *            example:
+ *               {      "token_name": "Infinito",
+                        "token_symbol": "INFT",
+                        "actived_flg": true
+                  }
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         examples:
+ *           application/json:
+ *             {
+ *                 "data": true
+ *             }
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/400'
+ *       401:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/401'
+ *       404:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/404'
+ *       500:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/500'
+ */
+
+router.post(
+  '/payouts',
+  validator(create),
+  authenticate,
+  authority(Permission.CREATE_PAYOUT_CONFIG),
+  controller.create
 );
 
 module.exports = router;
@@ -76,23 +167,31 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/staking-platforms/:staking_platform_id/payouts:
- *   put:
- *     summary: update pay out
+ * /web/payouts:
+ *   post:
+ *     summary: update payout
  *     tags:
- *       - Pay out
+ *       - Payout
  *     description:
  *     parameters:
  *       - in: body
  *         name: data
  *         description: Data for update.
  *         schema:
- *            type: array
+ *            type: object
+ *            required:
+ *            - platform
+ *            - token_name
+ *            - token_symbol
+ *            - token_address
+ *            - activate_flg
  *            example:
- *               [{
-                        "id":1,
-                        "max_payout":100,
-                  }]
+ *               {     "platform": "ETH",
+                        "token_name": "Infinito",
+                        "token_symbol": "INFT",
+                        "token_address": "0x1716a6f9D3917966d934Ce7837113A30dFFda9F4",
+                        "actived_flg": true
+                  }
  *     produces:
  *       - application/json
  *     responses:
