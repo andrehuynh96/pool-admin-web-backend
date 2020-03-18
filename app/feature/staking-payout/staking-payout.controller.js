@@ -40,7 +40,8 @@ module.exports = {
 
       let { tx_raw, tx_id } = await constructTxData.updateStakingMaxPayout(
         platformId,
-        req.body.max_payout
+        req.body.max_payout,
+        payout.token_address
       );
       tx_id = '0x' + tx_id;
 
