@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  let Model = sequelize.define("erc20_payout_cfgs", {
+  let Model = sequelize.define("payout_cfgs", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,

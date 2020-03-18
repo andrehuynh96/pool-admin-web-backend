@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("erc20_staking_payouts", {
+  return sequelize.define("staking_payouts", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4(),
     },
-    erc20_payout_id: {
+    payout_id: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
