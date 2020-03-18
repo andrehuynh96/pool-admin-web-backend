@@ -49,6 +49,11 @@ const config = {
     pass: process.env.SMTP_PASS
   },
   mailSendAs: process.env.MAIL_SEND_AS || 'no-reply@infinito.io',
+  emailTemplate: {
+    partnerName: "Moonstake",
+    activateAccount: "Moonstake/activate-account.ejs",
+    resetPassword: "Moonstake/reset-password.ejs"
+  },
   expiredVefiryToken: process.env.EXPIRED_VERIFY_TOKEN ? parseInt(process.env.EXPIRED_VERIFY_TOKEN) : 2,
   enableSeed: process.env.ENABLE_SEED == "1",
   websiteUrl: process.env.WEBSITE_URL,
