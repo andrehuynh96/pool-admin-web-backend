@@ -64,7 +64,7 @@ async function _sendEmail(user, verifyToken) {
     let subject = `${config.emailTemplate.partnerName} - Reset Account Password`;
     let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
     let data = {
-      imageUrl: config.website.urlImages,
+      imageUrl: config.urlImages,
       link: `${config.linkWebsiteVerify}?token=${verifyToken}`,
       hours: config.expiredVefiryToken
     }
