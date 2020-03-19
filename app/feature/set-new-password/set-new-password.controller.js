@@ -51,7 +51,8 @@ module.exports = async (req, res, next) => {
     } 
     let [_, response] = await User.update(data, {
         where: {
-          id: user.id
+          id: user.id,
+          attempt_login_number: 0 // reset attempt login number after password resetting
         },
         returning: true
       });
