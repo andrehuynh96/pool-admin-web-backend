@@ -51,8 +51,9 @@ const config = {
   mailSendAs: process.env.MAIL_SEND_AS || 'no-reply@infinito.io',
   emailTemplate: {
     partnerName: "Moonstake",
-    activateAccount: "Moonstake/activate-account.ejs",
-    resetPassword: "Moonstake/reset-password.ejs"
+    verifyEmail: "Moonstake/verify-email.ejs",
+    resetPassword: "Moonstake/reset-password.ejs",
+    deactiveAccount: "Moonstake/deactive-account.ejs"
   },
   expiredVefiryToken: process.env.EXPIRED_VERIFY_TOKEN ? parseInt(process.env.EXPIRED_VERIFY_TOKEN) : 2,
   enableSeed: process.env.ENABLE_SEED == "1",
