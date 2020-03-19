@@ -6,6 +6,7 @@ const ERC20EventPool = require("app/model/staking").erc20_event_pools;
 const config = require('app/config');
 const database = require('app/lib/database').db().staking;
 const constructTxData = require("app/lib/locking-contract");
+const { secondDurationTime } = require('app/lib/utils');
 
 module.exports = {
   getPlans: async (req, res, next) => {
@@ -84,10 +85,10 @@ module.exports = {
         wait_blockchain_confirm_status_flg: true,
         tx_id: tx_id
       }, {
-        where: {
-          id: planId
-        }
-      }, { transaction })
+          where: {
+            id: planId
+          }
+        }, { transaction })
 
       //Create event pool
       let newEvent = {
@@ -136,8 +137,10 @@ module.exports = {
       if (!payout) {
         return res.badRequest(res.__("STAKING_PAYOUT_NOT_FOUND"), "STAKING_PAYOUT_NOT", { fields: ["staking_platform_id"] });
       }
+      let durationInSecond = secondDurationTime(req.body.duration, req.body.duration_type);
       planParams = {
         ...req.body,
+        duration_in_second: durationInSecond,
         staking_platform_id: platform.id,
         staking_payout_id: payout.id,
         reward_diff_token_flg: false,
@@ -179,10 +182,10 @@ module.exports = {
         wait_blockchain_confirm_status_flg: true,
         tx_id: tx_id
       }, {
-        where: {
-          id: createPlanResponse.id
-        }
-      }, { transaction })
+          where: {
+            id: createPlanResponse.id
+          }
+        }, { transaction })
       return res.ok(true);
     }
     catch (err) {

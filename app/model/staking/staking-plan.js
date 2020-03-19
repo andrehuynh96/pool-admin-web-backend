@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4(),
     },
-    name:{
-      type: DataTypes.STRING(32) ,
+    name: {
+      type: DataTypes.STRING(32),
       allowNull: false
     },
     duration: {
@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(8),
       allowNull: false,
       defaultValue: timeUnit.DAY
+    },
+    duration_in_second: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
     },
     reward_percentage: {
       type: DataTypes.DOUBLE(4, 2),
