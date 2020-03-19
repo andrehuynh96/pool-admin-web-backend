@@ -393,7 +393,7 @@ async function _sendEmailCreateUser(user, verifyToken) {
     let subject = `${config.emailTemplate.partnerName} - Create Account`;
     let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
     let data = {
-      imageUrl: config.website.urlImages,
+      imageUrl: config.urlImages,
       link: `${config.linkWebsiteVerify}?token=${verifyToken}`,
       hours: config.expiredVefiryToken
     }
