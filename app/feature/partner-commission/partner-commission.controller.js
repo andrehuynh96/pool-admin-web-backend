@@ -57,7 +57,7 @@ commission.create = async (req, res, next) => {
     return res.ok(partner_commissions.map(item => mapper(item)));
   } catch (error) {
     logger.error(error);
-    await transaction.rollback();
+    if (transaction) await transaction.rollback();
     next(error);
   }
 };

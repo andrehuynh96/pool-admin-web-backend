@@ -61,7 +61,7 @@ module.exports = {
           }
           await transaction.commit();
         } catch (err) {
-          await transaction.rollback();
+          if (transaction) await transaction.rollback();
           throw err;
         }
       } 
