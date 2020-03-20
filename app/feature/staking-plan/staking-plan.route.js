@@ -249,7 +249,7 @@ router.post(
 
 /**
  * @swagger
- * /web/staking-platforms/{staking_platform_id}/plans/{plan_id}:
+ * /web/staking-platforms/{staking_platform_id}/plans:
  *   post:
  *     summary: create plan
  *     tags:
@@ -258,10 +258,6 @@ router.post(
  *     parameters:
  *       - in: path
  *         name: staking_platform_id
- *         type: string
- *         required: true
- *       - in: path
- *         name: plan_id
  *         type: string
  *         required: true
  *       - in: body
