@@ -7,7 +7,7 @@ const schema = Joi.object().keys({
     name: Joi.string().required(),
     duration: Joi.number().optional(),
     duration_type: Joi.string().valid(times).optional(),
-    reward_percentage: Joi.number().min(0.00).max(1.00).optional(),
+    reward_percentage: Joi.number().min(0.00).max(100).optional(),
     status: Joi.number().optional()
 });
 
