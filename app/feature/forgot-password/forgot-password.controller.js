@@ -61,16 +61,16 @@ module.exports = async (req, res, next) => {
 
 async function _sendEmail(user, verifyToken) {
   try {
-    let subject = `${config.emailTemplate.partnerName} - Reset Account Password`;
+    let subject = ` ${config.emailTemplate.partnerName} - Reset Password`;
     let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
     let data = {
-      imageUrl: config.urlImages,
-      link: `${config.linkWebsiteVerify}?token=${verifyToken}`,
+      imageUrl: config.website.urlImages,
+      link: `${config.website.urlResetPassword}?token=${verifyToken}`,
       hours: config.expiredVefiryToken
     }
     data = Object.assign({}, data, config.email);
     await mailer.sendWithTemplate(subject, from, user.email, data, config.emailTemplate.resetPassword);
   } catch (err) {
-    logger.error("send email forgot password fail", err);
+    logger.error("resend email forgot password fail", err);
   }
 }
