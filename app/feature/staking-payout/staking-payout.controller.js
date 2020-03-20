@@ -1,5 +1,5 @@
 const logger = require('app/lib/logger');
-const stakingPayout = require("app/model/staking").erc20_staking_payouts;
+const stakingPayout = require("app/model/staking").staking_payouts;
 const ERC20EventPool = require("app/model/staking").erc20_event_pools;
 const database = require('app/lib/database').db().staking;
 const constructTxData = require("app/lib/locking-contract");
@@ -21,7 +21,7 @@ module.exports = {
     }
   },
   update: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let { staking_platform_id: platformId, id: payoutId } = req.params;
       let payout = await stakingPayout.findOne({
@@ -40,10 +40,14 @@ module.exports = {
 
       let { tx_raw, tx_id } = await constructTxData.updateStakingMaxPayout(
         platformId,
-        req.body.max_payout
+        req.body.max_payout,
+        payout.token_address
       );
       tx_id = '0x' + tx_id;
+      console.log(tx_id);
 
+      transaction = await database.transaction();
+      
       let [_, response] = await stakingPayout.update({
         wait_blockchain_confirm_status_flg: true,
         tx_id: tx_id
@@ -60,8 +64,8 @@ module.exports = {
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, max_payout = ${req.body.max_payout} WHERE id = ${payout.id}`,
-        fail_event: `UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false WHERE id = ${payout.id}`
+        successful_event: `UPDATE public.staking_payouts SET wait_blockchain_confirm_status_flg = false, max_payout = ${req.body.max_payout} WHERE id = ${payout.id}`,
+        fail_event: `UPDATE public.staking_payouts SET wait_blockchain_confirm_status_flg = false WHERE id = ${payout.id}`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
 
@@ -70,7 +74,7 @@ module.exports = {
     }
     catch (err) {
       logger.error("update max payout fail: ", err);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(err);
     }
   }

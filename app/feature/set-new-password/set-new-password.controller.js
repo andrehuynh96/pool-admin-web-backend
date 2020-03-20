@@ -5,6 +5,7 @@ const OTP = require("app/model/staking").otps;
 const OtpType = require("app/model/staking/value-object/otp-type");
 const bcrypt = require('bcrypt');
 const Sequelize = require('sequelize');
+const { passwordEvaluator } = require('app/lib/utils');
 const Op = Sequelize.Op;
 
 module.exports = async (req, res, next) => {
@@ -36,14 +37,13 @@ module.exports = async (req, res, next) => {
     if (!user) {
       return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
     }
-    
-    if (user.user_sts == UserStatus.LOCKED) {
-      return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
-    }
 
     let passWord = bcrypt.hashSync(req.body.password, 10);
 
-    let data = { password_hash: passWord };
+    let data = { 
+      password_hash: passWord,
+      attempt_login_number: 0 // reset attempt login number after password resetting
+    };
 
     if (user.user_sts == UserStatus.UNACTIVATED) {
       data.user_sts = UserStatus.ACTIVATED;
@@ -65,13 +65,3 @@ module.exports = async (req, res, next) => {
     next(err);
   }
 }; 
-
-const passwordEvaluator = (p) => {
-  let score = 0;
-  if (p.length < 10) return false;
-  if (/[a-z]/.test(p)) score++;
-  if (/[A-Z]/.test(p)) score++;
-  if (/[0-9]/.test(p)) score++;
-  if (/[ !"#$%&'()*+,\-.\/:;<=>?@[\\\]^_`{|}~]/.test(p)) score++;
-  return score >= 2;
-}

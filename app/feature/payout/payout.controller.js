@@ -1,5 +1,5 @@
 const logger = require('app/lib/logger');
-const Payout = require("app/model/staking").erc20_payout_cfgs;
+const Payout = require("app/model/staking").payout_cfgs;
 const WAValidator = require('multicoin-address-validator');
 module.exports = {
   get: async (req, res, next) => {

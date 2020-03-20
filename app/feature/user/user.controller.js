@@ -13,6 +13,7 @@ const mailer = require('app/lib/mailer');
 const database = require('app/lib/database').db().staking;
 const Role = require("app/model/staking").roles;
 const UserRole = require("app/model/staking").user_roles;
+const { passwordEvaluator } = require('app/lib/utils');
 
 module.exports = {
   search: async (req, res, next) => {
@@ -118,7 +119,7 @@ module.exports = {
     }
   },
   create: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let result = await User.findOne({
         where: {
@@ -141,6 +142,8 @@ module.exports = {
         return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND");
       }
 
+      transaction = await database.transaction();
+
       let passWord = bcrypt.hashSync("Abc@123456", 10);
       let user = await User.create({
         email: req.body.email.toLowerCase(),
@@ -152,7 +155,7 @@ module.exports = {
       }, { transaction });
 
       if (!user) {
-        await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
       user.roleName = role.name
@@ -167,7 +170,7 @@ module.exports = {
         role_id: role.id
       }, { transaction });
       if (!userRole) {
-        await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
 
@@ -201,13 +204,13 @@ module.exports = {
     }
     catch (err) {
       logger.error('create account fail:', err);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(err);
     }
   },
 
   update: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let result = await User.findOne({
         where: {
@@ -235,6 +238,9 @@ module.exports = {
       if (req.body.name) {
         data.name = req.body.name;
       }
+
+      transaction = await database.transaction();
+
       let [_, response] = await User.update(data, {
           where: {
             id: req.params.id
@@ -242,7 +248,7 @@ module.exports = {
           returning: true
         }, { transaction });
       if (!response || response.length == 0) {
-        await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
 
@@ -258,7 +264,7 @@ module.exports = {
       }, { transaction });
 
       if (!userRole) {
-        await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
 
@@ -269,7 +275,7 @@ module.exports = {
     }
     catch (err) {
       logger.error('update user fail:', err);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(err);
     }
   },
@@ -301,6 +307,10 @@ module.exports = {
 
       if (user.user_sts == UserStatus.LOCKED) {
         return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
+      }
+
+      if (!passwordEvaluator(req.body.password)) {
+        return res.badRequest(res.__("WEAK_PASSWORD"), "WEAK_PASSWORD");
       }
 
       let passWord = bcrypt.hashSync(req.body.password, 10);

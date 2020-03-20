@@ -4,8 +4,8 @@ const StakingPlatform = require("app/model/staking").staking_platforms;
 const StakingType = require("app/model/staking/value-object/staking-type");
 const Settings = require("app/model/staking").settings;
 const ERC20EventPool = require("app/model/staking").erc20_event_pools;
-const ERC20PayoutCfg = require("app/model/staking").erc20_payout_cfgs;
-const ERC20Payout = require("app/model/staking").erc20_staking_payouts;
+const ERC20PayoutCfg = require("app/model/staking").payout_cfgs;
+const ERC20Payout = require("app/model/staking").staking_payouts;
 const TimeUnit = require("app/model/staking/value-object/time-unit");
 const PlatformConfig = require("app/model/staking/value-object/platform");
 const s3 = require('app/service/s3.service');
@@ -164,12 +164,22 @@ module.exports = {
   },
 
   createERC20: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let validAddress = WAValidator.validate(req.body.sc_token_address, 'eth');
       if (!validAddress)
         return res.badRequest(res.__("INVALID_TOKEN_ADDRESS"), "INVALID_TOKEN_ADDRESS", { fields: ["sc_token_address"] });
 
+      if (req.body.icon) {
+        let file = path.parse(req.body.icon.file.name);
+        if (config.CDN.exts.indexOf(file.ext.toLowerCase()) == -1) {
+          return res.badRequest(res.__("UNSUPPORT_FILE_EXTENSION"), "UNSUPPORT_FILE_EXTENSION", { fields: ["icon"] });
+        }
+        req.body.icon = await _uploadFile(req, res, next);
+      }
+
+      transaction  = await database.transaction();
+      
       let lockingAddress = await Settings.findOne({
         where: {
           key: 'LOCKING_CONTRACT'
@@ -197,14 +207,6 @@ module.exports = {
         wait_blockchain_confirm_status_flg: false,
       }, { transaction })
 
-      if (req.body.icon) {
-        let file = path.parse(req.body.icon.file.name);
-        if (config.CDN.exts.indexOf(file.ext.toLowerCase()) == -1) {
-          return res.badRequest(res.__("UNSUPPORT_FILE_EXTENSION"), "UNSUPPORT_FILE_EXTENSION", { fields: ["icon"] });
-        }
-        req.body.icon = await _uploadFile(req, res, next);
-      }
-
       let createPlatformResponse = await StakingPlatform.create({
         ...req.body,
         staking_type: StakingType.CONTRACT,
@@ -216,7 +218,7 @@ module.exports = {
 
       let payout = await ERC20Payout.create({
         staking_platform_id: createPlatformResponse.id,
-        erc20_payout_id: payoutCfg.id,
+        payout_id: payoutCfg.id,
         platform: platform[0].symbol,
         token_name: req.body.name,
         token_symbol: req.body.symbol,
@@ -233,19 +235,10 @@ module.exports = {
         req.body.name,
         req.body.sc_token_address,
         req.body.max_payout,
-        false,
-        req.body.sc_token_address
+        false
       );
       tx_id = '0x' + tx_id;
       console.log(tx_id);
-
-      await StakingPlatform.update({
-        tx_id: tx_id
-      }, {
-        where: {
-          id: createPlatformResponse.id
-        }
-      }, { transaction })
 
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLATFORM',
@@ -253,17 +246,26 @@ module.exports = {
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = ${req.body.status} WHERE id = '${createPlatformResponse.id}';UPDATE public.erc20_staking_payouts SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payout.id};UPDATE public.erc20_payout_cfgs SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payoutCfg.id};`,
-        fail_event: `DELETE FROM public.staking_platforms WHERE id = '${createPlatformResponse.id}'; DELETE FROM public.erc20_staking_payouts WHERE id = ${payout.id};`
+        successful_event: `UPDATE public.staking_platforms SET wait_blockchain_confirm_status_flg = false, status = ${req.body.status} WHERE id = '${createPlatformResponse.id}';UPDATE public.staking_payouts SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payout.id};UPDATE public.payout_cfgs SET wait_blockchain_confirm_status_flg = false, tx_id = '${tx_id}' WHERE id = ${payoutCfg.id};`,
+        fail_event: `DELETE FROM public.staking_platforms WHERE id = '${createPlatformResponse.id}'; DELETE FROM public.staking_payouts WHERE id = ${payout.id};`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
       await transaction.commit();
 
-      return res.ok(createPlatformResponse);
+      let [_, response] = await StakingPlatform.update({
+        tx_id: tx_id
+      }, {
+        where: {
+          id: createPlatformResponse.id
+        },
+        returning: true
+      });
+      
+      return res.ok(response[0]);
     }
     catch (err) {
       logger.error('get staking platform fail:', err);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(err);
     }
   },
