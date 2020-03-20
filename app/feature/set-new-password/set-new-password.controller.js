@@ -37,10 +37,6 @@ module.exports = async (req, res, next) => {
     if (!user) {
       return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
     }
-    
-    if (user.user_sts == UserStatus.LOCKED) {
-      return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
-    }
 
     let passWord = bcrypt.hashSync(req.body.password, 10);
 
