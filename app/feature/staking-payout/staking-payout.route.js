@@ -52,7 +52,7 @@ module.exports = router;
                         {
                             "id": 2,
                             "staking_platform_id": "96b7f440-1a3b-11ea-978f-2e728ce88125",
-                            "erc20_payout_id": 3,
+                            "payout_id": 3,
                             "platform": "ETH",
                             "token_name": "Infinito",
                             "token_symbol": "INFT",
@@ -132,7 +132,7 @@ module.exports = router;
                         {
                             "id": 2,
                             "staking_platform_id": "96b7f440-1a3b-11ea-978f-2e728ce88125",
-                            "erc20_payout_id": 3,
+                            "payout_id": 3,
                             "platform": "ETH",
                             "token_name": "Infinito",
                             "token_symbol": "INFT",

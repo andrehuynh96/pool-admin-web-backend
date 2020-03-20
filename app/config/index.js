@@ -111,6 +111,10 @@ const config = {
     updateStakingPlan: 'changePlanStatus',
     getPoolInfo: 'getPoolInfo',
     deposit: 'deposit'
+  },
+  lockUser: {
+    maximumTriesLogin: process.env.MAXIMUM_TRIES_LOGIN,
+    lockTime: process.env.LOCK_TIME
   }
 };
 

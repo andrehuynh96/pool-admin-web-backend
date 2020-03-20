@@ -1,11 +1,12 @@
 const logger = require('app/lib/logger');
-const StakingPlan = require("app/model/staking").erc20_staking_plans;
-const StakingPayout = require("app/model/staking").erc20_staking_payouts;
+const StakingPlan = require("app/model/staking").staking_plans;
+const StakingPayout = require("app/model/staking").staking_payouts;
 const StakingPlatform = require("app/model/staking").staking_platforms;
 const ERC20EventPool = require("app/model/staking").erc20_event_pools;
 const config = require('app/config');
 const database = require('app/lib/database').db().staking;
 const constructTxData = require("app/lib/locking-contract");
+const { secondDurationTime } = require('app/lib/utils');
 
 module.exports = {
   getPlans: async (req, res, next) => {
@@ -49,7 +50,7 @@ module.exports = {
   },
 
   update: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let platformId = req.params.staking_platform_id
       let planId = req.params.plan_id
@@ -80,14 +81,16 @@ module.exports = {
       )
       tx_id = '0x' + tx_id;
 
+      transaction = await database.transaction();
+
       await StakingPlan.update({
         wait_blockchain_confirm_status_flg: true,
         tx_id: tx_id
       }, {
-        where: {
-          id: planId
-        }
-      }, { transaction })
+          where: {
+            id: planId
+          }
+        }, { transaction })
 
       //Create event pool
       let newEvent = {
@@ -96,14 +99,14 @@ module.exports = {
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.erc20_staking_plans SET wait_blockchain_confirm_status_flg = false, name= '${req.body.name}', status = ${req.body.status} , tx_id = '${tx_id}' WHERE id = '${plan.id}'`,
-        fail_event: `UPDATE public.erc20_staking_plans SET wait_blockchain_confirm_status_flg = false WHERE id = '${plan.id}'`
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, name= '${req.body.name}', status = ${req.body.status} , tx_id = '${tx_id}' WHERE id = '${plan.id}'`,
+        fail_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false WHERE id = '${plan.id}'`
       };
 
 
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
       if (!createERC20EventResponse) {
-        await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
       await transaction.commit();
@@ -111,13 +114,13 @@ module.exports = {
     }
     catch (err) {
       logger.error("update staking plan fail: ", err);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(err);
     }
   },
 
   create: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let platformId = req.params.staking_platform_id
       let platform = await StakingPlatform.findOne({
@@ -136,18 +139,23 @@ module.exports = {
       if (!payout) {
         return res.badRequest(res.__("STAKING_PAYOUT_NOT_FOUND"), "STAKING_PAYOUT_NOT", { fields: ["staking_platform_id"] });
       }
+      let durationInSecond = secondDurationTime(req.body.duration, req.body.duration_type);
       planParams = {
         ...req.body,
+        duration_in_second: durationInSecond,
         staking_platform_id: platform.id,
-        erc20_staking_payout_id: payout.id,
+        staking_payout_id: payout.id,
         reward_diff_token_flg: false,
         diff_token_rate: 0,
         wait_blockchain_confirm_status_flg: true
       }
+
+      transaction = await database.transaction();
+
       // INSERT staking-plan
       let createPlanResponse = await StakingPlan.create(planParams, { transaction })
       if (!createPlanResponse) {
-        await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
       let durationTime = { timeNumber: planParams.duration, type: planParams.duration_type }
@@ -159,15 +167,6 @@ module.exports = {
       )
       tx_id = '0x' + tx_id;
 
-      await StakingPlan.update({
-        wait_blockchain_confirm_status_flg: true,
-        tx_id: tx_id
-      }, {
-        where: {
-          id: createPlanResponse.id
-        }
-      }, { transaction })
-
       // INSERT event pool
       let newEvent = {
         name: 'CREATE_NEW_ERC20_STAKING_PLAN',
@@ -175,20 +174,28 @@ module.exports = {
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.erc20_staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = '${tx_id}' WHERE id = '${createPlanResponse.id}' `,
-        fail_event: `DELETE FROM public.erc20_staking_plans where id = '${createPlanResponse.id}'`
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = '${tx_id}' WHERE id = '${createPlanResponse.id}' `,
+        fail_event: `DELETE FROM public.staking_plans where id = '${createPlanResponse.id}'`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
       if (!createERC20EventResponse) {
-        await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
       await transaction.commit();
+      await StakingPlan.update({
+        wait_blockchain_confirm_status_flg: true,
+        tx_id: tx_id
+      }, {
+          where: {
+            id: createPlanResponse.id
+          }
+        }, { transaction })
       return res.ok(true);
     }
     catch (err) {
       logger.error("create staking plan fail: ", err);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(err);
     }
   }

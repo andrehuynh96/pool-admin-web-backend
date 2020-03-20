@@ -60,7 +60,7 @@ router.get(
                   reward_percentage: '3.400',
                   status: 1,
                   reward_diff_token_flg: false,
-                  erc20_staking_payout_id: 96b7f440-1a3b-11ea-978f-2e728ce88125,
+                  staking_payout_id: 96b7f440-1a3b-11ea-978f-2e728ce88125,
                   diff_token_rate: '0',
                   tx_id: '0x5d4206fc925fddbae8c025b8c04a17b82fb83acc',
                   wait_blockchain_confirm_status_flg: false,
@@ -76,7 +76,7 @@ router.get(
                   reward_percentage: '3.400',
                   status: 1,
                   reward_diff_token_flg: false,
-                  erc20_staking_payout_id: 96b7f440-1a3b-11ea-978f-2e728ce88125,
+                  staking_payout_id: 96b7f440-1a3b-11ea-978f-2e728ce88125,
                   diff_token_rate: '0',
                   tx_id: '0x5d4206fc925fddbae8c025b8c04a17b82fb83acc',
                   wait_blockchain_confirm_status_flg: false,
@@ -146,7 +146,7 @@ router.get(
                   reward_percentage: '3.400',
                   status: 1,
                   reward_diff_token_flg: false,
-                  erc20_staking_payout_id: 96b7f440-1a3b-11ea-978f-2e728ce88125,
+                  staking_payout_id: 96b7f440-1a3b-11ea-978f-2e728ce88125,
                   diff_token_rate: '0',
                   tx_id: '0x5d4206fc925fddbae8c025b8c04a17b82fb83acc',
                   wait_blockchain_confirm_status_flg: false,
@@ -249,7 +249,7 @@ router.post(
 
 /**
  * @swagger
- * /web/staking-platforms/{staking_platform_id}/plans/{plan_id}:
+ * /web/staking-platforms/{staking_platform_id}/plans:
  *   post:
  *     summary: create plan
  *     tags:
@@ -258,10 +258,6 @@ router.post(
  *     parameters:
  *       - in: path
  *         name: staking_platform_id
- *         type: string
- *         required: true
- *       - in: path
- *         name: plan_id
  *         type: string
  *         required: true
  *       - in: body
