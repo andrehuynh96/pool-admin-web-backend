@@ -50,7 +50,7 @@ module.exports = {
   },
 
   update: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let platformId = req.params.staking_platform_id
       let planId = req.params.plan_id
@@ -81,6 +81,8 @@ module.exports = {
       )
       tx_id = '0x' + tx_id;
 
+      transaction = await database.transaction();
+
       await StakingPlan.update({
         wait_blockchain_confirm_status_flg: true,
         tx_id: tx_id
@@ -104,7 +106,7 @@ module.exports = {
 
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
       if (!createERC20EventResponse) {
-        await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
       await transaction.commit();
@@ -112,13 +114,13 @@ module.exports = {
     }
     catch (err) {
       logger.error("update staking plan fail: ", err);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(err);
     }
   },
 
   create: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let platformId = req.params.staking_platform_id
       let platform = await StakingPlatform.findOne({
@@ -147,10 +149,13 @@ module.exports = {
         diff_token_rate: 0,
         wait_blockchain_confirm_status_flg: true
       }
+
+      transaction = await database.transaction();
+
       // INSERT staking-plan
       let createPlanResponse = await StakingPlan.create(planParams, { transaction })
       if (!createPlanResponse) {
-        await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
       let durationTime = { timeNumber: planParams.duration, type: planParams.duration_type }
@@ -174,7 +179,7 @@ module.exports = {
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
       if (!createERC20EventResponse) {
-        await transaction.rollback();
+        if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
       await transaction.commit();
@@ -190,7 +195,7 @@ module.exports = {
     }
     catch (err) {
       logger.error("create staking plan fail: ", err);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(err);
     }
   }

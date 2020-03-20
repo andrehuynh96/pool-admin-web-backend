@@ -44,7 +44,10 @@ module.exports = async (req, res, next) => {
 
     let passWord = bcrypt.hashSync(req.body.password, 10);
 
-    let data = { password_hash: passWord };
+    let data = { 
+      password_hash: passWord,
+      attempt_login_number: 0 // reset attempt login number after password resetting
+    };
 
     if (user.user_sts == UserStatus.UNACTIVATED) {
       data.user_sts = UserStatus.ACTIVATED;

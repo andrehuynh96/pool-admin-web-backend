@@ -65,7 +65,7 @@ module.exports = {
       return res.ok(mapper(results));
     } catch (error) {
       logger.error(error);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(error);
     }
   }
