@@ -49,16 +49,22 @@ const config = {
     pass: process.env.SMTP_PASS
   },
   mailSendAs: process.env.MAIL_SEND_AS || 'no-reply@infinito.io',
+  website: {
+    url: process.env.WEBSITE_URL,
+    urlActive: process.env.WEBSITE_URL + '/sign-in',
+    urlResetPassword: process.env.WEBSITE_URL + '/set-new-password',
+    urlConfirmNewIp: process.env.WEBSITE_URL + '/sign-in',
+    urlImages: process.env.PARTNER_NAME ? process.env.WEBSITE_URL +'/'+ process.env.PARTNER_NAME.toLowerCase() : process.env.WEBSITE_URL,
+  },
   emailTemplate: {
-    partnerName: "Moonstake",
-    activateAccount: "Moonstake/activate-account.ejs",
-    resetPassword: "Moonstake/reset-password.ejs"
+    partnerName: process.env.PARTNER_NAME,
+    activeAccount: process.env.PARTNER_NAME + "/activate-account.ejs",
+    resetPassword: process.env.PARTNER_NAME + "/reset-password.ejs",
+    deactiveAccount: process.env.PARTNER_NAME + "/deactive-account.ejs"
   },
   expiredVefiryToken: process.env.EXPIRED_VERIFY_TOKEN ? parseInt(process.env.EXPIRED_VERIFY_TOKEN) : 2,
   enableSeed: process.env.ENABLE_SEED == "1",
   websiteUrl: process.env.WEBSITE_URL,
-  urlImages: process.env.WEBSITE_URL + '/images',
-  linkWebsiteVerify: process.env.WEBSITE_URL + '/set-new-password',
   linkWebsiteActiveUser: process.env.WEBSITE_URL + '/active-user',
   disableRecaptcha: true,
   CDN: {

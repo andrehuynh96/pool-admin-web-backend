@@ -403,12 +403,12 @@ async function _sendEmailCreateUser(user, verifyToken) {
     let subject = `${config.emailTemplate.partnerName} - Create Account`;
     let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
     let data = {
-      imageUrl: config.urlImages,
-      link: `${config.linkWebsiteVerify}?token=${verifyToken}`,
+      imageUrl: config.website.urlImages,
+      link: `${config.website.urlActive}?token=${verifyToken}`,
       hours: config.expiredVefiryToken
     }
     data = Object.assign({}, data, config.email);
-    await mailer.sendWithTemplate(subject, from, user.email, data, config.emailTemplate.activateAccount);
+    await mailer.sendWithTemplate(subject, from, user.email, data, config.emailTemplate.activeAccount);
   } catch (err) {
     logger.error("send email create account fail", err);
   }
@@ -416,15 +416,16 @@ async function _sendEmailCreateUser(user, verifyToken) {
 
 async function _sendEmailDeleteUser(user) {
   try {
-    let subject = 'Listco Account - Delete Account';
-    let from = `Listco <${config.mailSendAs}>`;
-    let data = {
-      email: user.email,
-      fullname: user.email,
-      site: config.websiteUrl
-    }
-    data = Object.assign({}, data, config.email);
-    await mailer.sendWithTemplate(subject, from, user.email, data, "delete-user.ejs");
+    console.log("not email template")
+    // let subject = 'Listco Account - Delete Account';//TODO:
+    // let from = `Listco <${config.mailSendAs}>`;
+    // let data = {
+    //   email: user.email,
+    //   fullname: user.email,
+    //   site: config.websiteUrl
+    // }
+    // data = Object.assign({}, data, config.email);
+    // await mailer.sendWithTemplate(subject, from, user.email, data, "delete-user.ejs");
   } catch (err) {
     logger.error("send email create account fail", err);
   }
