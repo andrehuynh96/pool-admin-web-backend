@@ -37,13 +37,22 @@ variables:
  except:
   - branches
 
-Node01Build:
+DeployBS:
  variables:
   _ENV: "stage" 
  extends:
   - .BuildJSApp
   - .OnlyStagingBS
  tags:
-  - stage-stak-ap-bs-ansible
+  - stage-stak-mp-ansible
+  
+DeployMS:
+ variables:
+  _ENV: "stage" 
+ extends:
+  - .BuildJSApp
+  - .OnlyStagingMS
+ tags:
+  - stage-stak-mp-ansible
 
   
