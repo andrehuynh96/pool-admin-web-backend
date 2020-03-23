@@ -11,17 +11,12 @@ variables:
  script:
   - cd ${ANSIBLE_DIR}
   - ansible_file=`grep ${CI_PROJECT_NAME}.git *.yml | awk '{print $1}'|awk -F':' '{print $1}' | grep ${_ENV}`
-  - sudo su ubuntu -c "ansible-playbook $ansible_file"
+  - echo "ansible-playbook $ansible_file --extra-vars=\"version=${CI_COMMIT_TAG}\""
+  - sudo su ubuntu -c "ansible-playbook $ansible_file --extra-vars=\"version=${CI_COMMIT_TAG}\""
   
 .OnlyStagingMS:
  only:
   - /^.*-ms-rc$/
- except:
-  - branches
-
-.OnlyStagingBS:
- only:
-  - /^.*-bs-rc$/
  except:
   - branches
 
@@ -31,20 +26,6 @@ variables:
  except:
   - branches
 
-.OnlyProductionBS:
- only:
-  - /^.*-bs$/
- except:
-  - branches
-
-DeployBS:
- variables:
-  _ENV: "stage" 
- extends:
-  - .BuildJSApp
-  - .OnlyStagingBS
- tags:
-  - stage-stak-mp-ansible
   
 DeployMS:
  variables:
