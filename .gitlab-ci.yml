@@ -3,6 +3,7 @@ stages:
  - test
  - deploy   
 variables:
+ GIT_STRATEGY: none
  ANSIBLE_DIR: "/home/ubuntu/staking-iac/ansible"
  
 ###
@@ -11,8 +12,9 @@ variables:
  script:
   - cd ${ANSIBLE_DIR}
   - ansible_file=`grep ${CI_PROJECT_NAME}.git *.yml | awk '{print $1}'|awk -F':' '{print $1}' | grep ${_ENV}`
-  - echo "ansible-playbook $ansible_file --extra-vars=\"version=${CI_COMMIT_TAG}\""
-  - sudo su ubuntu -c "ansible-playbook $ansible_file --extra-vars=\"version=${CI_COMMIT_TAG}\""
+  - echo "INFO: anisble_file: $ansible_file"
+  - echo "INFO: ansible-playbook $ansible_file --extra-vars=\"${CI_COMMIT_TAG}\""
+  - sudo su ubuntu -c "ansible-playbook $ansible_file --extra-vars=\"${CI_COMMIT_TAG}\""
   
 .OnlyStagingMS:
  only:
