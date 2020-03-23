@@ -19,9 +19,11 @@ module.exports = {
   createStakingPlatform: async (_poolId, _poolName, _tokenAddr, _reserveTokenAmount, _needWhitelist) => {
     let max_payout = new BN(_reserveTokenAmount, 10);
     let decimal = await coinAPI.getContractInfo(_tokenAddr);
-    if (decimal) decimal = decimal.data.decimals;
-    else decimal = 1;
-    max_payout = max_payout.mul(new BN(decimal, 10));
+    if (decimal) {
+      decimal = decimal.data.decimals;
+    }
+    else decimal = 0;
+    max_payout = max_payout.mul(new BN(10 ** decimal, 10));
     let poolId = new BN(_poolId.replace(/-/g, ''), 16);
     let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlatform).inputs.map(ele => ele.type);
     let sig = abi.methodID(
@@ -35,8 +37,6 @@ module.exports = {
       max_payout.toString(),
       _needWhitelist
     ];
-    // console.log(paramTypeList);
-    // console.log(paramList);
     let encoded = abi.rawEncode(paramTypeList, paramList);
     let data = '0x' + sig.toString('hex') + encoded.toString('hex');
     // console.log(data);
@@ -47,8 +47,8 @@ module.exports = {
     let amount = new BN(_newAmount, 10);
     let decimal = await coinAPI.getContractInfo(_tokenAddr);
     if (decimal) decimal = decimal.data.decimals;
-    else decimal = 1;
-    amount = amount.mul(new BN(decimal, 10));
+    else decimal = 0;
+    amount = amount.mul(new BN(10 ** decimal, 10));
     let poolId = new BN(_poolId.replace(/-/g, ''), 16);
     let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.updateStakingMaxPayout).inputs.map(ele => ele.type);
     let sig = abi.methodID(
@@ -59,11 +59,8 @@ module.exports = {
       poolId.toString(),
       amount.toString()
     ];
-    // console.log(paramTypeList);
-    // console.log(paramList);
     let encoded = abi.rawEncode(paramTypeList, paramList);
     let data = '0x' + sig.toString('hex') + encoded.toString('hex');
-    // console.log(data);
     let ret = await _constructAndSignTx(data);
     return ret;
   },
@@ -114,28 +111,6 @@ module.exports = {
     let ret = await _constructAndSignTx(data);
     return ret;
   },
-  // deposit: async (_poolId, _partnerId, _planId, _tokenAmount) => {
-  //     let poolId = new BN(_poolId.replace(/-/g, ''), 16);
-  //     let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.deposit).inputs.map(ele => ele.type);
-  //     let sig = abi.methodID(
-  //         config.lockingContract.deposit, 
-  //         paramTypeList
-  //     );
-  //     let paramList = [
-  //         poolId.toString(),
-  //         _poolName,
-  //         _tokenAddr,
-  //         max_payout.toString(),
-  //         _needWhitelist
-  //     ];
-  //     console.log(paramTypeList);
-  //     console.log(paramList);
-  //     let encoded = abi.rawEncode(paramTypeList, paramList);
-  //     let data = '0x' + sig.toString('hex') + encoded.toString('hex');
-  //     console.log(data);
-  //     let ret = await _constructAndSignTx(data);
-  //     return ret;
-  // }
 }
 
 async function _getTestToken() {
