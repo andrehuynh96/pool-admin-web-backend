@@ -39,7 +39,6 @@ module.exports = {
     ];
     let encoded = abi.rawEncode(paramTypeList, paramList);
     let data = '0x' + sig.toString('hex') + encoded.toString('hex');
-    // console.log(data);
     let ret = await _constructAndSignTx(data);
     return ret;
   },
@@ -84,11 +83,8 @@ module.exports = {
       durationSecond.toString(),
       interestRate.toString()
     ];
-    // console.log(paramTypeList);
-    // console.log(paramList);
     let encoded = abi.rawEncode(paramTypeList, paramList);
     let data = '0x' + sig.toString('hex') + encoded.toString('hex');
-    // console.log(data);
     let ret = await _constructAndSignTx(data);
     return ret;
   },
@@ -103,11 +99,8 @@ module.exports = {
       planId.toString(),
       _isClosed
     ];
-    // console.log(paramTypeList);
-    // console.log(paramList);
     let encoded = abi.rawEncode(paramTypeList, paramList);
     let data = '0x' + sig.toString('hex') + encoded.toString('hex');
-    // console.log(data);
     let ret = await _constructAndSignTx(data);
     return ret;
   },
@@ -129,9 +122,11 @@ async function _getTestToken() {
     // console.log(txParams);
     let tx = new Transaction(txParams, { chain: config.txCreator.ETH.testNet === 1 ? 'ropsten' : 'mainnet' });
     let { tx_raw, tx_id } = await txCreator.sign({ raw: tx.serialize().toString('hex') });
-    if (tx_raw && tx_id) resolve({ tx_raw, tx_id });
-    else reject('Sign transaction failed');
-    await coinAPI.sendTransaction({ rawtx: tx_raw });
+    let ret = await coinAPI.sendTransaction({ rawtx: '0x' + tx_raw });
+    console.log(tx_raw);
+    if (ret.msg) reject('Broadcast tx failed: ' + ret.msg);
+    if (tx_raw) resolve({ tx_raw, tx_id: ret.data.Txid });
+    else reject('Sign and send transaction failed');
   })
 }
 
@@ -148,11 +143,12 @@ async function _constructAndSignTx(data, value = '0x0') {
       value,
       data
     };
-    // console.log(txParams);
     let tx = new Transaction(txParams, { chain: config.txCreator.ETH.testNet === 1 ? 'ropsten' : 'mainnet' });
     let { tx_raw, tx_id } = await txCreator.sign({ raw: tx.serialize().toString('hex') });
-    if (tx_raw && tx_id) resolve({ tx_raw, tx_id });
-    else reject('Sign transaction failed');
-    await coinAPI.sendTransaction({ rawtx: tx_raw });
+    let ret = await coinAPI.sendTransaction({ rawtx: '0x' + tx_raw });
+    console.log(tx_raw);
+    if (ret.msg) reject('Broadcast tx failed: ' + ret.msg);
+    if (tx_raw) resolve({ tx_raw, tx_id: ret.data.tx_id.replace('0x', '') });
+    else reject('Sign and send transaction failed');
   })
-} 
+}
