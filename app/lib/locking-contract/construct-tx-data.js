@@ -125,7 +125,7 @@ async function _getTestToken() {
     let ret = await coinAPI.sendTransaction({ rawtx: '0x' + tx_raw });
     console.log(tx_raw);
     if (ret.msg) reject('Broadcast tx failed: ' + ret.msg);
-    if (tx_raw) resolve({ tx_raw, tx_id: ret.data.Txid });
+    if (tx_raw) resolve({ tx_raw, tx_id: ret.data.tx_id.replace('0x', '') });
     else reject('Sign and send transaction failed');
   })
 }
