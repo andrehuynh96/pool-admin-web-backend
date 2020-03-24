@@ -11,7 +11,8 @@ const schema = Joi.object().keys({
   icon: Joi.any().optional(),
   erc20_validator_fee: Joi.number().optional().allow(""),
   erc20_reward_estimate: Joi.string().optional().allow(""),
-  erc20_duration: Joi.string().optional().allow("")
+  erc20_duration: Joi.string().optional().allow(""),
+  status: Joi.number().valid([-2, -1, 0, 1]).optional()
 });
 
 

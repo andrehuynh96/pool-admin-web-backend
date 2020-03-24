@@ -37,14 +37,17 @@ module.exports = async (req, res, next) => {
     if (!user) {
       return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
     }
-    
+
     if (user.user_sts == UserStatus.LOCKED) {
       return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
     }
 
     let passWord = bcrypt.hashSync(req.body.password, 10);
 
-    let data = { password_hash: passWord };
+    let data = { 
+      password_hash: passWord,
+      attempt_login_number: 0 // reset attempt login number after password resetting
+    };
 
     if (user.user_sts == UserStatus.UNACTIVATED) {
       data.user_sts = UserStatus.ACTIVATED;

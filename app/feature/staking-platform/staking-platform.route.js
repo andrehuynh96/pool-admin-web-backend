@@ -626,6 +626,8 @@ module.exports = router;
  *                type: string
  *              erc20_duration:
  *                type: string
+ *              status:
+ *                type: number
  *            example:
  *                  {
                       "name": "Infinitooooooooo",
@@ -633,7 +635,8 @@ module.exports = router;
                       "icon": "https://static.chainservices.info/staking/platforms/eth.png",
                       "erc20_validator_fee": 20,
                       "erc20_reward_estimate": "10%~20%",
-                      "erc20_duration": "10 ~ 20 days"
+                      "erc20_duration": "10 ~ 20 days",
+                      "status": 1
  *                  }
  *     produces:
  *       - application/json
@@ -664,7 +667,7 @@ module.exports = router;
                       "icon": "https://terraform-state-web-wallet.s3.ap-southeast-1.amazonaws.com/images/default-1583898984222.jpg",
                       "updated_by": 64,
                       "created_by": 64,
-                      "status": -1,
+                      "status": 1,
                       "wait_blockchain_confirm_status_flg": true,
                       "updatedAt": "2020-03-11T03:56:24.844Z",
                       "createdAt": "2020-03-11T03:56:24.844Z",
@@ -716,6 +719,7 @@ module.exports = router;
  *            - symbol
  *            - icon
  *            - max_payout
+ *            - status
  *            properties:
  *              name:
  *                type: string

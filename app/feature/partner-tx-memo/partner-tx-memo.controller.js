@@ -66,7 +66,7 @@ memo.create = async (req, res, next) => {
     });
   } catch (error) {
     logger.error(error);
-    await transaction.rollback();
+    if (transaction) await transaction.rollback();
     next(error);
   }
 };

@@ -21,7 +21,7 @@ module.exports = {
     }
   },
   update: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let { staking_platform_id: platformId, id: payoutId } = req.params;
       let payout = await stakingPayout.findOne({
@@ -46,6 +46,8 @@ module.exports = {
       tx_id = '0x' + tx_id;
       console.log(tx_id);
 
+      transaction = await database.transaction();
+      
       let [_, response] = await stakingPayout.update({
         wait_blockchain_confirm_status_flg: true,
         tx_id: tx_id
@@ -72,7 +74,7 @@ module.exports = {
     }
     catch (err) {
       logger.error("update max payout fail: ", err);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(err);
     }
   }

@@ -164,12 +164,22 @@ module.exports = {
   },
 
   createERC20: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let validAddress = WAValidator.validate(req.body.sc_token_address, 'eth');
       if (!validAddress)
         return res.badRequest(res.__("INVALID_TOKEN_ADDRESS"), "INVALID_TOKEN_ADDRESS", { fields: ["sc_token_address"] });
 
+      if (req.body.icon) {
+        let file = path.parse(req.body.icon.file.name);
+        if (config.CDN.exts.indexOf(file.ext.toLowerCase()) == -1) {
+          return res.badRequest(res.__("UNSUPPORT_FILE_EXTENSION"), "UNSUPPORT_FILE_EXTENSION", { fields: ["icon"] });
+        }
+        req.body.icon = await _uploadFile(req, res, next);
+      }
+
+      transaction  = await database.transaction();
+      
       let lockingAddress = await Settings.findOne({
         where: {
           key: 'LOCKING_CONTRACT'
@@ -196,14 +206,6 @@ module.exports = {
         created_by: req.user.id,
         wait_blockchain_confirm_status_flg: false,
       }, { transaction })
-
-      if (req.body.icon) {
-        let file = path.parse(req.body.icon.file.name);
-        if (config.CDN.exts.indexOf(file.ext.toLowerCase()) == -1) {
-          return res.badRequest(res.__("UNSUPPORT_FILE_EXTENSION"), "UNSUPPORT_FILE_EXTENSION", { fields: ["icon"] });
-        }
-        req.body.icon = await _uploadFile(req, res, next);
-      }
 
       let createPlatformResponse = await StakingPlatform.create({
         ...req.body,
@@ -263,7 +265,7 @@ module.exports = {
     }
     catch (err) {
       logger.error('get staking platform fail:', err);
-      await transaction.rollback();
+      if (transaction) await transaction.rollback();
       next(err);
     }
   },
