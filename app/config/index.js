@@ -52,7 +52,7 @@ const config = {
   website: {
     url: process.env.WEBSITE_URL,
     urlActive: process.env.WEBSITE_URL + '/login?token=',
-    urlResetPassword: process.env.WEBSITE_URL + '/set-new-password/token=',
+    urlResetPassword: process.env.WEBSITE_URL + '/set-new-password/',
     urlConfirmNewIp: process.env.WEBSITE_URL + '/confirm-ip',
     urlImages: process.env.PARTNER_NAME ? process.env.WEBSITE_URL + '/' + process.env.PARTNER_NAME.toLowerCase() : process.env.WEBSITE_URL,
   },
