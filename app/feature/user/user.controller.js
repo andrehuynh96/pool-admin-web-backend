@@ -242,11 +242,11 @@ module.exports = {
       transaction = await database.transaction();
 
       let [_, response] = await User.update(data, {
-          where: {
-            id: req.params.id
-          },
-          returning: true
-        }, { transaction });
+        where: {
+          id: req.params.id
+        },
+        returning: true
+      }, { transaction });
       if (!response || response.length == 0) {
         if (transaction) await transaction.rollback();
         return res.serverInternalError();
@@ -404,7 +404,7 @@ async function _sendEmailCreateUser(user, verifyToken) {
     let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
     let data = {
       imageUrl: config.website.urlImages,
-      link: `${config.website.urlActive}?token=${verifyToken}`,
+      link: `${config.website.urlActive}${verifyToken}`,
       hours: config.expiredVefiryToken
     }
     data = Object.assign({}, data, config.email);
@@ -422,7 +422,7 @@ async function _sendEmailDeleteUser(user) {
       imageUrl: config.website.urlImages,
     }
     data = Object.assign({}, data, config.email);
-    await mailer.sendWithTemplate(subject, from, user.email, data,config.emailTemplate.deactiveAccount );
+    await mailer.sendWithTemplate(subject, from, user.email, data, config.emailTemplate.deactiveAccount);
   } catch (err) {
     logger.error("send email delete account fail", err);
   }
