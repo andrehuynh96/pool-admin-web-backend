@@ -145,7 +145,7 @@ module.exports = {
         duration: req.body.duration,
         duration_type: req.body.duration_type,
         reward_percentage: req.body.reward_percentage,
-        status: -1,
+        status: 0,
         duration_in_second: durationInSecond,
         staking_platform_id: platform.id,
         staking_payout_id: payout.id,
