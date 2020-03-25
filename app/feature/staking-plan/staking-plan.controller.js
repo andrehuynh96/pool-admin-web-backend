@@ -72,7 +72,7 @@ module.exports = {
         return res.badRequest(res.__("STAKING_PLAN_NOT_FOUND"), "STAKING_PLAN_NOT_FOUND", { fields: ["plan_id"] });
       }
       if (plan.wait_blockchain_confirm_status_flg) {
-        return res.badRequest(res.__("PLAN_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLAN_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
+        return res.forbidden(res.__("PLAN_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLAN_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
       }
 
       let { tx_raw, tx_id } = await constructTxData.updateStakingPlan(

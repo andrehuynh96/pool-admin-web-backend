@@ -63,7 +63,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       let userRole = await UserRole.findOne({
@@ -86,7 +86,7 @@ module.exports = {
   delete: async (req, res, next) => {
     try {
       if (req.params.id == req.user.id) {
-        return res.badRequest(res.__("USER_NOT_DELETED"), "USER_NOT_DELETED");
+        return res.badRequest(res.__("USER_NOT_DELETED"), "USER_NOT_DELETED", { fields: ['id'] });
       }
       let result = await User.findOne({
         where: {
@@ -95,7 +95,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       let [_, response] = await User.update({
@@ -129,7 +129,7 @@ module.exports = {
       })
 
       if (result) {
-        return res.badRequest(res.__("EMAIL_EXISTS_ALREADY"), "EMAIL_EXISTS_ALREADY");
+        return res.badRequest(res.__("EMAIL_EXISTS_ALREADY"), "EMAIL_EXISTS_ALREADY", { fields: ['email'] });
       }
 
       let role = await Role.findOne({
@@ -139,7 +139,7 @@ module.exports = {
       })
 
       if (!role) {
-        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND");
+        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND", { fields: ['role_id'] });
       }
 
       transaction = await database.transaction();
@@ -219,7 +219,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       let role = await Role.findOne({
@@ -229,7 +229,7 @@ module.exports = {
       })
 
       if (!role) {
-        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND");
+        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND", { fields: ['role_id'] });
       }
       let data = {
         user_sts: req.body.user_sts,
@@ -242,11 +242,11 @@ module.exports = {
       transaction = await database.transaction();
 
       let [_, response] = await User.update(data, {
-          where: {
-            id: req.params.id
-          },
-          returning: true
-        }, { transaction });
+        where: {
+          id: req.params.id
+        },
+        returning: true
+      }, { transaction });
       if (!response || response.length == 0) {
         if (transaction) await transaction.rollback();
         return res.serverInternalError();
@@ -293,7 +293,7 @@ module.exports = {
 
       let today = new Date();
       if (otp.expired_at < today || otp.expired || otp.used) {
-        return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED");
+        return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED", { fields: ['verify_token'] });
       }
 
       let user = await User.findOne({
@@ -355,7 +355,7 @@ module.exports = {
       })
 
       if (!user) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       if (user.user_sts == UserStatus.ACTIVATED) {
@@ -404,7 +404,7 @@ async function _sendEmailCreateUser(user, verifyToken) {
     let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
     let data = {
       imageUrl: config.website.urlImages,
-      link: `${config.website.urlActive}?token=${verifyToken}`,
+      link: `${config.website.urlActive}${verifyToken}`,
       hours: config.expiredVefiryToken
     }
     data = Object.assign({}, data, config.email);
@@ -416,17 +416,14 @@ async function _sendEmailCreateUser(user, verifyToken) {
 
 async function _sendEmailDeleteUser(user) {
   try {
-    console.log("not email template")
-    // let subject = 'Listco Account - Delete Account';//TODO:
-    // let from = `Listco <${config.mailSendAs}>`;
-    // let data = {
-    //   email: user.email,
-    //   fullname: user.email,
-    //   site: config.websiteUrl
-    // }
-    // data = Object.assign({}, data, config.email);
-    // await mailer.sendWithTemplate(subject, from, user.email, data, "delete-user.ejs");
+    let subject = `${config.emailTemplate.partnerName} - Delete Account`;
+    let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
+    let data = {
+      imageUrl: config.website.urlImages,
+    }
+    data = Object.assign({}, data, config.email);
+    await mailer.sendWithTemplate(subject, from, user.email, data, config.emailTemplate.deactiveAccount);
   } catch (err) {
-    logger.error("send email create account fail", err);
+    logger.error("send email delete account fail", err);
   }
 }

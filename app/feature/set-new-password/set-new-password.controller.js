@@ -11,7 +11,7 @@ const Op = Sequelize.Op;
 module.exports = async (req, res, next) => {
   try {
     if (!passwordEvaluator(req.body.password)) {
-      return res.badRequest(res.__("WEAK_PASSWORD"), "WEAK_PASSWORD");
+      return res.badRequest(res.__("WEAK_PASSWORD"), "WEAK_PASSWORD", { fields: ['password'] });
     }
 
     let otp = await OTP.findOne({
@@ -26,7 +26,7 @@ module.exports = async (req, res, next) => {
 
     let today = new Date();
     if (otp.expired_at < today || otp.expired || otp.used) {
-      return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED");
+      return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED", { fields: ['verify_token'] });
     }
 
     let user = await User.findOne({
@@ -37,7 +37,7 @@ module.exports = async (req, res, next) => {
     if (!user) {
       return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
     }
-    
+
     if (user.user_sts == UserStatus.LOCKED) {
       return res.forbidden(res.__("ACCOUNT_LOCKED"), "ACCOUNT_LOCKED");
     }
