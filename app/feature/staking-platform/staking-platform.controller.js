@@ -79,7 +79,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND");
+        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND", { fields: ['id'] });
       }
 
       return res.ok(result);
@@ -100,11 +100,11 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND");
+        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND", { fields: ['id'] });
       }
 
       if (result.wait_blockchain_confirm_status_flg)
-        return res.badRequest(res.__("PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
+        return res.forbidden(res.__("PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
 
       if (req.body.icon) {
         let file = path.parse(req.body.icon.file.name);
@@ -280,11 +280,11 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND");
+        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND", { fields: ['id'] });
       }
 
       if (result.wait_blockchain_confirm_status_flg)
-        return res.badRequest(res.__("PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
+        return res.forbidden(res.__("PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
 
       if (req.body.icon) {
         let file = path.parse(req.body.icon.file.name);

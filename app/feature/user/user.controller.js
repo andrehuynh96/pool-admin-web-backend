@@ -63,7 +63,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       let userRole = await UserRole.findOne({
@@ -86,7 +86,7 @@ module.exports = {
   delete: async (req, res, next) => {
     try {
       if (req.params.id == req.user.id) {
-        return res.badRequest(res.__("USER_NOT_DELETED"), "USER_NOT_DELETED");
+        return res.badRequest(res.__("USER_NOT_DELETED"), "USER_NOT_DELETED", { fields: ['id'] });
       }
       let result = await User.findOne({
         where: {
@@ -95,7 +95,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       let [_, response] = await User.update({
@@ -129,7 +129,7 @@ module.exports = {
       })
 
       if (result) {
-        return res.badRequest(res.__("EMAIL_EXISTS_ALREADY"), "EMAIL_EXISTS_ALREADY");
+        return res.badRequest(res.__("EMAIL_EXISTS_ALREADY"), "EMAIL_EXISTS_ALREADY", { fields: ['email'] });
       }
 
       let role = await Role.findOne({
@@ -139,7 +139,7 @@ module.exports = {
       })
 
       if (!role) {
-        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND");
+        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND", { fields: ['role_id'] });
       }
 
       transaction = await database.transaction();
@@ -219,7 +219,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       let role = await Role.findOne({
@@ -229,7 +229,7 @@ module.exports = {
       })
 
       if (!role) {
-        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND");
+        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND", { fields: ['role_id'] });
       }
       let data = {
         user_sts: req.body.user_sts,
@@ -293,7 +293,7 @@ module.exports = {
 
       let today = new Date();
       if (otp.expired_at < today || otp.expired || otp.used) {
-        return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED");
+        return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED", { fields: ['verify_token'] });
       }
 
       let user = await User.findOne({
@@ -355,7 +355,7 @@ module.exports = {
       })
 
       if (!user) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       if (user.user_sts == UserStatus.ACTIVATED) {
