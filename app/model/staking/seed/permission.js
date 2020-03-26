@@ -4,7 +4,7 @@ const PermissionKey = require("app/model/staking/value-object/permission-key");
 (async () => {
   let models = [];
   let permissions = Object.keys(PermissionKey).map(key => {
-    return PermissionKey[key]
+    return PermissionKey[key].KEY;
   })
   for (let permission of permissions) {
     let m = await Model.findOne({

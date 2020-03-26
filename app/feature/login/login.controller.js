@@ -2,6 +2,8 @@ const Sequelize = require('sequelize');
 const logger = require('app/lib/logger');
 const User = require("app/model/staking").users;
 const UserActivityLog = require("app/model/staking").user_activity_logs;
+const RolePermissions = require("app/model/staking").role_permissions;
+const Permissions = require("app/model/staking").permissions;
 const OTP = require("app/model/staking").otps;
 const UserStatus = require("app/model/staking/value-object/user-status");
 const ActionType = require("app/model/staking/value-object/user-activity-action-type");
@@ -11,6 +13,7 @@ const bcrypt = require('bcrypt');
 const config = require("app/config");
 const uuidV4 = require('uuid/v4');
 const UserRole = require('app/model/staking').user_roles;
+const Op = Sequelize.Op;
 
 module.exports = async (req, res, next) => {
   try {
@@ -56,7 +59,7 @@ module.exports = async (req, res, next) => {
       if (nextAcceptableLogin >= rightNow && user.attempt_login_number >= config.lockUser.maximumTriesLogin) // don't forbid if lock time has passed
         return res.forbidden(res.__("ACCOUNT_TEMPORARILY_LOCKED_DUE_TO_MANY_WRONG_ATTEMPTS"), "ACCOUNT_TEMPORARILY_LOCKED_DUE_TO_MANY_WRONG_ATTEMPTS");
       await User.update({
-        attempt_login_number: 0, 
+        attempt_login_number: 0,
         latest_login_at: Sequelize.fn('NOW') // TODO: review this in case 2fa is enabled
       }, {
         where: {
@@ -73,12 +76,12 @@ module.exports = async (req, res, next) => {
       await OTP.update({
         expired: true
       }, {
-          where: {
-            user_id: user.id,
-            action_type: OtpType.TWOFA
-          },
-          returning: true
-        })
+        where: {
+          user_id: user.id,
+          action_type: OtpType.TWOFA
+        },
+        returning: true
+      })
 
       await OTP.create({
         code: verifyToken,
@@ -111,10 +114,29 @@ module.exports = async (req, res, next) => {
       });
       req.session.authenticated = true;
       req.session.user = user;
+
       let roleList = roles.map(role => role.role_id);
-      req.session.role = roleList;
-      let response = userMapper(user); 
-      response.role = roleList;
+      let rolePermissions = await RolePermissions.findAll({
+        attributes: [
+          "permission_id"
+        ],
+        where: {
+          role_id: roleList
+        }
+      });
+      rolePermissions = [...new Set(rolePermissions.map(ele => ele.permission_id))];
+      let permissions = await Permissions.findAll({
+        attributes: [
+          "name"
+        ],
+        where: {
+          id: rolePermissions
+        }
+      });
+      req.session.roles = permissions.map(ele => ele.name);
+
+      let response = userMapper(user);
+      response.roles = roleList;
       return res.ok({
         twofa: false,
         user: response
