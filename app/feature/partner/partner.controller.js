@@ -48,7 +48,7 @@ partner.create = async (req, res, next) => {
       }
     })
     if(child){
-      return res.badRequest(res.__("EMAIL_EXIST_ALREADY"), "EMAIL_EXIST_ALREADY")
+      return res.badRequest(res.__("EMAIL_EXIST_ALREADY"), "EMAIL_EXIST_ALREADY", { fields: ['email'] });
     }
     logger.info('partner::create');
     req.body.created_by = req.user.id;
