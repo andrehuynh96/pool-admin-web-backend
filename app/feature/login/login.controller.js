@@ -134,6 +134,7 @@ module.exports = async (req, res, next) => {
         }
       });
       req.session.roles = permissions.map(ele => ele.name);
+      req.session.role = roleList;
 
       let response = userMapper(user);
       response.roles = roleList;

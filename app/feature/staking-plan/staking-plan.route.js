@@ -240,7 +240,7 @@ router.put(
 router.post(
   '/staking-platforms/:staking_platform_id/plans',
   authenticate,
-  authority(Permission.CREATE_PLAN_STAKING_PLATFORM),
+  authority(Permission.CREATE_PLAN_ERC20_STAKING_PLATFORM),
   validator(create),
   controller.create
 )

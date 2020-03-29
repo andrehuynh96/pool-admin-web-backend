@@ -4,13 +4,15 @@ const Model = require("app/model/staking").roles;
   let count = await Model.count();
   if (count == 0) {
     await Model.bulkCreate([{
+      name: "Master"
+    }, {
       name: "Admin"
     }, {
-      name: "Operator"
+      name: "Operator 1"
     }, {
-      name: "Master"
+      name: "Operator 2"
     }], {
-        returning: true
-      });
+      returning: true
+    });
   }
 })();

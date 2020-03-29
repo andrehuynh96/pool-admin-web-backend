@@ -14,11 +14,12 @@ let PermissionKey = Object.assign({}, require("app/model/staking/value-object/pe
     });
     let data = [];
     Object.keys(PermissionKey).forEach(key => {
-      PermissionKey[key].ROLES.map(ele => { 
-        data.push({
-          role_id: roles[ele],
-          permission_id: permissions[key]
-        } )
+      if (PermissionKey[key].ROLES.length > 0)
+        PermissionKey[key].ROLES.map(ele => {
+          data.push({
+            role_id: roles[ele],
+            permission_id: permissions[key]
+          })
       });
     });
     await RolePermission.bulkCreate(data, {
