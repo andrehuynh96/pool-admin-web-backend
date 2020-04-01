@@ -1,56 +1,262 @@
 module.exports = {
-  CREATE_USER: "CREATE_USER",
-  UPDATE_USER: "UPDATE_USER",
-  DELETE_USER: "DELETE_USER",
-  VIEW_LIST_USER: "VIEW_LIST_USER",
-  VIEW_USER: "VIEW_USER",
-  ACTIVE_USER: "ACTIVE_USER",
-  VIEW_ACCOUNT: "VIEW_ACCOUNT",
-  CHANGE_PASSWORD_ACCOUNT: "CHANGE_PASSWORD_ACCOUNT",
-  VIEW_2FA_ACCOUNT: "VIEW_2FA_ACCOUNT",
-  UPDATE_2FA_ACCOUNT: "UPDATE_2FA_ACCOUNT",
-  VIEW_LOGIN_HISTORY_ACCOUNT: "VIEW_LOGIN_HISTORY_ACCOUNT",
-  VIEW_LIST_COMMISSION_SETTING: "VIEW_LIST_COMMISSION_SETTING",
-  VIEW_COMMISSION_HISTORY_SETTING: "VIEW_COMMISSION_HISTORY_SETTING",
-  CREATE_COMMISSION_SETTING: "CREATE_COMMISSION_SETTING",
-  CREATE_PARTNER: "CREATE_PARTNER",
-  UPDATE_PARTNER: "UPDATE_PARTNER",
-  DELETE_PARTNER: "DELETE_PARTNER",
-  VIEW_LIST_PARTNER: "VIEW_LIST_PARTNER",
-  VIEW_PARTNER: "VIEW_PARTNER",
-  VIEW_LIST_CHILD_PARTNER: "VIEW_LIST_CHILD_PARTNER",
-  VIEW_LIST_KEY_PARTNER: "VIEW_LIST_KEY_PARTNER",
-  CREATE_KEY_PARTNER: "CREATE_KEY_PARTNER",
-  DELETE_KEY_PARTNER: "DELETE_KEY_PARTNER",
-  VIEW_LIST_COMMISSION_PARTNER: "VIEW_LIST_COMMISSION_PARTNER",
-  CREATE_COMMISSION_PARTNER: "CREATE_COMMISSION_PARTNER",
-  VIEW_HISTORY_COMMISSION_PARTNER: "VIEW_HISTORY_COMMISSION_PARTNER",
-  VIEW_LIST_MEMO_PARTNER: "VIEW_LIST_MEMO_PARTNER",
-  CREATE_MEMO_PARTNER: "CREATE_MEMO_PARTNER",
-  VIEW_HISTORY_MEMO_PARTNER: "VIEW_HISTORY_MEMO_PARTNER",
-  VIEW_LIST_PAYOUT_CONFIG: "VIEW_LIST_PAYOUT_CONFIG",
-  UPDATE_PAYOUT_CONFIG: "UPDATE_PAYOUT_CONFIG",
-  CREATE_PAYOUT_CONFIG: "CREATE_PAYOUT_CONFIG",
-  VIEW_LIST_PAYOUT_STAKING_PLATFORM: "VIEW_LIST_PAYOUT_STAKING_PLATFORM",
-  UPDATE_PAYOUT_STAKING_PLATFORM: "UPDATE_PAYOUT_STAKING_PLATFORM",
-  CREATE_PAYOUT_STAKING_PLATFORM: "CREATE_PAYOUT_STAKING_PLATFORM",
-  VIEW_LIST_REWARD_SETTING: "VIEW_LIST_REWARD_SETTING",
-  VIEW_HISTORY_REWARD_SETTING: "VIEW_HISTORY_REWARD_SETTING",
-  VIEW_LIST_ROLE: "VIEW_LIST_ROLE",
-  VIEW_LIST_PLAN_STAKING_PLATFORM: "VIEW_LIST_PLAN_STAKING_PLATFORM",
-  VIEW_PLAN_STAKING_PLATFORM: "VIEW_PLAN_STAKING_PLATFORM",
-  UPDATE_PLAN_STAKING_PLATFORM: "UPDATE_PLAN_STAKING_PLATFORM",
-  CREATE_PLAN_STAKING_PLATFORM: "CREATE_PLAN_STAKING_PLATFORM",
-  VIEW_TIME_UNIT_STAKING_PLATFORM: "VIEW_TIME_UNIT_STAKING_PLATFORM",
-  VIEW_LIST_STAKING_PLATFORM: "VIEW_LIST_STAKING_PLATFORM",
-  VIEW_STAKING_PLATFORM: "VIEW_STAKING_PLATFORM",
-  UPDATE_STAKING_PLATFORM: "UPDATE_STAKING_PLATFORM",
-  CREATE_STAKING_PLATFORM: "CREATE_STAKING_PLATFORM",
-  VIEW_STAT_PARTNER: "VIEW_STAT_PARTNER",
-  VIEW_COMMISSION_STAT_PARTNER: "VIEW_COMMISSION_STAT_PARTNER",
-  VIEW_CHART_STAT_PARTNER: "VIEW_CHART_STAT_PARTNER",
-  VIEW_COMMISSION_CHART_STAT_PARTNER: "VIEW_COMMISSION_CHART_STAT_PARTNER",
-  RESEND_EMAIL_USER: "RESEND_EMAIL_USER",
-  VIEW_STAKING_PLATFORM_CONFIG: "VIEW_STAKING_PLATFORM_CONFIG",
-  VIEW_LIST_SETTING: "VIEW_LIST_SETTING"
+  "CREATE_USER": {
+    "KEY": "CREATE_USER",
+    "ROLES": []
+  },
+  "UPDATE_USER": {
+    "KEY": "UPDATE_USER",
+    "ROLES": []
+  },
+  "DELETE_USER": {
+    "KEY": "DELETE_USER",
+    "ROLES": []
+  },
+  "CREATE_USER_ADMIN": {
+    "KEY": "CREATE_USER_ADMIN",
+    "ROLES": ["Master"]
+  },
+  "UPDATE_USER_ADMIN": {
+    "KEY": "UPDATE_USER_ADMIN",
+    "ROLES": ["Master"]
+  },
+  "DELETE_USER_ADMIN": {
+    "KEY": "DELETE_USER_ADMIN",
+    "ROLES": ["Master"]
+  },
+  "CREATE_USER_OPERATOR_2": {
+    "KEY": "CREATE_USER_OPERATOR_2",
+    "ROLES": ["Admin"]
+  },
+  "UPDATE_USER_OPERATOR_2": {
+    "KEY": "UPDATE_USER_OPERATOR_2",
+    "ROLES": ["Admin"]
+  },
+  "DELETE_USER_OPERATOR_2": {
+    "KEY": "DELETE_USER_OPERATOR_2",
+    "ROLES": ["Admin"]
+  },
+  "CREATE_USER_OPERATOR_1": {
+    "KEY": "CREATE_USER_OPERATOR_1",
+    "ROLES": ["Operator 2"]
+  },
+  "UPDATE_USER_OPERATOR_1": {
+    "KEY": "UPDATE_USER_OPERATOR_1",
+    "ROLES": ["Operator 2"]
+  },
+  "DELETE_USER_OPERATOR_1": {
+    "KEY": "DELETE_USER_OPERATOR_1",
+    "ROLES": ["Operator 2"]
+  },
+  "VIEW_LIST_USER": {
+    "KEY": "VIEW_LIST_USER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_USER": {
+    "KEY": "VIEW_USER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "ACTIVE_USER": {
+    "KEY": "ACTIVE_USER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_ACCOUNT": {
+    "KEY": "VIEW_ACCOUNT",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CHANGE_PASSWORD_ACCOUNT": {
+    "KEY": "CHANGE_PASSWORD_ACCOUNT",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_2FA_ACCOUNT": {
+    "KEY": "VIEW_2FA_ACCOUNT",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "UPDATE_2FA_ACCOUNT": {
+    "KEY": "UPDATE_2FA_ACCOUNT",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LOGIN_HISTORY_ACCOUNT": {
+    "KEY": "VIEW_LOGIN_HISTORY_ACCOUNT",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "TURN_OFF_2FA_OTHER_USERS": {
+    "KEY": "TURN_OFF_2FA_OTHER_USERS",
+    "ROLES": ["Master"]
+  },
+  "VIEW_LIST_COMMISSION_SETTING": {
+    "KEY": "VIEW_LIST_COMMISSION_SETTING",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_COMMISSION_HISTORY_SETTING": {
+    "KEY": "VIEW_COMMISSION_HISTORY_SETTING",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CREATE_COMMISSION_SETTING": {
+    "KEY": "CREATE_COMMISSION_SETTING",
+    "ROLES": ["Master", "Admin"]
+  },
+  "CREATE_PARTNER": {
+    "KEY": "CREATE_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "UPDATE_PARTNER": {
+    "KEY": "UPDATE_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "DELETE_PARTNER": {
+    "KEY": "DELETE_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_PARTNER": {
+    "KEY": "VIEW_LIST_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_PARTNER": {
+    "KEY": "VIEW_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_CHILD_PARTNER": {
+    "KEY": "VIEW_LIST_CHILD_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_KEY_PARTNER": {
+    "KEY": "VIEW_LIST_KEY_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CREATE_KEY_PARTNER": {
+    "KEY": "CREATE_KEY_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "DELETE_KEY_PARTNER": {
+    "KEY": "DELETE_KEY_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_COMMISSION_PARTNER": {
+    "KEY": "VIEW_LIST_COMMISSION_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CREATE_COMMISSION_PARTNER": {
+    "KEY": "CREATE_COMMISSION_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_HISTORY_COMMISSION_PARTNER": {
+    "KEY": "VIEW_HISTORY_COMMISSION_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_MEMO_PARTNER": {
+    "KEY": "VIEW_LIST_MEMO_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CREATE_MEMO_PARTNER": {
+    "KEY": "CREATE_MEMO_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_HISTORY_MEMO_PARTNER": {
+    "KEY": "VIEW_HISTORY_MEMO_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_PAYOUT_CONFIG": {
+    "KEY": "VIEW_LIST_PAYOUT_CONFIG",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "UPDATE_PAYOUT_CONFIG": {
+    "KEY": "UPDATE_PAYOUT_CONFIG",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CREATE_PAYOUT_CONFIG": {
+    "KEY": "CREATE_PAYOUT_CONFIG",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_PAYOUT_STAKING_PLATFORM": {
+    "KEY": "VIEW_LIST_PAYOUT_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "UPDATE_PAYOUT_STAKING_PLATFORM": {
+    "KEY": "UPDATE_PAYOUT_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CREATE_PAYOUT_STAKING_PLATFORM": {
+    "KEY": "CREATE_PAYOUT_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_REWARD_SETTING": {
+    "KEY": "VIEW_LIST_REWARD_SETTING",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_HISTORY_REWARD_SETTING": {
+    "KEY": "VIEW_HISTORY_REWARD_SETTING",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_ROLE": {
+    "KEY": "VIEW_LIST_ROLE",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_PLAN_STAKING_PLATFORM": {
+    "KEY": "VIEW_LIST_PLAN_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_PLAN_STAKING_PLATFORM": {
+    "KEY": "VIEW_PLAN_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "UPDATE_PLAN_STAKING_PLATFORM": {
+    "KEY": "UPDATE_PLAN_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CREATE_PLAN_STAKING_PLATFORM": {
+    "KEY": "CREATE_PLAN_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CREATE_PLAN_ERC20_STAKING_PLATFORM": {
+    "KEY": "CREATE_PLAN_ERC20_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin"]
+  },
+  "VIEW_TIME_UNIT_STAKING_PLATFORM": {
+    "KEY": "VIEW_TIME_UNIT_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_STAKING_PLATFORM": {
+    "KEY": "VIEW_LIST_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_STAKING_PLATFORM": {
+    "KEY": "VIEW_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "UPDATE_STAKING_PLATFORM": {
+    "KEY": "UPDATE_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CREATE_STAKING_PLATFORM": {
+    "KEY": "CREATE_STAKING_PLATFORM",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_STAT_PARTNER": {
+    "KEY": "VIEW_STAT_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_COMMISSION_STAT_PARTNER": {
+    "KEY": "VIEW_COMMISSION_STAT_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_CHART_STAT_PARTNER": {
+    "KEY": "VIEW_CHART_STAT_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_COMMISSION_CHART_STAT_PARTNER": {
+    "KEY": "VIEW_COMMISSION_CHART_STAT_PARTNER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "RESEND_EMAIL_USER": {
+    "KEY": "RESEND_EMAIL_USER",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_STAKING_PLATFORM_CONFIG": {
+    "KEY": "VIEW_STAKING_PLATFORM_CONFIG",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_SETTING": {
+    "KEY": "VIEW_LIST_SETTING",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  }
 }

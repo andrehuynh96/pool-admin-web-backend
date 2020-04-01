@@ -23,7 +23,7 @@ module.exports = {
       decimal = decimal.data.decimals;
     }
     else decimal = 0;
-    max_payout = max_payout.mul(new BN(10 ** decimal, 10));
+    max_payout = max_payout.mul(new BN((10 ** decimal).toString(), 10));
     let poolId = new BN(_poolId.replace(/-/g, ''), 16);
     let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlatform).inputs.map(ele => ele.type);
     let sig = abi.methodID(
@@ -47,7 +47,7 @@ module.exports = {
     let decimal = await coinAPI.getContractInfo(_tokenAddr);
     if (decimal) decimal = decimal.data.decimals;
     else decimal = 0;
-    amount = amount.mul(new BN(10 ** decimal, 10));
+    amount = amount.mul(new BN((10 ** decimal).toString(), 10));
     let poolId = new BN(_poolId.replace(/-/g, ''), 16);
     let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.updateStakingMaxPayout).inputs.map(ele => ele.type);
     let sig = abi.methodID(
