@@ -72,7 +72,7 @@ module.exports = {
         return res.badRequest(res.__("STAKING_PLAN_NOT_FOUND"), "STAKING_PLAN_NOT_FOUND", { fields: ["plan_id"] });
       }
       if (plan.wait_blockchain_confirm_status_flg) {
-        return res.badRequest(res.__("PLAN_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLAN_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
+        return res.forbidden(res.__("PLAN_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLAN_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
       }
 
       let { tx_raw, tx_id } = await constructTxData.updateStakingPlan(
@@ -141,7 +141,11 @@ module.exports = {
       }
       let durationInSecond = secondDurationTime(req.body.duration, req.body.duration_type);
       planParams = {
-        ...req.body,
+        name: req.body.name,
+        duration: req.body.duration,
+        duration_type: req.body.duration_type,
+        reward_percentage: req.body.reward_percentage,
+        status: 0,
         duration_in_second: durationInSecond,
         staking_platform_id: platform.id,
         staking_payout_id: payout.id,
@@ -174,7 +178,7 @@ module.exports = {
         tx_id: tx_id,
         updated_by: req.user.id,
         created_by: req.user.id,
-        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${planParams.status}, tx_id = '${tx_id}' WHERE id = '${createPlanResponse.id}' `,
+        successful_event: `UPDATE public.staking_plans SET wait_blockchain_confirm_status_flg = false, status = ${req.body.status}, tx_id = '${tx_id}' WHERE id = '${createPlanResponse.id}' `,
         fail_event: `DELETE FROM public.staking_plans where id = '${createPlanResponse.id}'`
       };
       let createERC20EventResponse = await ERC20EventPool.create(newEvent, { transaction });
