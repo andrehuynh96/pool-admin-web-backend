@@ -62,7 +62,9 @@ module.exports = {
       if (!platform) {
         return res.badRequest(res.__("STAKING_PLATFORM_NOT_FOUND"), "STAKING_PLATFORM_NOT_FOUND", { fields: ["staking_platform_id"] });
       }
-
+      if (platform.wait_blockchain_confirm_status_flg) {
+        return res.badRequest(res.__("PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION", { fields: ["staking_platform_id"] });
+      }
       let plan = await StakingPlan.findOne({
         where: {
           id: planId
@@ -130,6 +132,9 @@ module.exports = {
       })
       if (!platform) {
         return res.badRequest(res.__("STAKING_PLATFORM_NOT_FOUND"), "STAKING_PLATFORM_NOT_FOUND", { fields: ["staking_platform_id"] });
+      }
+      if ( platform.wait_blockchain_confirm_status_flg) {
+        return res.badRequest(res.__("PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION", { fields: ["staking_platform_id"] });
       }
       let payout = await StakingPayout.findOne({
         where: {
