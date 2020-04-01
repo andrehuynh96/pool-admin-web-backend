@@ -83,6 +83,7 @@ module.exports = {
       durationSecond.toString(),
       interestRate.toString()
     ];
+    console.log('paramList', paramList);
     let encoded = abi.rawEncode(paramTypeList, paramList);
     let data = '0x' + sig.toString('hex') + encoded.toString('hex');
     let ret = await _constructAndSignTx(data);
