@@ -12,6 +12,8 @@ module.exports = {
   secondDurationTime: (number, type) => {
     let SECOND_TYPE_HOUR = number * 60 * 60
     switch (type) {
+      case 'MINUTE': return number * 60;
+        break;
       case 'HOUR': return SECOND_TYPE_HOUR;
         break;
       case 'DAY': return SECOND_TYPE_HOUR * 24;
