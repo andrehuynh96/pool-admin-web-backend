@@ -258,5 +258,25 @@ module.exports = {
   "VIEW_LIST_SETTING": {
     "KEY": "VIEW_LIST_SETTING",
     "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
-  }
+  },
+  "VIEW_LIST_PERMISSION": {
+    "KEY": "VIEW_LIST_PERMISSION",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "VIEW_LIST_PERMISSION_DETAIL": {
+    "KEY": "VIEW_LIST_PERMISSION_DETAIL",
+    "ROLES": ["Master", "Admin", "Operator 1", "Operator 2"]
+  },
+  "CREATE_ROLE": {
+    "KEY": "CREATE_ROLE",
+    "ROLES": ["Master"]
+  },
+  "UPDATE_ROLE": {
+    "KEY": "UPDATE_ROLE",
+    "ROLES": ["Master"]
+  },
+  "DELETE_ROLE": {
+    "KEY": "DELETE_ROLE",
+    "ROLES": ["Master"]
+  },
 }

@@ -23,7 +23,7 @@ router.use(require('./stat/stat.route'));
 router.use(require('./check-token/check-token.route'));
 router.use(require('./setting/setting.route'));
 router.use(require('./staking-payout/staking-payout.route'));
-
+router.use(require('./role-permission/role-permission.route'));
 module.exports = router;
 
 /**********************************************************************/
