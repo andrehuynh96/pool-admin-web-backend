@@ -28,32 +28,11 @@ variables:
  except:
   - branches
 
-.OnlyStagingBS:
- only:
-  - /^.*-bs-rc$/
- except:
-  - branches
-
 .OnlyProductionMS:
  only:
   - /^.*-ms$/
  except:
   - branches
-
-.OnlyProductionBS:
- only:
-  - /^.*-bs$/
- except:
-  - branches
-
-StageBinaryStar:
- variables:
-  _ENV: "stage" 
- extends:
-  - .BuildJSApp
-  - .OnlyStagingBS
- tags:
-  - stage-stak-mp-bs-ansible
 
 StageMoonStake:
  variables:
@@ -62,16 +41,7 @@ StageMoonStake:
   - .BuildJSApp
   - .OnlyStagingMS
  tags:
-  - stage-stak-mp-ms-ansible
-
-ProdBinaryStar:
- variables:
-  _ENV: "prod" 
- extends:
-  - .BuildJSApp
-  - .OnlyProductionBS
- tags:
-  - prod-stak-mp-bs-ansible
+  - stage-stak-mp-ansible
 
 ProdMoonStake:
  variables:
@@ -80,4 +50,4 @@ ProdMoonStake:
   - .BuildJSApp
   - .OnlyProductionMS
  tags:
-  - prod-stak-mp-ms-ansible 
+  - prod-stak-mp-ansible 
