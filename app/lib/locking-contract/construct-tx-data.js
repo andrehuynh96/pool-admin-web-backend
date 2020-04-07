@@ -23,7 +23,7 @@ module.exports = {
       decimal = decimal.data.decimals;
     }
     else decimal = 0;
-    max_payout = max_payout.mul(new BN(10 ** decimal, 10));
+    max_payout = max_payout.mul(new BN((10 ** decimal).toString(), 10));
     let poolId = new BN(_poolId.replace(/-/g, ''), 16);
     let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlatform).inputs.map(ele => ele.type);
     let sig = abi.methodID(
@@ -47,7 +47,7 @@ module.exports = {
     let decimal = await coinAPI.getContractInfo(_tokenAddr);
     if (decimal) decimal = decimal.data.decimals;
     else decimal = 0;
-    amount = amount.mul(new BN(10 ** decimal, 10));
+    amount = amount.mul(new BN((10 ** decimal).toString(), 10));
     let poolId = new BN(_poolId.replace(/-/g, ''), 16);
     let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.updateStakingMaxPayout).inputs.map(ele => ele.type);
     let sig = abi.methodID(
@@ -69,7 +69,7 @@ module.exports = {
   createStakingPlan: async (_poolId, _planId, _lockDuration, _annualInterestRate) => {
     duration = secondDurationTime(_lockDuration.timeNumber, _lockDuration.type);
     let durationSecond = new BN(duration, 10);
-    let interestRate = new BN(_annualInterestRate, 10);
+    let interestRate = new BN(_annualInterestRate * 100, 10);
     let poolId = new BN(_poolId.replace(/-/g, ''), 16);
     let planId = new BN(_planId.replace(/-/g, ''), 16);
     let paramTypeList = locking.abi.find(ele => ele.type === 'function' && ele.name === config.lockingContract.createStakingPlan).inputs.map(ele => ele.type);
@@ -83,6 +83,7 @@ module.exports = {
       durationSecond.toString(),
       interestRate.toString()
     ];
+    console.log('paramList', paramList);
     let encoded = abi.rawEncode(paramTypeList, paramList);
     let data = '0x' + sig.toString('hex') + encoded.toString('hex');
     let ret = await _constructAndSignTx(data);

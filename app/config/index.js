@@ -51,16 +51,16 @@ const config = {
   mailSendAs: process.env.MAIL_SEND_AS || 'no-reply@infinito.io',
   website: {
     url: process.env.WEBSITE_URL,
-    urlActive: process.env.WEBSITE_URL + '/set-new-password/',
+    urlActive: process.env.WEBSITE_URL + '/active-user/',
     urlResetPassword: process.env.WEBSITE_URL + '/set-new-password/',
     urlConfirmNewIp: process.env.WEBSITE_URL + '/confirm-ip',
     urlImages: process.env.PARTNER_NAME ? process.env.WEBSITE_URL + '/' + process.env.PARTNER_NAME.toLowerCase() : process.env.WEBSITE_URL,
   },
   emailTemplate: {
     partnerName: process.env.PARTNER_NAME,
-    activeAccount: process.env.PARTNER_NAME + "/activate-account.ejs",
-    resetPassword: process.env.PARTNER_NAME + "/reset-password.ejs",
-    deactiveAccount: process.env.PARTNER_NAME + "/deactive-account.ejs"
+    activeAccount: process.env.PARTNER_NAME.toLowerCase() + "/activate-account.ejs",
+    resetPassword: process.env.PARTNER_NAME.toLowerCase() + "/reset-password.ejs",
+    deactiveAccount: process.env.PARTNER_NAME.toLowerCase() + "/deactive-account.ejs"
   },
   expiredVefiryToken: process.env.EXPIRED_VERIFY_TOKEN ? parseInt(process.env.EXPIRED_VERIFY_TOKEN) : 2,
   enableSeed: process.env.ENABLE_SEED == "1",
