@@ -43,13 +43,18 @@ module.exports = {
         return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
       }
 
-      const match = await bcrypt.compare(req.body.password, user.password_hash);
+      const match = await bcrypt.compare(req.body.password, result.password_hash);
       if (!match) {
-        return res.badRequest(res.__("PASSWORD_INVALID", "PASSWORD_INVALID"));
+        return res.badRequest(res.__("PASSWORD_INVALID"), "PASSWORD_INVALID", { fields: ['password'] });
+      }
+
+      const exist = await bcrypt.compare(req.body.new_password, result.password_hash);
+      if (exist) {
+        return res.badRequest(res.__("PASSWORD_EXIST"), "PASSWORD_EXIST", { fields: ['new_password'] });
       }
 
       let passWord = bcrypt.hashSync(req.body.new_password, 10);
-      let [_, user] = await StakingPlatform.update({
+      let [_, user] = await User.update({
         password_hash: passWord
       }, {
           where: {
@@ -82,27 +87,70 @@ module.exports = {
   },
   update2Fa: async (req, res, next) => {
     try {
-      var verified = speakeasy.totp.verify({
-        secret: req.body.twofa_secret,
-        encoding: 'base32',
-        token: req.body.twofa_code,
-      });
-
-      if (!verified) {
-        return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT");
+      let user = await User.findOne({
+        where: {
+          id: req.user.id
+        }
+      })
+      if (!user) {
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
       }
-
-      let [_, response] = await User.update({
-        twofa_secret: req.body.twofa_secret,
-        twofa_enable_flg: true
-      }, {
-          where: {
-            id: req.user.id
-          },
-          returning: true
+      if (req.body.disable) {
+        var verified = speakeasy.totp.verify({
+          secret: user.twofa_secret,
+          encoding: 'base32',
+          token: req.body.twofa_code,
         });
-      if (!response || response.length == 0) {
-        return res.serverInternalError();
+
+        if (!verified) {
+          return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT");
+        }
+
+        let [_, response] = await User.update({
+          twofa_enable_flg: false
+        }, {
+            where: {
+              id: req.user.id
+            },
+            returning: true
+          });
+        if (!response || response.length == 0) {
+          return res.serverInternalError();
+        }
+      }
+      else {
+        var verified = speakeasy.totp.verify({
+          secret: req.body.twofa_secret,
+          encoding: 'base32',
+          token: req.body.twofa_code,
+        });
+
+        if (!verified) {
+          return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT");
+        }
+
+        let result = await User.findOne({
+          where: {
+            twofa_secret: req.body.twofa_secret
+          }
+        })
+
+        if (result) {
+          return res.badRequest(res.__("TWOFA_EXISTS_ALREADY"), "TWOFA_EXISTS_ALREADY");
+        }
+
+        let [_, response] = await User.update({
+          twofa_secret: req.body.twofa_secret,
+          twofa_enable_flg: true
+        }, {
+            where: {
+              id: req.user.id
+            },
+            returning: true
+          });
+        if (!response || response.length == 0) {
+          return res.serverInternalError();
+        }
       }
 
       return res.ok(true);
@@ -112,6 +160,19 @@ module.exports = {
       next(err);
     }
   },
+
+  disable2Fa: async (req, res, next) => {
+    try {
+
+
+      return res.ok(true);
+    }
+    catch (err) {
+      logger.error('getMe fail:', err);
+      next(err);
+    }
+  },
+
   loginHistory: async (req, res, next) => {
     try {
       let limit = req.query.limit ? parseInt(req.query.limit) : 10;

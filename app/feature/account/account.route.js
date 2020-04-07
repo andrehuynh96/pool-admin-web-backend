@@ -10,17 +10,22 @@ const config = require('app/config')
 const Recaptcha = require('express-recaptcha').RecaptchaV2;
 const recaptcha = new Recaptcha(config.recaptchaSiteKey, config.recaptchaSecret);
 
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
+
 const router = express.Router();
 
 router.get(
   '/me',
   authenticate,
+  authority(Permission.VIEW_ACCOUNT),
   controller.getMe
 );
 
 router.post(
   '/me/change-password',
   authenticate,
+  authority(Permission.CHANGE_PASSWORD_ACCOUNT),
   validator(changePassword),
   recaptcha.middleware.verify,
   verifyRecaptcha,
@@ -31,12 +36,14 @@ router.post(
 router.get(
   '/me/2fa',
   authenticate,
+  authority(Permission.VIEW_2FA_ACCOUNT),
   controller.get2Fa
 );
 
 router.post(
   '/me/2fa',
   authenticate,
+  authority(Permission.UPDATE_2FA_ACCOUNT),
   validator(twofa),
   controller.update2Fa
 );
@@ -45,6 +52,7 @@ router.post(
 router.get(
   '/me/login-history',
   authenticate,
+  authority(Permission.VIEW_LOGIN_HISTORY_ACCOUNT),
   controller.loginHistory
 );
 
@@ -73,7 +81,6 @@ module.exports = router;
  *                 "data":{
                         "id": 1,
                         "email":"example@gmail.com",
-                        "twofa_secret":"sCM87xx",
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED"
@@ -222,17 +229,20 @@ module.exports = router;
  *         schema:
  *            type: object
  *            required:
- *            - twofa_secret
+ *            - disable
  *            - twofa_code
   *            properties:
  *              twofa_secret:
  *                type: string
  *              twofa_code:
  *                type: string
+ *              disable:
+ *                type: boolean
  *            example:
  *                  {
                           "twofa_secret":"AIU45sdsahssdsjYUDHd6",
                           "twofa_code":"123456",
+                          "disable":false
  *                  }
  *     produces:
  *       - application/json

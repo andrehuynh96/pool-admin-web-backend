@@ -1,13 +1,18 @@
 const Model = require("app/model/staking").roles;
-const bcrypt = require('bcrypt');
 
 (async () => {
   let count = await Model.count();
   if (count == 0) {
     await Model.bulkCreate([{
+      name: "Master"
+    }, {
       name: "Admin"
+    }, {
+      name: "Operator 1"
+    }, {
+      name: "Operator 2"
     }], {
-        returning: true
-      });
+      returning: true
+    });
   }
 })();

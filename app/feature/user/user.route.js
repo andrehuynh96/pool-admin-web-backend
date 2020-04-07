@@ -3,26 +3,31 @@ const validator = require('app/middleware/validator.middleware');
 const authenticate = require('app/middleware/authenticate.middleware');
 const parseformdata = require('app/middleware/parse-formdata.middleware');
 const { create, update, } = require('./validator');
-const controller = require('./user.contorller');
-const config = require('app/config')
+const controller = require('./user.controller');
+const config = require('app/config');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/users',
   authenticate,
+  authority(Permission.VIEW_LIST_USER),
   controller.search
 );
 
 router.get(
   '/users/:id',
   authenticate,
+  authority(Permission.VIEW_USER),
   controller.get
 );
 
 router.post(
   '/users',
   authenticate,
+  authority(Permission.CREATE_USER),
   validator(create),
   controller.create
 );
@@ -30,13 +35,27 @@ router.post(
 router.put(
   '/users/:id',
   authenticate,
+  authority(Permission.UPDATE_USER),
   validator(update),
   controller.update
+);
+
+router.post(
+  '/users/:id/resend-active-code',
+  authenticate,
+  authority(Permission.RESEND_EMAIL_USER),
+  controller.resendEmailActive
+);
+
+router.post(
+  '/active-user', 
+  controller.active
 );
 
 router.delete(
   '/users/:id',
   authenticate,
+  authority(Permission.DELETE_USER),
   controller.delete
 );
 
@@ -85,10 +104,11 @@ module.exports = router;
                         {
                           "id": 1,
                           "email":"example@gmail.com",
-                          "twofa_secret":"sCM87xx",
+                          "name": "example",
                           "twofa_enable_flg": true,
                           "create_at":"",
-                          "user_sts":"ACTIVATED"
+                          "user_sts":"ACTIVATED",
+                          "role": ["Admin"]
                         }
                       ],
                       "offset": 0,
@@ -143,7 +163,7 @@ module.exports = router;
  *                 "data": {
                         "id": 1,
                         "email":"example@gmail.com",
-                        "twofa_secret":"sCM87xx",
+                        "name": "example",
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED",
@@ -233,7 +253,8 @@ module.exports = router;
  *            example:
  *                  {
                           "email":"example@gmail.com",
-                          "role":1
+                          "name": "example",
+                          "role_id":1
  *                  }
  *     produces:
  *       - application/json
@@ -246,11 +267,11 @@ module.exports = router;
  *                 "data": {
                         "id": 1,
                         "email":"example@gmail.com",
-                        "twofa_secret":"sCM87xx",
+                        "name": "example",
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED",
-                        "role":1
+                        "role_id":1
  *                 }
  *             }
  *       400:
@@ -295,7 +316,8 @@ module.exports = router;
  *            example:
  *                  {
                           "user_sts":"UNACTIVATED|ACTIVATED|LOCKED",
-                          "role":1
+                          "name": "example",
+                          "role_id":1
  *                  }
  *     produces:
  *       - application/json
@@ -308,12 +330,113 @@ module.exports = router;
  *                 "data": {
                         "id": 1,
                         "email":"example@gmail.com",
-                        "twofa_secret":"sCM87xx",
+                        "name": "example",
                         "twofa_enable_flg": true,
                         "create_at":"",
                         "user_sts":"ACTIVATED",
-                        "role":1
+                        "role_id":1
  *                 }
+ *             }
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/400'
+ *       401:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/401'
+ *       404:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/404'
+ *       500:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/500'
+ */
+
+
+
+
+/*********************************************************************/
+
+
+/**
+ * @swagger
+ * /web/users/{id}/resend-active-code:
+ *   post:
+ *     summary: resend active code
+ *     tags:
+ *       - Users
+ *     description:
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         type: string
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         examples:
+ *           application/json:
+ *             {
+ *                 "data": true
+ *             }
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/400'
+ *       401:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/401'
+ *       404:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/404'
+ *       500:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/500'
+ */
+
+
+/*********************************************************************/
+
+
+
+/*********************************************************************/
+
+/**
+ * @swagger
+ * /web/active-user:
+ *   post:
+ *     summary: active user
+ *     tags:
+ *       - Users
+ *     description:
+ *     parameters:
+ *       - name: data
+ *         in: body
+ *         required: true
+ *         description: submit data JSON to register.
+ *         schema:
+ *            type: object
+ *            example:
+ *                  {
+                          "verify_token":"fdfn%D(cxNCSDSKDSDSD",
+                          "password":"Asadsa@12"
+ *                  }
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         examples:
+ *           application/json:
+ *             {
+ *                  "data": true
  *             }
  *       400:
  *         description: Error

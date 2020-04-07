@@ -3,12 +3,15 @@ const validator = require('app/middleware/validator.middleware');
 const authenticate = require('app/middleware/authenticate.middleware');
 const parseformdata = require('app/middleware/parse-formdata.middleware');
 const controller = require('./role.controller');
+const authority = require('app/middleware/authority.middleware');
+const Permission = require('app/model/staking/value-object/permission-key');
 
 const router = express.Router();
 
 router.get(
   '/roles',
   authenticate,
+  authority(Permission.VIEW_LIST_ROLE),
   controller.getAll
 );
 

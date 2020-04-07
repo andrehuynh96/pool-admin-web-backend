@@ -12,7 +12,7 @@ memo.all = async (req, res, next) => {
     const where = { partner_id: partner_id, default_flg: true };
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({lim, off, where: where, order: [['platform', 'ASC']]});
+    const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({offset: off, limit: lim, where: where, order: [['platform', 'ASC']]});
     return res.ok({
       items: partner_tx_memos.map(item => mapper(item)),
       offset: off,
@@ -43,17 +43,17 @@ memo.create = async (req, res, next) => {
       condition.memo = item.memo;
       let existMemo = await TxMemo.findOne({where: condition});
       if (!existMemo) {
-        item.created_by = user;
-        item.updated_by = user;
+        item.created_by = user.id;
+        item.updated_by = user.id;
         item.partner_id = partner_id;
         insertedItems.push(item);
-        updatedItems.push(txMemo.id);
+        if (txMemo && txMemo.id) updatedItems.push(txMemo.id);
       } 
     }
     let partner_tx_memos = await TxMemo.bulkCreate(insertedItems, { transaction });
     await TxMemo.update({
       default_flg: false,
-      updated_by: user
+      updated_by: user.id
     }, {
         where: {
           id: updatedItems
@@ -66,7 +66,7 @@ memo.create = async (req, res, next) => {
     });
   } catch (error) {
     logger.error(error);
-    await transaction.rollback();
+    if (transaction) await transaction.rollback();
     next(error);
   }
 };
@@ -78,7 +78,7 @@ memo.getHis = async (req, res, next) => {
     const where = { partner_id: partner_id, default_flg: false };
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({lim, off, where: where, order: [['platform', 'ASC']]});
+    const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({offset: off, limit: lim, where: where, order: [['platform', 'ASC']]});
     return res.ok({
       items: partner_tx_memos.map(item => mapper(item)),
       offset: off,
