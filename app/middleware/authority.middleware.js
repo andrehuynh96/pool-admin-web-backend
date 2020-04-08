@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 module.exports = function (permission) {
   return async function (req, res, next) {
-    if (!req.session || !req.session.authenticated || !req.session.roles) {
+    if (!req.session || !req.session.authenticated || !req.session.roles || !req.session.permissions.includes(permission.KEY)) {
       res.forbidden();
     }
     else {
@@ -48,7 +48,7 @@ module.exports = function (permission) {
         }
       }
       else {
-
+        next();
       }
     }
   }
