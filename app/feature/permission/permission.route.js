@@ -1,7 +1,5 @@
 const express = require("express");
 const controller = require("./permission.controller");
-const { create, update } = require("./validator");
-const validator = require("app/middleware/validator.middleware");
 const authenticate = require('app/middleware/authenticate.middleware');
 const PermissionKey = require('app/model/staking/value-object/permission-key');
 const authority = require('app/middleware/authority.middleware');
@@ -12,7 +10,7 @@ route.get("/permissions",
   authority(PermissionKey.VIEW_LIST_PERMISSION),
   controller.getAll
 );
-route.get("me/permissions",
+route.get("/me/permissions",
   authenticate,
   authority(PermissionKey.VIEW_LIST_PERMISSION_DETAIL),
   controller.get
