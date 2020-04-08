@@ -1,6 +1,7 @@
 const logger = require('app/lib/logger');
 const Role = require("app/model/staking").roles;
 const database = require('app/lib/database').db().staking;
+const Permission = require("app/model/staking").permissions;
 const RolePermission = require("app/model/staking").role_permissions
 module.exports = {
   getAll: async (req, res, next) => {
@@ -23,7 +24,16 @@ module.exports = {
       let name = req.body.name
       let level = req.body.level
       let permissionList = req.body.permission_ids
+      let items = await Permission.findAll({
+        attributes:
+          ["id"]
+      });
+      let allPermissions = items.map(ele => ele.id)
 
+      const foundPermission = permissionList.every(ele => allPermissions.includes(ele))
+      if(!foundPermission){
+        return res.badRequest(res.__("PERMISION_IDS_NOT_FOUND"), "PERMISION_IDS_NOT_FOUND", { fields: ['permission_ids'] });
+      }
       let role = await Role.findOne({
         where: {
           name: name
@@ -57,7 +67,7 @@ module.exports = {
         if (transaction) await transaction.rollback();
         return res.serverInternalError();
       }
-      logger.info('role::create::role::');
+      logger.info('role::create::role');
       await transaction.commit();
       return res.ok({ role_permissions: data });
     }
@@ -73,7 +83,6 @@ module.exports = {
       let name = req.body.name
       let level = req.body.level
       let permissionList = req.body.permission_ids
-
       let role = await Role.findOne({
         where: {
           id: req.params.id
@@ -81,6 +90,16 @@ module.exports = {
       })
       if (!role) {
         return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND", { fields: ['id'] });
+      }
+      let items = await Permission.findAll({
+        attributes:
+          ["id"]
+      });
+      let allPermissions = items.map(ele => ele.id)
+
+      const foundPermission = permissionList.every(ele => allPermissions.includes(ele))
+      if(!foundPermission){
+        return res.badRequest(res.__("PERMISION_IDS_NOT_FOUND"), "PERMISION_IDS_NOT_FOUND", { fields: ['permission_ids'] });
       }
       if (name !== role.name || level !== role.level) {
         let updateRoleResponse = await Role.update({
@@ -117,7 +136,7 @@ module.exports = {
         return res.serverInternalError();
       }
 
-      logger.info('role::update::role::');
+      logger.info('role::update::role');
       await transaction.commit();
       return res.ok(true);
     }

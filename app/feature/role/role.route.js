@@ -17,7 +17,7 @@ router.get(
 router.post("/roles",
   validator(create),
   authenticate,
-  // authority(Permission.CREATE_ROLE),
+  authority(Permission.CREATE_ROLE),
   controller.create
 );
 router.put("/roles/:id",
