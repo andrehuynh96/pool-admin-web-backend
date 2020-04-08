@@ -28,7 +28,7 @@ module.exports = function (permission) {
           }
         })
         roleActions = roleActions.map(ele => ele.id)
-        let roleId = nsull
+        let roleId = 0
         if (req.body.role_id) {
           roleId = req.body.role_id
         }
