@@ -1,5 +1,5 @@
 const express = require("express");
-const controller = require("./role-permission.controller");
+const controller = require("./permission.controller");
 const { create, update } = require("./validator");
 const validator = require("app/middleware/validator.middleware");
 const authenticate = require('app/middleware/authenticate.middleware');
@@ -12,22 +12,10 @@ route.get("/permissions",
   authority(PermissionKey.VIEW_LIST_PERMISSION),
   controller.getAll
 );
-route.get("/permissions/me",
+route.get("me/permissions",
   authenticate,
   authority(PermissionKey.VIEW_LIST_PERMISSION_DETAIL),
   controller.get
-);
-route.post("/roles",
-  validator(create),
-  authenticate,
-  // authority(PermissionKey.CREATE_ROLE),
-  controller.create
-);
-route.put("/roles/:id",
-  validator(update),
-  authenticate,
-  // authority(PermissionKey.UPDATE_ROLE),
-  controller.update
 );
 
 module.exports = route;
@@ -40,7 +28,7 @@ module.exports = route;
 *   get:
 *     summary: get list permission
 *     tags:
-*       - Role Permission
+*       - Permission
 *     description:
 *     parameters:
 *       - name: offset
@@ -109,11 +97,11 @@ module.exports = route;
 
 /**
 * @swagger
-* /web/permissions/me:
+* /web/me/permissions:
 *   get:
 *     summary: get list permission of role
 *     tags:
-*       - Role Permission
+*       - Permission
 *     description:
 *     parameters:
 *       - name: offset
@@ -178,142 +166,4 @@ module.exports = route;
 *         schema:
 *           $ref: '#/definitions/500'
 *
-*/
-
-/**
- * @swagger
- * /web/roles:
- *   post:
- *     summary: create role
- *     tags:
- *       - Role Permission
- *     description:
- *     parameters:
- *       - in: body
- *         name: name
- *         type: string
- *         required: true
- *       - in: body
- *         name: level
- *         type: string
- *         required: true
- *      - in: body
- *         name: permission_id
- *         type: array
- *         required: true
- *         schema:
- *            type: object
- *            - name
- *            example:
- *               {
-                    "name":"User",
-                    "level": 50,
-                    "permission_id":[17,18,19,20]
-                  }
- *     produces:
- *       - application/json
- *     responses:
- *       200:
- *         description: Ok
- *         examples:
- *           application/json:
- *             {
-                  "data": {
-                      "role_permissions": [
-                          {
-                              "role_id": 15,
-                              "permission_id": 17
-                          },
-                          {
-                              "role_id": 15,
-                              "permission_id": 18
-                          },
-                          {
-                              "role_id": 15,
-                              "permission_id": 19
-                          },
-                          {
-                              "role_id": 15,
-                              "permission_id": 20
-                          }
-                      ]
-                  }
-              }
- *       400:
- *         description: Error
- *         schema:
- *           $ref: '#/definitions/400'
- *       401:
- *         description: Error
- *         schema:
- *           $ref: '#/definitions/401'
- *       404:
- *         description: Error
- *         schema:
- *           $ref: '#/definitions/404'
- *       500:
- *         description: Error
- *         schema:
- *           $ref: '#/definitions/500'
-*/
-/**
- * @swagger
- * /web/roles/{id}:
- *   put:
- *     summary: update role
- *     tags:
- *       - Role Permission
- *     description:
- *     parameters:
- *       - in: path
- *         name: id
- *         type: string
- *         required: true
- *       - in: body
- *         name: name
- *         type: string
- *         required: true
- *       - in: body
- *         name: level
- *         type: string
- *         required: true
- *      - in: body
- *         name: permission_id
- *         type: array
- *         required: true
- *         schema:
- *            type: object
- *            - name
- *            example:
- *               {
-                    "name":"User1",
-                    "level": 50,
-                    "permission_id":[17,18]
-                  }
- *     produces:
- *       - application/json
- *     responses:
- *       200:
- *         description: Ok
- *         examples:
- *           application/json:
- *             {
-                  "data": true
-              }
- *       400:
- *         description: Error
- *         schema:
- *           $ref: '#/definitions/400'
- *       401:
- *         description: Error
- *         schema:
- *           $ref: '#/definitions/401'
- *       404:
- *         description: Error
- *         schema:
- *           $ref: '#/definitions/404'
- *       500:
- *         description: Error
- *         schema:
- *           $ref: '#/definitions/500'
 */
