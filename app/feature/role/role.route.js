@@ -14,6 +14,13 @@ router.get(
   authority(Permission.VIEW_LIST_ROLE),
   controller.getAll
 );
+router.get(
+  '/roles-have-permission',
+  authenticate,
+  // authority(Permission.VIEW_LIST_ROLE),
+  controller.roleHavePermission
+);
+
 router.post("/roles",
   validator(create),
   authenticate,
@@ -78,6 +85,59 @@ module.exports = router;
 *         schema:
 *           $ref: '#/definitions/500'
 */
+
+
+
+/*********************************************************************/
+
+
+/**
+ * @swagger
+ * /web/roles-have-permission:
+ *   get:
+ *     summary: get roles that user have permission CURD
+ *     tags:
+ *       - Roles
+ *     description:
+ *     parameters:
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         examples:
+ *           application/json:
+ *             {
+ *                 "data":[
+                      {
+                        "id":1,
+                        "name":"Admin",
+                        "description":null,
+                        "deleted_flg":false,
+                        "createdAt":"2020-01-16T07:17:26.158Z",
+                        "updatedAt":"2020-01-16T07:17:26.158Z"
+                      }
+                    ]
+ *             }
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/400'
+ *       401:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/401'
+ *       404:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/404'
+ *       500:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/500'
+ */
+
+
 
 /**
 * @swagger

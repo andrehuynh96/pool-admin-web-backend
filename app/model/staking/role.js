@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     root_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false      
+      defaultValue: false
     }
   }, {
       underscored: true,
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     });
   Role.associate = (models) => {
     // associations can be defined here
-    Role.hasMany(models.user_roles, {foreignKey: 'role_id'})
+    Role.hasMany(models.user_roles, { foreignKey: 'role_id' })
   };
   return Role;
 } 

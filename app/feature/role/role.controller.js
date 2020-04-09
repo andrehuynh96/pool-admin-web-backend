@@ -2,7 +2,10 @@ const logger = require('app/lib/logger');
 const Role = require("app/model/staking").roles;
 const database = require('app/lib/database').db().staking;
 const Permission = require("app/model/staking").permissions;
-const RolePermission = require("app/model/staking").role_permissions
+const RolePermission = require("app/model/staking").role_permissions;
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 module.exports = {
   getAll: async (req, res, next) => {
     try {
@@ -18,8 +21,33 @@ module.exports = {
       next(err);
     }
   },
+  roleHavePermission: async (req, res, next) => {
+    try {
+      let levels = req.roles.map(ele => ele.level)
+      let roleControl = []
+      for (let e of levels) {
+        let role = await Role.findOne({
+
+          where: {
+            level: { [Op.gt]: e },
+            deleted_flg: false
+          },
+          order: [['level', 'ASC']]
+        });
+
+        if (role) {
+          roleControl.push(role)
+        }
+      }
+      return res.ok(roleControl);
+    }
+    catch (err) {
+      logger.error('getAll role fail:', err);
+      next(err);
+    }
+  },
   create: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let name = req.body.name
       let level = req.body.level
@@ -31,7 +59,7 @@ module.exports = {
       let allPermissions = items.map(ele => ele.id)
 
       const foundPermission = permissionList.every(ele => allPermissions.includes(ele))
-      if(!foundPermission){
+      if (!foundPermission) {
         return res.badRequest(res.__("PERMISION_IDS_NOT_FOUND"), "PERMISION_IDS_NOT_FOUND", { fields: ['permission_ids'] });
       }
       let role = await Role.findOne({
@@ -42,6 +70,7 @@ module.exports = {
       if (role) {
         return res.badRequest(res.__("ROLE_EXIST_ALREADY"), "ROLE_EXIST_ALREADY", { fields: ['name'] });
       }
+      transaction = await database.transaction();
       let createRoleResponse = await Role.create({
         name: name,
         level: level,
@@ -78,7 +107,7 @@ module.exports = {
     }
   },
   update: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       let name = req.body.name
       let level = req.body.level
@@ -91,7 +120,7 @@ module.exports = {
       if (!role) {
         return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND", { fields: ['id'] });
       }
-      if(roles.root_flg){
+      if (roles.root_flg) {
         return res.badRequest(res.__("UNABLE_UPDATE_ROOT_ROLE"), "UNABLE_UPDATE_ROOT_ROLE", { fields: ['id'] });
       }
       let items = await Permission.findAll({
@@ -101,19 +130,21 @@ module.exports = {
       let allPermissions = items.map(ele => ele.id)
 
       const foundPermission = permissionList.every(ele => allPermissions.includes(ele))
-      if(!foundPermission){
+      if (!foundPermission) {
         return res.badRequest(res.__("PERMISION_IDS_NOT_FOUND"), "PERMISION_IDS_NOT_FOUND", { fields: ['permission_ids'] });
       }
+
+      transaction = await database.transaction();
       if (name !== role.name || level !== role.level) {
         let updateRoleResponse = await Role.update({
           name: name,
           level: level
         }, {
-          where: {
-            id: req.params.id
-          },
-          returning: true
-        }, { transaction });
+            where: {
+              id: req.params.id
+            },
+            returning: true
+          }, { transaction });
         if (!updateRoleResponse) {
           if (transaction) await transaction.rollback();
           return res.serverInternalError();

@@ -38,6 +38,7 @@ router.put(
   '/users/:id',
   authenticate,
   authority(Permission.UPDATE_USER),
+  levelAuthority("req.params.id", true),
   levelAuthority("req.body.role_id"),
   validator(update),
   controller.update
@@ -51,7 +52,7 @@ router.post(
 );
 
 router.post(
-  '/active-user', 
+  '/active-user',
   controller.active
 );
 
