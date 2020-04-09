@@ -120,7 +120,7 @@ module.exports = {
       if (!role) {
         return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND", { fields: ['id'] });
       }
-      if (roles.root_flg) {
+      if (role.root_flg) {
         return res.badRequest(res.__("UNABLE_UPDATE_ROOT_ROLE"), "UNABLE_UPDATE_ROOT_ROLE", { fields: ['id'] });
       }
       let items = await Permission.findAll({
