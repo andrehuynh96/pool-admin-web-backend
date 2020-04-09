@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("partner_commissions_histories", {
+  return sequelize.define("partner_commissions_his", {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -36,5 +36,5 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
-    
+
 }

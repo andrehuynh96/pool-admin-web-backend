@@ -1,3 +1,4 @@
+const ApiKeyStatus = require("./value-object/api-key-status");
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("partner_api_keys", {
@@ -11,23 +12,32 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false
     },
+    name: {
+      type: DataTypes.STRING(64),
+      allowNull: false
+    },
     api_key: {
       type: DataTypes.STRING(36),
       allowNull: false
     },
     secret_key: {
       type: DataTypes.STRING(64),
-      allowNull: false
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.STRING(16),
+      allowNull: false,
+      defaultValue: ApiKeyStatus.NOT_CONNECT
     },
     actived_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      default: true
+      defaultValue: true
     },
     created_by: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      default: 0
+      defaultValue: 0
     },
   }, {
       underscored: true,

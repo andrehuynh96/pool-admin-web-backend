@@ -1,4 +1,5 @@
-const Temporal = require('sequelize-temporal');
+const { Temporalize } = require('sequelize-temporalize');
+
 module.exports = (sequelize, DataTypes) => {
   const partner_commission = sequelize.define("partner_commissions", {
     id: {
@@ -32,11 +33,23 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
-    }
+    },
+    staking_platform_id: {
+      type: DataTypes.UUID,
+    },
   }, {
       underscored: true,
       timestamps: true,
     });
-  Temporal(partner_commission, sequelize, { blocking: true, full: false });  
+
+  Temporalize({
+    model: partner_commission,
+    sequelize,
+    temporalizeOptions: {
+      blocking: false,
+      full: false,
+      modelSuffix: "_his"
+    }
+  });
   return partner_commission;
 }

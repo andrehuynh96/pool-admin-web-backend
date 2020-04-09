@@ -60,7 +60,11 @@ module.exports = router;
                       "verify_token":"3f76680510bcca07e7e011dcc1effb079d1d0a34",
                       "user":{
                         "id": 1,
-                        "email":"example@gmail.com"
+                        "email":"example@gmail.com",
+                        "twofa_enable_flg": true,
+                        "create_at":"",
+                        "user_sts":"ACTIVATED",
+                        "latest_login_at":"2020-02-11T16:03:09.497Z"
                       }
                     }
  *             }
