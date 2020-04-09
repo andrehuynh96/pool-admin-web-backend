@@ -57,8 +57,7 @@ module.exports = router;
  *               { items: [{
                         "id": "3c3ed477-a40e-439c-97ff-a404498ed5c1",     
                         "platform":"ATOM",
-                        "commission":20,
-                        "reward_address": "cosmos1suvplzztw7kn4ntn9pcduxz2lxfjfy5akd3uk0"
+                        "commission":20
                     }]
                   }
  *     produces:
