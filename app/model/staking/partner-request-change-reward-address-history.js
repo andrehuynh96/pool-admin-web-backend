@@ -1,8 +1,7 @@
 const Status = require("./value-object/request-change-reward-address-status");
-const { Temporalize } = require('sequelize-temporalize');
 
 module.exports = (sequelize, DataTypes) => {
-  const  partner_request_change_reward_address = sequelize.define("partner_request_change_reward_addresses", {
+  return sequelize.define("partner_request_change_reward_addresses_his", {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -38,14 +37,5 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
-    Temporalize({
-      model: partner_request_change_reward_address,
-      sequelize,
-      temporalizeOptions: {
-        blocking: false,
-        full: false,
-        modelSuffix: "_his"
-      }
-    });
-  return partner_request_change_reward_address;
+
 }

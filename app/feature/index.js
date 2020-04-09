@@ -24,6 +24,8 @@ router.use(require('./check-token/check-token.route'));
 router.use(require('./setting/setting.route'));
 router.use(require('./staking-payout/staking-payout.route'));
 router.use(require('./permission/permission.route'));
+router.use(require('./partner-request/partner-request.route'));
+
 module.exports = router;
 
 /**********************************************************************/
