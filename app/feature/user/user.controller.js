@@ -20,7 +20,28 @@ module.exports = {
     try {
       let limit = req.query.limit ? parseInt(req.query.limit) : 10;
       let offset = req.query.offset ? parseInt(req.query.offset) : 0;
-      const { count: total, rows: items } = await User.findAndCountAll({ limit, offset, order: [['created_at', 'DESC']] });
+      let rolesControl = await _getRoleControl(req.roles);
+      let where = { deleted_flg: false };
+      let include = [
+        {
+          model: UserRole,
+          include: [
+            {
+              model: Role
+            }
+          ],
+          where: {
+            role_id: { [Op.in]: rolesControl }
+          }
+        }
+      ];
+      if (req.query.user_sts) {
+        where.user_sts = req.query.user_sts
+      }
+      if (req.query.query) {
+        where.email = { [Op.iLike]: `%${req.query.query}%` };
+      }
+      const { count: total, rows: items } = await User.findAndCountAll({ limit, offset, where: where, include: include, order: [['created_at', 'DESC']] });
       return res.ok({
         items: userMapper(items),
         offset: offset,
@@ -404,4 +425,24 @@ async function _sendEmailDeleteUser(user) {
   } catch (err) {
     logger.error("send email delete account fail", err);
   }
+}
+async function _getRoleControl(roles) {
+  let levels = roles.map(ele => ele.level)
+  let roleControl = []
+  for (let e of levels) {
+    let role = await Role.findOne({
+      attribute: ["level"],
+      where: {
+        level: { [Op.gt]: e },
+        deleted_flg: false
+      },
+      order: [['level', 'ASC']]
+    });
+
+    if (role) {
+      roleControl.push(role.id)
+    }
+  }
+
+  return roleControl;
 }

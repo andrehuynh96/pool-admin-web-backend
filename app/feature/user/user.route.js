@@ -7,6 +7,7 @@ const controller = require('./user.controller');
 const config = require('app/config');
 const authority = require('app/middleware/authority.middleware');
 const Permission = require('app/model/staking/value-object/permission-key');
+const levelAuthority = require('app/middleware/level-authority.middleware');
 
 const router = express.Router();
 
@@ -28,6 +29,7 @@ router.post(
   '/users',
   authenticate,
   authority(Permission.CREATE_USER),
+  levelAuthority("req.body.role_id"),
   validator(create),
   controller.create
 );
@@ -36,6 +38,7 @@ router.put(
   '/users/:id',
   authenticate,
   authority(Permission.UPDATE_USER),
+  levelAuthority("req.body.role_id"),
   validator(update),
   controller.update
 );
@@ -56,6 +59,7 @@ router.delete(
   '/users/:id',
   authenticate,
   authority(Permission.DELETE_USER),
+  levelAuthority("req.params.id", true),
   controller.delete
 );
 
