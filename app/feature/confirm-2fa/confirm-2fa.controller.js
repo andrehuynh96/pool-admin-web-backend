@@ -77,12 +77,42 @@ module.exports = async (req, res, next) => {
     });
 
     req.session.authenticated = true;
-    req.session.user = user;
-    let roleList = roles.map(role => role.role_id);
-    req.session.role = roleList;
-    let response = userMapper(user); 
-    response.role = roleList;
-    return res.ok(response);
+      req.session.user = user;
+
+      let roleList = roles.map(role => role.role_id);
+      let rolePermissions = await RolePermissions.findAll({
+        attributes: [
+          "permission_id"
+        ],
+        where: {
+          role_id: roleList
+        }
+      });
+      rolePermissions = [...new Set(rolePermissions.map(ele => ele.permission_id))];
+      let permissions = await Permissions.findAll({
+        attributes: [
+          "name"
+        ],
+        where: {
+          id: rolePermissions
+        }
+      });
+      req.session.permissions = permissions.map(ele => ele.name);
+      roleList = await Roles.findAll({
+        attributes: [
+          "id", "name", "level", "root_flg"
+        ],
+        where: {
+          id: roleList
+        }
+      })
+
+      let response = userMapper(user);
+      response.roles = roleList;
+      req.session.roles = roleList;
+      return res.ok({
+        user: response
+      });
   }
   catch (err) {
     logger.error("login fail: ", err);

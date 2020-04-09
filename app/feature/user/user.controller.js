@@ -20,7 +20,7 @@ module.exports = {
     try {
       let limit = req.query.limit ? parseInt(req.query.limit) : 10;
       let offset = req.query.offset ? parseInt(req.query.offset) : 0;
-      let roles = req.session.role;
+      let rolesControl = await _getRoleControl(req.roles);
       let where = { deleted_flg: false };
       let include = [
         {
@@ -31,7 +31,7 @@ module.exports = {
             }
           ],
           where: {
-            role_id: { [Op.gte]: Math.min(...roles) }
+            role_id: { [Op.in]: rolesControl }
           }
         }
       ];
@@ -84,35 +84,28 @@ module.exports = {
     }
   },
   delete: async (req, res, next) => {
-    let transaction;
     try {
       if (req.params.id == req.user.id) {
         return res.badRequest(res.__("USER_NOT_DELETED"), "USER_NOT_DELETED", { fields: ['id'] });
       }
       let result = await User.findOne({
         where: {
-          id: req.params.id
+          id: req.params.id,
+          deleted_flg: false
         }
       })
 
       if (!result) {
         return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
-
-      transaction = await database.transaction();
-      await UserRole.destroy({
-        where: {
-          user_id: req.params.id
-        }
-      }, { transaction });
-      let response = await User.destroy({
-        where: {
+      let response = await User.update(
+        {
+          deleted_flg: true
+        },{
+           where : {
           id: req.params.id
-        },
-        returning: true
-      }, { transaction });
-      await transaction.commit();
-
+        }
+      })
       if (!response || response.length == 0) {
         return res.serverInternalError();
       }
@@ -121,7 +114,6 @@ module.exports = {
     }
     catch (err) {
       logger.error('delete user fail:', err);
-      if (transaction) await transaction.rollback();
       next(err);
     }
   },
@@ -433,4 +425,24 @@ async function _sendEmailDeleteUser(user) {
   } catch (err) {
     logger.error("send email delete account fail", err);
   }
+}
+async function _getRoleControl(roles) {
+  let levels = roles.map(ele => ele.level)
+  let roleControl = []
+  for (let e of levels) {
+    let role = await Role.findOne({
+      attribute: ["level"],
+      where: {
+        level: { [Op.gt]: e },
+        deleted_flg: false
+      },
+      order: [['level', 'ASC']]
+    });
+
+    if (role) {
+      roleControl.push(role.id)
+    }
+  }
+
+  return roleControl;
 }
