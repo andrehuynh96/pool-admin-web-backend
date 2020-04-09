@@ -54,13 +54,15 @@ const config = {
     urlActive: process.env.WEBSITE_URL + '/active-user/',
     urlResetPassword: process.env.WEBSITE_URL + '/set-new-password/',
     urlConfirmNewIp: process.env.WEBSITE_URL + '/confirm-ip',
+    urlConfirmingRequest: '/confirm-request/',
     urlImages: process.env.PARTNER_NAME ? process.env.WEBSITE_URL + '/' + process.env.PARTNER_NAME.toLowerCase() : process.env.WEBSITE_URL,
   },
   emailTemplate: {
     partnerName: process.env.PARTNER_NAME,
     activeAccount: process.env.PARTNER_NAME.toLowerCase() + "/activate-account.ejs",
     resetPassword: process.env.PARTNER_NAME.toLowerCase() + "/reset-password.ejs",
-    deactiveAccount: process.env.PARTNER_NAME.toLowerCase() + "/deactive-account.ejs"
+    deactiveAccount: process.env.PARTNER_NAME.toLowerCase() + "/deactive-account.ejs",
+    confirmingRequest: process.env.PARTNER_NAME.toLocaleLowerCase() + "/confirm-request.ejs"
   },
   expiredVefiryToken: process.env.EXPIRED_VERIFY_TOKEN ? parseInt(process.env.EXPIRED_VERIFY_TOKEN) : 2,
   enableSeed: process.env.ENABLE_SEED == "1",
