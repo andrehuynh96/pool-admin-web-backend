@@ -30,7 +30,7 @@ router.post("/roles",
 router.put("/roles/:id",
   validator(update),
   authenticate,
-  // authority(Permission.UPDATE_ROLE),
+  authority(Permission.UPDATE_ROLE),
   controller.update
 );
 
