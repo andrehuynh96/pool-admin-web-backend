@@ -54,7 +54,7 @@ const config = {
     urlActive: process.env.WEBSITE_URL + '/active-user/',
     urlResetPassword: process.env.WEBSITE_URL + '/set-new-password/',
     urlConfirmNewIp: process.env.WEBSITE_URL + '/confirm-ip',
-    urlConfirmingRequest: process.env.WEBSITE_URL + '/confirm-request/',
+    urlConfirmingRequest: '/confirm-request/',
     urlImages: process.env.PARTNER_NAME ? process.env.WEBSITE_URL + '/' + process.env.PARTNER_NAME.toLowerCase() : process.env.WEBSITE_URL,
   },
   emailTemplate: {

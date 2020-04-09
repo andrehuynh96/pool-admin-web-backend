@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
     verify_token: {
       type: DataTypes.STRING(128),
       allowNull: false
+    },
+    link: {
+      type: DataTypes.STRING(256),
+      allowNull: false
     }
   }, {
       underscored: true,
