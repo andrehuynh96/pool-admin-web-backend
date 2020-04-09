@@ -243,4 +243,8 @@ module.exports = {
     "KEY": "DELETE_ROLE",
     "ROLES": ["Master"]
   },
+  "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
+    "KEY": "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
+    "ROLES": ["Admin"]
+  }
 }
