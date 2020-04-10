@@ -153,8 +153,8 @@ module.exports = router;
  *       - Roles
  *     description:
  *     parameters:
- *         - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         type: string
  *         required: true
  *     produces:
@@ -163,6 +163,7 @@ module.exports = router;
  *       200:
  *         description: Ok
  *         examples:
+ * 
  *           application/json:
  *             {
                   "data": [
