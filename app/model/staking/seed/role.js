@@ -8,9 +8,9 @@ const Model = require("app/model/staking").roles;
     }, {
       name: "Admin"
     }, {
-      name: "Operator 1"
+      name: "Operator1"
     }, {
-      name: "Operator 2"
+      name: "Operator2"
     }], {
       returning: true
     });

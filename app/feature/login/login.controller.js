@@ -13,6 +13,7 @@ const bcrypt = require('bcrypt');
 const config = require("app/config");
 const uuidV4 = require('uuid/v4');
 const UserRole = require('app/model/staking').user_roles;
+const Roles = require("app/model/staking").roles;
 const Op = Sequelize.Op;
 
 module.exports = async (req, res, next) => {
@@ -105,7 +106,6 @@ module.exports = async (req, res, next) => {
           user_id: user.id
         }
       })
-
       await UserActivityLog.create({
         user_id: user.id,
         client_ip: registerIp,
@@ -133,11 +133,19 @@ module.exports = async (req, res, next) => {
           id: rolePermissions
         }
       });
-      req.session.roles = permissions.map(ele => ele.name);
-      req.session.role = roleList;
+      req.session.permissions = permissions.map(ele => ele.name);
+      roleList = await Roles.findAll({
+        attributes: [
+          "id", "name", "level", "root_flg"
+        ],
+        where: {
+          id: roleList
+        }
+      })
 
       let response = userMapper(user);
       response.roles = roleList;
+      req.session.roles = roleList;
       return res.ok({
         twofa: false,
         user: response
