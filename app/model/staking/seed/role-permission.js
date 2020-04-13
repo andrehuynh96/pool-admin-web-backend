@@ -20,7 +20,7 @@ let PermissionKey = Object.assign({}, require("app/model/staking/value-object/pe
             role_id: roles[ele],
             permission_id: permissions[key]
           })
-      });
+        });
     });
     await RolePermission.bulkCreate(data, {
       returning: true

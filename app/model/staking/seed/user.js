@@ -6,7 +6,7 @@ let passWord = bcrypt.hashSync("Abc@123456", 10);
   let count = await Model.count();
   if (count == 0) {
     await Model.bulkCreate([{
-      email: "example@gmail.com",
+      email: "admin@gmail.com",
       password_hash: passWord,
       user_sts: "ACTIVATED",
       twofa_enable_flg: false,
