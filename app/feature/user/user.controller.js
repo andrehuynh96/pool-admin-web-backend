@@ -20,7 +20,7 @@ module.exports = {
     try {
       let limit = req.query.limit ? parseInt(req.query.limit) : 10;
       let offset = req.query.offset ? parseInt(req.query.offset) : 0;
-      let roles = req.session.role;
+      let rolesControl = await _getRoleControl(req.roles);
       let where = { deleted_flg: false };
       let include = [
         {
@@ -31,7 +31,7 @@ module.exports = {
             }
           ],
           where: {
-            role_id: { [Op.gte]: Math.min(...roles) }
+            role_id: { [Op.in]: rolesControl }
           }
         }
       ];
@@ -91,7 +91,8 @@ module.exports = {
       }
       let result = await User.findOne({
         where: {
-          id: req.params.id
+          id: req.params.id,
+          deleted_flg: false
         }
       })
 
@@ -433,4 +434,24 @@ async function _sendEmailDeleteUser(user) {
   } catch (err) {
     logger.error("send email delete account fail", err);
   }
+}
+async function _getRoleControl(roles) {
+  let levels = roles.map(ele => ele.level)
+  let roleControl = []
+  for (let e of levels) {
+    let role = await Role.findOne({
+      attribute: ["level"],
+      where: {
+        level: { [Op.gt]: e },
+        deleted_flg: false
+      },
+      order: [['level', 'ASC']]
+    });
+
+    if (role) {
+      roleControl.push(role.id)
+    }
+  }
+
+  return roleControl;
 }
