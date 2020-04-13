@@ -251,4 +251,12 @@ module.exports = {
     "KEY": "VIEW_ROLE_PERMISSIONS",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   },
+  "GET_LIST_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
+    "KEY": "GET_LIST_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
+    "ROLES": ["Admin"]
+  },
+  "GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
+    "KEY": "GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
+    "ROLES": ["Admin"]
+  }
 }

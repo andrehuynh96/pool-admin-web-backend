@@ -41,7 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
-
+  partner_commission.associate = (models) => {
+    // associations can be defined here
+    partner_commission.hasMany(models.partner_request_change_reward_addresses, { foreignKey: 'partner_commission_id' })
+  };
   Temporalize({
     model: partner_commission,
     sequelize,
