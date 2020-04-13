@@ -5,12 +5,12 @@ const UserRole = require("app/model/staking").user_roles;
 (async () => {
   let adminRole = await Role.findOne({
     where: {
-      name: "Admin"
+      name: "Master"
     }
   });
   let user = await User.findOne({
     where: {
-      email: "example@gmail.com"
+      email: "admin@gmail.com"
     }
   });
 
