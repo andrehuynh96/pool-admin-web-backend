@@ -246,5 +246,9 @@ module.exports = {
   "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
     "KEY": "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
     "ROLES": ["Admin"]
-  }
+  },
+  "VIEW_ROLE_PERMISSIONS": {
+    "KEY": "VIEW_ROLE_PERMISSIONS",
+    "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
+  },
 }
