@@ -37,7 +37,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /web/partners/{partner_id}/memos:
+ *  /web/partners/{partner_id}/memos:
  *   post:
  *     summary: update partner memos
  *     tags:
@@ -56,7 +56,7 @@ module.exports = router;
  *            example:
  *               { items: [{     
                         "platform":"ATOM",
-                        "memo":"Infinito:ATOM"
+                        "memo":"Infinito:ATOM",
                     }]
                   }
  *     produces:
@@ -92,6 +92,12 @@ module.exports = router;
  *         description: Error
  *         schema:
  *           $ref: '#/definitions/500'
+ * 
+ */
+
+/**
+ * @swagger
+ *  /web/partners/{partner_id}/memos:
  *   get:
  *     summary: get partner memo
  *     tags:
@@ -150,7 +156,7 @@ module.exports = router;
  *  
  */
 
- /**
+/**
  * @swagger
  * /web/partners/{partner_id}/memos/histories:
  *   get:
