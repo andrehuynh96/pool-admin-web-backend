@@ -1,0 +1,7 @@
+const path = require('path');
+ 
+module.exports = {
+    'config': path.resolve('app/config/db-migration.js'),
+    'models-path': path.resolve('app/model/staking'),
+    'migrations-path': path.resolve('app/model/staking/migration')
+}
