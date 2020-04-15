@@ -43,6 +43,15 @@ module.exports = {
     "KEY": "VIEW_LOGIN_HISTORY_ACCOUNT",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   },
+  "UPDATE_PROFILE_ACCOUNT": {
+    "KEY": "UPDATE_PROFILE_ACCOUNT",
+    "ROLES": [
+      "Master",
+      "Admin",
+      "Operator1",
+      "Operator2",
+    ]
+  },
   "TURN_OFF_2FA_OTHER_USERS": {
     "KEY": "TURN_OFF_2FA_OTHER_USERS",
     "ROLES": ["Master"]

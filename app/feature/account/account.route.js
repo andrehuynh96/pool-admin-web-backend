@@ -2,7 +2,7 @@ const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const authenticate = require('app/middleware/authenticate.middleware');
 const parseformdata = require('app/middleware/parse-formdata.middleware');
-const { changePassword, update, twofa } = require('./validator');
+const { changePassword, update, twofa, updateProfile } = require('./validator');
 const controller = require('./account.controller');
 const verifyRecaptcha = require('app/middleware/verify-recaptcha.middleware');
 const config = require('app/config')
@@ -54,6 +54,14 @@ router.get(
   authenticate,
   authority(Permission.VIEW_LOGIN_HISTORY_ACCOUNT),
   controller.loginHistory
+);
+
+router.put(
+  '/me/profile',
+  authenticate,
+  authority(Permission.UPDATE_PROFILE_ACCOUNT),
+  validator(updateProfile),
+  controller.updateProfile
 );
 
 module.exports = router;
@@ -337,7 +345,66 @@ module.exports = router;
  *           $ref: '#/definitions/500'
  */
 
-
 /*********************************************************************/
 
-
+/**
+ * @swagger
+ * /web/me/profile:
+ *   put:
+ *     summary: update user profile
+ *     tags:
+ *       - Accounts
+ *     description: update user profile
+ *     parameters:
+ *       - name: data
+ *         in: body
+ *         required: true
+ *         description: submit data JSON to update.
+ *         schema:
+ *            type: object
+ *            required:
+ *            - name
+ *            - twofa_code
+  *            properties:
+ *              name:
+ *                type: string
+ *            example:
+ *                  {
+                        "name": "testttttttttt"
+ *                  }
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         examples:
+ *           application/json:
+ *             {
+ *                 "data": [
+                        {
+                            "id": 64,
+                            "email": "yukirito131098@gmail.com",
+                            "name": "testttttttttt",
+                            "twofa_enable_flg": false,
+                            "user_sts": "ACTIVATED",
+                            "latest_login_at": "2020-04-15T04:51:47.775Z"
+                        }
+                    ]
+ *             }
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/400'
+ *       401:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/401'
+ *       404:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/404'
+ *       500:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/500'
+ */
