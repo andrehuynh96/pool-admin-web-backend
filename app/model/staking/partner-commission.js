@@ -37,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     staking_platform_id: {
       type: DataTypes.UUID,
     },
+    partner_updated_by: {
+      type: DataTypes.UUID,
+      allowNull: true
+    }
   }, {
       underscored: true,
       timestamps: true,
