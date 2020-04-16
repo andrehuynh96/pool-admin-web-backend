@@ -43,6 +43,15 @@ module.exports = {
     "KEY": "VIEW_LOGIN_HISTORY_ACCOUNT",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   },
+  "UPDATE_PROFILE_ACCOUNT": {
+    "KEY": "UPDATE_PROFILE_ACCOUNT",
+    "ROLES": [
+      "Master",
+      "Admin",
+      "Operator1",
+      "Operator2",
+    ]
+  },
   "TURN_OFF_2FA_OTHER_USERS": {
     "KEY": "TURN_OFF_2FA_OTHER_USERS",
     "ROLES": ["Master"]
@@ -245,6 +254,18 @@ module.exports = {
   },
   "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
     "KEY": "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
+    "ROLES": ["Admin"]
+  },
+  "VIEW_ROLE_PERMISSIONS": {
+    "KEY": "VIEW_ROLE_PERMISSIONS",
+    "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
+  },
+  "GET_LIST_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
+    "KEY": "GET_LIST_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
+    "ROLES": ["Admin"]
+  },
+  "GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
+    "KEY": "GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
     "ROLES": ["Admin"]
   }
 }

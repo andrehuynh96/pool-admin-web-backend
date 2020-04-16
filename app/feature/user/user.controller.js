@@ -84,6 +84,7 @@ module.exports = {
     }
   },
   delete: async (req, res, next) => {
+    let transaction;
     try {
       if (req.params.id == req.user.id) {
         return res.badRequest(res.__("USER_NOT_DELETED"), "USER_NOT_DELETED", { fields: ['id'] });
@@ -98,14 +99,21 @@ module.exports = {
       if (!result) {
         return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
-      let response = await User.update(
-        {
-          deleted_flg: true
-        },{
-           where : {
-          id: req.params.id
+
+      transaction = await database.transaction();
+      await UserRole.destroy({
+        where: {
+          user_id: req.params.id
         }
-      })
+      }, { transaction });
+      let response = await User.destroy({
+        where: {
+          id: req.params.id
+        },
+        returning: true
+      }, { transaction });
+      await transaction.commit();
+
       if (!response || response.length == 0) {
         return res.serverInternalError();
       }
@@ -114,6 +122,7 @@ module.exports = {
     }
     catch (err) {
       logger.error('delete user fail:', err);
+      if (transaction) await transaction.rollback();
       next(err);
     }
   },
