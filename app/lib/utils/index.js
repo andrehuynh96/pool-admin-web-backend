@@ -1,3 +1,5 @@
+const User = require('app/model/staking').users;
+
 module.exports = {
   passwordEvaluator: (p) => {
     let score = 0;
@@ -8,7 +10,6 @@ module.exports = {
     if (/[ !"#$%&'()*+,\-.\/:;<=>?@[\\\]^_`{|}~]/.test(p)) score++;
     return score >= 2;
   },
-
   secondDurationTime: (number, type) => {
     let SECOND_TYPE_HOUR = number * 60 * 60
     switch (type) {
@@ -25,5 +26,25 @@ module.exports = {
       case 'YEAR': return SECOND_TYPE_HOUR * 365 * 24;
         break;
     }
+  },
+  _getUsername: async (arr) => {
+    let userNames = await User.findAll({
+      attributes: [
+        "id", "name"
+      ],
+      where: {
+        id: arr.map(ele => ele.updated_by)
+      }
+    });
+    let names = userNames.reduce((result, item) => {
+      result[item.id] = item.name;
+      return result;
+    }, {});
+    return arr.map(ele => {
+      return {
+        ...ele.dataValues,
+        updated_by_user_name: ele.partner_updated_by ? null : names[ele.updated_by]
+      };
+    })
   }
 }

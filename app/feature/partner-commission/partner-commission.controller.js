@@ -4,6 +4,7 @@ const PartnerCommission = require('app/model/staking').partner_commissions;
 const History = require('app/model/staking').partner_commissions_his;
 const mapper = require('app/feature/response-schema/partner-commission.response-schema');
 const database = require('app/lib/database').db().staking;
+const { _getUsername } = require('app/lib/utils');
 var commission = {};
 
 commission.all = async (req, res, next) => {
@@ -14,8 +15,9 @@ commission.all = async (req, res, next) => {
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
     const { count: total, rows: partner_commissions } = await PartnerCommission.findAndCountAll({ offset: off, limit: lim, where: where, order: [['platform', 'ASC']] });
+    let result = await _getUsername(partner_commissions);
     return res.ok({
-      items: partner_commissions.map(item => mapper(item)),
+      items: mapper(result),
       offset: off,
       limit: lim,
       total: total
@@ -42,6 +44,7 @@ commission.create = async (req, res, next) => {
         insertedItems.push(item);
       } else {
         item.updated_by = user.id;
+        item.partner_updated_by = null;
         let [_, updatedCommission] = await PartnerCommission.update(item, {
           where: {
             id: item.id
@@ -54,7 +57,8 @@ commission.create = async (req, res, next) => {
     let partner_commissions = insertedCommissions.concat(updatedCommissions);
     logger.info('partner-commission::update::partner-commission::', JSON.stringify(partner_commissions));
     await transaction.commit();
-    return res.ok(partner_commissions.map(item => mapper(item)));
+    let result = await _getUsername(partner_commissions);
+    return res.ok(mapper(result));
   } catch (error) {
     logger.error(error);
     if (transaction) await transaction.rollback();
@@ -70,8 +74,9 @@ commission.getHis = async (req, res, next) => {
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
     const { count: total, rows: partner_commissions_his } = await History.findAndCountAll({ offset: off, limit: lim, where: where, order: [['platform', 'ASC']] });
+    let result = await _getUsername(partner_commissions_his);
     return res.ok({
-      items: partner_commissions_his.map(item => mapper(item)),
+      items: mapper(result),
       offset: off,
       limit: lim,
       total: total
