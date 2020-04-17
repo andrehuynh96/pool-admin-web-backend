@@ -1,15 +1,15 @@
 module.exports = {
   "CREATE_USER": {
     "KEY": "CREATE_USER",
-    "ROLES": []
+    "ROLES": ["Master", "Admin", "Operator1"]
   },
   "UPDATE_USER": {
     "KEY": "UPDATE_USER",
-    "ROLES": []
+    "ROLES": ["Master", "Admin", "Operator1",]
   },
   "DELETE_USER": {
     "KEY": "DELETE_USER",
-    "ROLES": []
+    "ROLES": ["Master", "Admin", "Operator1",]
   },
   "VIEW_LIST_USER": {
     "KEY": "VIEW_LIST_USER",
