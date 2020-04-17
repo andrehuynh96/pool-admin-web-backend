@@ -39,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0
     },
+    partner_updated_by: {
+      type: DataTypes.UUID,
+      allowNull: true
+    }
   }, {
       underscored: true,
       timestamps: true,
