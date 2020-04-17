@@ -91,7 +91,7 @@ module.exports = router;
                         "default_flg": true,
                         "updated_by": 115,
                         "updated_at": "2020-04-13T09:05:47.640Z",
-                        "updated_by_user_name": "testttttttttt"
+                        "updated_by_user_name": "anh Hung` dep chai"
                       }
                     ]
                   }
@@ -153,7 +153,7 @@ module.exports = router;
                         "default_flg": true,
                         "updated_by": 71,
                         "updated_at": "2020-03-30T07:21:06.420Z",
-                        "updated_by_user_name": "Myhn"
+                        "updated_by_user_name": "anh Hung` dep chai"
                       },
                       {
                         "id": "e71887da-8d24-4c56-b8ed-3ca0fec9719c",
@@ -226,7 +226,7 @@ module.exports = router;
                       "default_flg": false,
                       "updated_by": 71,
                       "updated_at": "2020-03-30T07:21:06.420Z",
-                      "updated_by_user_name": "Myhn"
+                      "updated_by_user_name": "anh Hung` dep chai"
                     },
                     {
                       "id": "9d284127-3e71-4d41-9b61-f48d0910877e",

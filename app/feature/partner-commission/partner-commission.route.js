@@ -82,7 +82,7 @@ module.exports = router;
                         "commission": 10,
                         "reward_address": "this_is_a_more_different_etc_address",
                         "updated_by": 10,
-                        "updated_by_user_name": "testttttttttt"
+                        "updated_by_user_name": "anh Hung` dep chai"
                       },
                       {
                         "id": "b216a8ef-cc05-4d7b-b46a-a72c918d22c2",
@@ -90,7 +90,7 @@ module.exports = router;
                         "commission": 15,
                         "reward_address": "this_is_a_different_bitcoin_address",
                         "updated_by": 10,
-                        "updated_by_user_name": "testttttttttt"
+                        "updated_by_user_name": "anh Hung` dep chai"
                       }
                     ]
  *             }
@@ -144,7 +144,7 @@ module.exports = router;
                         "commission": 15,
                         "reward_address": "this_is_a_different_bitcoin_address",
                         "updated_by": 10,
-                        "updated_by_user_name": "testttttttttt"
+                        "updated_by_user_name": "anh Hung` dep chai"
                       },
                       {
                         "id": "2366f28e-8802-47b6-b96e-1cbf467f6978",
@@ -159,7 +159,7 @@ module.exports = router;
                         "commission": 24,
                         "reward_address": "",
                         "updated_by": 10,
-                        "updated_by_user_name": "testttttttttt"
+                        "updated_by_user_name": "anh Hung` dep chai"
                       }
                     ],
                     "offset": 0,
@@ -223,7 +223,7 @@ module.exports = router;
                       "commission": 12,
                       "reward_address": "",
                       "updated_by": 10,
-                      "updated_by_user_name": "testttttttttt"
+                      "updated_by_user_name": "anh Hung` dep chai"
                     },
                     {
                       "id": "eb56566b-dc6e-477b-a271-f712e887ea2c",
