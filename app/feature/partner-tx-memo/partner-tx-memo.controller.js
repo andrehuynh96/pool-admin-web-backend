@@ -3,6 +3,7 @@ const config = require('app/config');
 const TxMemo = require('app/model/staking').partner_tx_memos;
 const mapper = require('app/feature/response-schema/partner-tx-memo.response-schema');
 const database = require('app/lib/database').db().staking;
+const { _getUsername } = require('app/lib/utils');
 var memo = {};
 
 memo.all = async (req, res, next) => {
@@ -13,8 +14,9 @@ memo.all = async (req, res, next) => {
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
     const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({offset: off, limit: lim, where: where, order: [['platform', 'ASC']]});
+    let result = await _getUsername(partner_tx_memos);
     return res.ok({
-      items: partner_tx_memos.map(item => mapper(item)),
+      items: mapper(result),
       offset: off,
       limit: lim,
       total: total
@@ -53,7 +55,8 @@ memo.create = async (req, res, next) => {
     let partner_tx_memos = await TxMemo.bulkCreate(insertedItems, { transaction });
     await TxMemo.update({
       default_flg: false,
-      updated_by: user.id
+      updated_by: user.id,
+      partner_updated_by: null
     }, {
         where: {
           id: updatedItems
@@ -61,8 +64,9 @@ memo.create = async (req, res, next) => {
       }, { transaction });
     logger.info('partner-tx-memo::update::partner-tx-memo::', JSON.stringify(partner_tx_memos));
     await transaction.commit();
+    let result = await _getUsername(partner_tx_memos);
     return res.ok({
-      items: partner_tx_memos.map(item => mapper(item))
+      items: mapper(result)
     });
   } catch (error) {
     logger.error(error);
@@ -79,8 +83,9 @@ memo.getHis = async (req, res, next) => {
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
     const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({offset: off, limit: lim, where: where, order: [['platform', 'ASC']]});
+    let result = await _getUsername(partner_tx_memos);
     return res.ok({
-      items: partner_tx_memos.map(item => mapper(item)),
+      items: mapper(result),
       offset: off,
       limit: lim,
       total: total
