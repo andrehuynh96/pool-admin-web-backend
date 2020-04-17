@@ -42,6 +42,7 @@ commission.create = async (req, res, next) => {
         insertedItems.push(item);
       } else {
         item.updated_by = user.id;
+        item.partner_updated_by = null;
         let [_, updatedCommission] = await PartnerCommission.update(item, {
           where: {
             id: item.id

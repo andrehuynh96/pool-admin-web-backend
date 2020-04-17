@@ -53,7 +53,8 @@ memo.create = async (req, res, next) => {
     let partner_tx_memos = await TxMemo.bulkCreate(insertedItems, { transaction });
     await TxMemo.update({
       default_flg: false,
-      updated_by: user.id
+      updated_by: user.id,
+      partner_updated_by: null
     }, {
         where: {
           id: updatedItems
