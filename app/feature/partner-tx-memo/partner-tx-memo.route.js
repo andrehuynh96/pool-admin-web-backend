@@ -10,8 +10,8 @@ const router = express.Router();
 
 router.get(
   '/partners/:partner_id/memos',
-  authenticate,
-  authority(Permission.VIEW_LIST_MEMO_PARTNER),
+  //authenticate,
+  //authority(Permission.VIEW_LIST_MEMO_PARTNER),
   controller.all
 );
 
