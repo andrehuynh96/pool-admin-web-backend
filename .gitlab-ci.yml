@@ -18,19 +18,18 @@ variables:
 #   - sudo su ubuntu -c "export GIT_SSH_COMMAND='ssh -i /home/ubuntu/staking-iac/ansible/id_rsa';git pull"
   # Run ansible-playbook
   - cd ${ANSIBLE_DIR}
-  - project=`echo ${CI_COMMIT_TAG} | awk -F'-' '{print $2}'`
-  - ansible_file=`grep ${CI_PROJECT_NAME}.git *.yml | awk '{print $1}'|awk -F':' '{print $1}' | grep ${_ENV} | grep $project`
+  - ansible_file=`grep ${CI_PROJECT_NAME}.git *.yml | awk '{print $1}'|awk -F':' '{print $1}' | grep ${_ENV}`
   - sudo su ubuntu -c "ansible-playbook $ansible_file --extra-vars=\"node_git_version=${CI_COMMIT_TAG}\""
 
-.OnlyStagingMS:
+.OnlyStaging:
  only:
-  - /^.*-ms-rc$/
+  - /^.*-rc$/
  except:
   - branches
 
-.OnlyProductionMS:
+.OnlyProduction:
  only:
-  - /^.*-ms$/
+  - /^.*[0-9]$/
  except:
   - branches
 
@@ -39,7 +38,7 @@ StageMoonStake:
   _ENV: "stage" 
  extends:
   - .BuildJSApp
-  - .OnlyStagingMS
+  - .OnlyStaging
  tags:
   - stage-stak-mp-ansible
 
@@ -48,6 +47,6 @@ ProdMoonStake:
   _ENV: "prod" 
  extends:
   - .BuildJSApp
-  - .OnlyProductionMS
+  - .OnlyProduction
  tags:
   - prod-stak-mp-ansible 
