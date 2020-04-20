@@ -19,7 +19,8 @@ variables:
   # Run ansible-playbook
   - cd ${ANSIBLE_DIR}
   - ansible_file=`grep ${CI_PROJECT_NAME}.git *.yml | awk '{print $1}'|awk -F':' '{print $1}' | grep ${_ENV}`
-  - sudo su ubuntu -c "ansible-playbook $ansible_file --extra-vars=\"node_git_version=${CI_COMMIT_TAG}\""
+  #- sudo su ubuntu -c "ansible-playbook $ansible_file --extra-vars=\"node_git_version=${CI_COMMIT_TAG}\""
+  - echo $ansible_file
 
 .OnlyStaging:
  only:
