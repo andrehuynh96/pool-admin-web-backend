@@ -2,7 +2,7 @@ const Role = require("app/model/staking").roles;
 const User = require("app/model/staking").users;
 const UserRole = require("app/model/staking").user_roles;
 
-(async () => {
+module.exports = async () => {
   let adminRole = await Role.findOne({
     where: {
       name: "Master"
@@ -29,4 +29,4 @@ const UserRole = require("app/model/staking").user_roles;
       })
     }
   }
-})();
+};
