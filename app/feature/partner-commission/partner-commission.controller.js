@@ -73,7 +73,7 @@ commission.getHis = async (req, res, next) => {
     const where = { partner_id: partner_id };
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_commissions_his } = await History.findAndCountAll({ offset: off, limit: lim, where: where, order: [['platform', 'ASC']] });
+    const { count: total, rows: partner_commissions_his } = await History.findAndCountAll({ offset: off, limit: lim, where: where, order: [['updated_at', 'DESC']] });
     let result = await _getUsername(partner_commissions_his);
     return res.ok({
       items: mapper(result),

@@ -12,7 +12,8 @@ module.exports = {
       let result = await Role.findAll({
         where: {
           deleted_flg: false
-        }
+        },
+        order: [['level', 'ASC']]
       });
       return res.ok(result);
     }
@@ -27,7 +28,6 @@ module.exports = {
       let roleControl = []
       for (let e of levels) {
         let role = await Role.findOne({
-
           where: {
             level: { [Op.gt]: e },
             deleted_flg: false
@@ -36,7 +36,13 @@ module.exports = {
         });
 
         if (role) {
-          roleControl.push(role)
+          let roles = await Role.findAll({
+            where: {
+              level: role.level,
+              deleted_flg: false
+            }
+          });
+          roleControl = roleControl.concat(roles);
         }
       }
       return res.ok(roleControl);
@@ -46,7 +52,7 @@ module.exports = {
       next(err);
     }
   },
-  permissionsOfRole: async(req, res, next) => {
+  permissionsOfRole: async (req, res, next) => {
     try {
       let role = await Role.findOne({
         where: {
@@ -58,7 +64,7 @@ module.exports = {
       }
       let rolePemssion = await RolePermission.findAll({
         where: {
-          role_id : req.params.id
+          role_id: req.params.id
         }
       })
       let permissionIds = rolePemssion.map(ele => ele.permission_id)
@@ -89,7 +95,7 @@ module.exports = {
       if (role) {
         return res.badRequest(res.__("ROLE_EXIST_ALREADY"), "ROLE_EXIST_ALREADY", { fields: ['name'] });
       }
-      
+
       let items = await Permission.findAll({
         attributes:
           ["id"]
@@ -166,13 +172,13 @@ module.exports = {
 
       transaction = await database.transaction();
       if (name !== role.name || level !== role.level) {
-        if(name !== role.name){
+        if (name !== role.name) {
           let checkName = await Role.findOne({
             where: {
               name: name
             }
           })
-          if(checkName) return res.badRequest(res.__("NAME_EXIST_ALREADY"), "NAME_EXIST_ALREADY", { fields: ['name'] });
+          if (checkName) return res.badRequest(res.__("NAME_EXIST_ALREADY"), "NAME_EXIST_ALREADY", { fields: ['name'] });
         }
         let updateRoleResponse = await Role.update({
           name: name,
