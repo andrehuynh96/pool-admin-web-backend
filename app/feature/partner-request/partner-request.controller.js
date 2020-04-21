@@ -2,6 +2,7 @@ const logger = require('app/lib/logger');
 const PartnerRequest = require('app/model/staking').partner_request_change_reward_addresses;
 const Partner = require('app/model/staking').partners;
 const PartnerCommission = require('app/model/staking').partner_commissions;
+const StakingPlatform = require('app/model/staking').staking_platforms;
 const uuidV4 = require('uuid/v4');
 const config = require('app/config');
 const mailer = require('app/lib/mailer');
@@ -43,6 +44,12 @@ module.exports = {
             if (!partnerRequest) {
                 return res.badRequest(res.__("CHANGE_REQUEST_ADDRESS_NOT_FOUND"), "CHANGE_REQUEST_ADDRESS_NOT_FOUND");
             }
+            let stakingPlatform = await StakingPlatform.findOne({
+                where: {
+                    platform: commission.platform
+                }
+            })
+            let icon = stakingPlatform ? stakingPlatform.icon : null;
             await PartnerRequest.update({
                 status: status,
                 verify_token: verifyToken
@@ -53,7 +60,8 @@ module.exports = {
                     id: id
                   },
                 });
-            _sendEmail(partner, commission, partnerRequest,verifyToken);
+            
+            _sendEmail(partner, commission, partnerRequest,verifyToken, icon);
             return res.ok(true);
         } catch (error) {
             logger.error(error);
@@ -113,17 +121,17 @@ module.exports = {
     }
 }
 
-async function _sendEmail(partner, commission, partnerRequest, verifyToken) {
+async function _sendEmail(partner, commission, partnerRequest, verifyToken, icon) {
     try {
       let subject = ` ${config.emailTemplate.partnerName} - Change reward address`;
       let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
       let data = {
-        imageUrl: config.website.urlImages,
+        imageUrl: partnerRequest.link + `/${config.emailTemplate.partnerName.toLowerCase()}`,
         link: `${partnerRequest.link}${config.website.urlApproveRequest}${verifyToken}`,
         partnerName: partner.name,
         platform: commission.platform,
         rewardAddress: partnerRequest.reward_address,
-
+        icon: icon
       }
       data = Object.assign({}, data, config.email);
       await mailer.sendWithTemplate(subject, from, partnerRequest.email_confirmed, data, config.emailTemplate.confirmingRequest);
