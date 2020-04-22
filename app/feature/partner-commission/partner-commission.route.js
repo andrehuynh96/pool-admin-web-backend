@@ -57,13 +57,11 @@ module.exports = router;
  *               {
                     "items": [
                       {
-                        "id": "8f3d8b76-7915-493c-88f2-94ee074a56f1",
-                        "platform": "ETC",
-                        "commission": 68
-                      },
-                      {
-                        "platform": "IRIS",
-                        "commission": 70
+                          "id": "3c3ed477-a40e-439c-97ff-a404498ed5c2",
+                          "platform": "ETH",
+                          "commission": 68,
+                          "reward_address": "",
+                          "staking_platform_id": ""
                       }
                     ]
                   }
@@ -77,20 +75,26 @@ module.exports = router;
  *             {
  *                 "data": [
                       {
-                        "id": "8f3d8b76-7915-493c-88f2-94ee074a56f1",
-                        "platform": "ETC",
-                        "commission": 10,
-                        "reward_address": "this_is_a_more_different_etc_address",
-                        "updated_by": 10,
-                        "updated_by_user_name": "anh Hung` dep chai"
+                        "id": "f62634d4-30f9-11ea-aec2-2e728ce88125",
+                        "platform": "ATOM",
+                        "symbol": "ATOM",
+                        "commission": 69,
+                        "reward_address": "cosmos1suvplzztw7kn4ntn9pcduxz2lxfjfy5akd3uk0",
+                        "staking_platform_id": "cba566c6-35ae-11ea-978f-2e728ce88125",
+                        "updated_by": 64,
+                        "updated_at": "2020-04-22T04:07:27.929Z",
+                        "partner_updated_by": "ed483de6-2d14-11ea-978f-2e728ce88125"
                       },
                       {
-                        "id": "b216a8ef-cc05-4d7b-b46a-a72c918d22c2",
-                        "platform": "BTC",
-                        "commission": 15,
-                        "reward_address": "this_is_a_different_bitcoin_address",
-                        "updated_by": 10,
-                        "updated_by_user_name": "anh Hung` dep chai"
+                        "id": "f62634d4-30f9-11ea-aec2-2e728ce88125",
+                        "platform": "ATOM",
+                        "symbol": "ATOM",
+                        "commission": 69,
+                        "reward_address": "cosmos1suvplzztw7kn4ntn9pcduxz2lxfjfy5akd3uk0",
+                        "staking_platform_id": "cba566c6-35ae-11ea-978f-2e728ce88125",
+                        "updated_by": 64,
+                        "updated_at": "2020-04-22T04:07:27.929Z",
+                        "partner_updated_by": "ed483de6-2d14-11ea-978f-2e728ce88125"
                       }
                     ]
  *             }
@@ -139,27 +143,14 @@ module.exports = router;
                   "data": {
                     "items": [
                       {
-                        "id": "b216a8ef-cc05-4d7b-b46a-a72c918d22c2",
-                        "platform": "BTC",
-                        "commission": 15,
-                        "reward_address": "this_is_a_different_bitcoin_address",
-                        "updated_by": 10,
-                        "updated_by_user_name": "anh Hung` dep chai"
-                      },
-                      {
-                        "id": "2366f28e-8802-47b6-b96e-1cbf467f6978",
-                        "platform": "IRIS",
-                        "commission": 70,
-                        "reward_address": "",
-                        "updated_by": 64
-                      },
-                      {
-                        "id": "92883d8c-4184-4cee-8eb7-c0bacee1ffcc",
-                        "platform": "IRIS",
-                        "commission": 24,
-                        "reward_address": "",
-                        "updated_by": 10,
-                        "updated_by_user_name": "anh Hung` dep chai"
+                       	"id": "ac098ffd-1ff3-47c5-9244-38eda2dcfc59",
+                        "platform": "ETH",
+                        "commission": 69,
+                        "reward_address": "0x61179C42C57BFE59C5CecA25B3B66f6Ee3b15cD7",
+                        "staking_platform_id": "96a29602-257d-4041-85c4-ea0fb17e0e67",
+                        "updated_by": 64,
+                        "updated_at": "2020-04-22T04:52:01.134Z",
+                        "partner_updated_by": "ed483de6-2d14-11ea-978f-2e728ce88125"
                       }
                     ],
                     "offset": 0,
