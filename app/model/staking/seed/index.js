@@ -8,6 +8,7 @@ const config = require("app/config");
       require("./role-permission")();
       require("./user-role")();
       await require("./setting")();
+      require('./cold-wallet')();
     }
     require("./root-permission")();
   }
