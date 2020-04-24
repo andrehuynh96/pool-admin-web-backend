@@ -142,7 +142,7 @@ module.exports = {
         }
       })
       if (!payout) {
-        return res.badRequest(res.__("STAKING_PAYOUT_NOT_FOUND"), "STAKING_PAYOUT_NOT", { fields: ["staking_platform_id"] });
+        return res.badRequest(res.__("STAKING_PAYOUT_NOT_FOUND"), "STAKING_PAYOUT_NOT_FOUND", { fields: ["staking_platform_id"] });
       }
       let durationInSecond = secondDurationTime(req.body.duration, req.body.duration_type);
       planParams = {

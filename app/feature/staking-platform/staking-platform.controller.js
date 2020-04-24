@@ -83,7 +83,7 @@ module.exports = {
       });
 
       if (!result) {
-        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND", {
+        return res.badRequest(res.__("STAKING_PLATFORM_NOT_FOUND"), "STAKING_PLATFORM_NOT_FOUND", {
           fields: ["id"]
         });
       }
@@ -105,7 +105,7 @@ module.exports = {
       });
 
       if (!result) {
-        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND", {
+        return res.badRequest(res.__("STAKING_PLATFORM_NOT_FOUND"), "STAKING_PLATFORM_NOT_FOUND", {
           fields: ["id"]
         });
       }
@@ -190,8 +190,8 @@ module.exports = {
       let validAddress = WAValidator.validate(req.body.sc_token_address, "eth");
       if (!validAddress)
         return res.badRequest(
-          res.__("INVALID_TOKEN_ADDRESS"),
-          "INVALID_TOKEN_ADDRESS",
+          res.__("TOKEN_ADDRESS_INVALID"),
+          "TOKEN_ADDRESS_INVALID",
           { fields: ["sc_token_address"] }
         );
 
@@ -326,7 +326,7 @@ module.exports = {
       });
 
       if (!result) {
-        return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND", {
+        return res.badRequest(res.__("STAKING_PLATFORM_NOT_FOUND"), "STAKING_PLATFORM_NOT_FOUND", {
           fields: ["id"]
         });
       }
