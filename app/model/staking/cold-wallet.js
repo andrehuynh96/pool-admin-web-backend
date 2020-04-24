@@ -24,6 +24,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(16),
       allowNull: false
     },
+    percentage: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
+    enable_flg: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
     created_by: {
       type: DataTypes.INTEGER,
       allowNull: false,

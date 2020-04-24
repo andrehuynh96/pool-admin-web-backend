@@ -7,8 +7,8 @@ const config = require("app/config");
       await Promise.all([require("./user")(), require("./role")()]);
       require("./role-permission")();
       require("./user-role")();
-      await require("./setting")();
-      require('./cold-wallet')();
+      require("./cold-wallet")();
+      await require("./setting")(); 
     }
     require("./root-permission")();
   }
