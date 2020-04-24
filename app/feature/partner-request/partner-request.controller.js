@@ -13,7 +13,7 @@ const { Op } = require("sequelize");
 module.exports = {
     update: async (req, res, next) => {
         try {
-            let {params: {partner_id, commission_id, id}, body: {status}} = req;
+            let {params: {partner_id, partner_commission_id, id}, body: {status}} = req;
             let verifyToken = Buffer.from(uuidV4()).toString('base64');
             let partner = await Partner.findOne({
                 where: {
@@ -25,7 +25,7 @@ module.exports = {
             }
             let commission = await PartnerCommission.findOne({
                 where: {
-                    id: commission_id,
+                    id: partner_commission_id,
                     partner_id: partner_id
                 }
             });
@@ -36,7 +36,7 @@ module.exports = {
             let partnerRequest = await PartnerRequest.findOne({
                 where: {
                     partner_id: partner_id,
-                    partner_commission_id: commission_id,
+                    partner_commission_id: partner_commission_id,
                     id: id,
                     status: 1
                 }
@@ -56,7 +56,7 @@ module.exports = {
               }, {
                   where: {
                     partner_id: partner_id,
-                    partner_commission_id: commission_id,
+                    partner_commission_id: partner_commission_id,
                     id: id
                   },
                 });
@@ -114,6 +114,62 @@ module.exports = {
               }
         
             return res.ok(mapper(result));
+        } catch (error) {
+            logger.error(error);
+            next(error);
+        }
+    },
+    resendEmail: async (req, res, next) => {
+        try {
+            const { params: {partner_id, partner_commission_id, id}} = req;
+            let verifyToken = Buffer.from(uuidV4()).toString('base64');
+            let partner = await Partner.findOne({
+                where: {
+                    id: partner_id
+                }
+            });
+            if (!partner) {
+                return res.badRequest(res.__("PARTNER_NOT_FOUND"), "PARTNER_NOT_FOUND");
+            }
+            let commission = await PartnerCommission.findOne({
+                where: {
+                    id: partner_commission_id,
+                    partner_id: partner_id
+                }
+            });
+    
+            if (!commission) {
+                return res.badRequest(res.__("PARTNER_COMMISSION_NOT_FOUND"), "PARTNER_COMMISSION_NOT_FOUND");
+            }
+            let partnerRequest = await PartnerRequest.findOne({
+                where: {
+                    partner_id: partner_id,
+                    partner_commission_id: partner_commission_id,
+                    id: id,
+                    status: 2
+                }
+            });
+            if (!partnerRequest) {
+                return res.badRequest(res.__("CHANGE_REQUEST_ADDRESS_NOT_FOUND"), "CHANGE_REQUEST_ADDRESS_NOT_FOUND");
+            }
+            let stakingPlatform = await StakingPlatform.findOne({
+                where: {
+                    platform: commission.platform
+                }
+            })
+            let icon = stakingPlatform ? stakingPlatform.icon : null;
+            await PartnerRequest.update({
+                verify_token: verifyToken
+              }, {
+                  where: {
+                    partner_id: partner_id,
+                    partner_commission_id: partner_commission_id,
+                    id: id
+                  },
+                });
+            
+            _sendEmail(partner, commission, partnerRequest,verifyToken, icon);
+            return res.ok(true);
         } catch (error) {
             logger.error(error);
             next(error);
