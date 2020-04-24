@@ -30,7 +30,7 @@ module.exports = {
           staking_platform_id: platformId
         }
       })
-      if (!payout) return res.badRequest(res.__("NOT_FOUND"), "NOT_FOUND", { fields: ['id'] });
+      if (!payout) return res.badRequest(res.__("STAKING_PAYOUT_NOT_FOUND"), "STAKING_PAYOUT_NOT_FOUND", { fields: ['id'] });
       if (payout.wait_blockchain_confirm_status_flg)
         return res.forbidden(res.__("PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION"), "PLATFORM_IS_UNDER_BLOCKCHAIN_CONFIRMATION");
 
