@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
+    partner_request_change_reward_address.associate = (models) => {
+      // associations can be defined here
+      partner_request_change_reward_address.belongsTo(models.partner_commissions, {foreignKey: 'partner_commission_id'})
+    };
+   
     Temporalize({
       model: partner_request_change_reward_address,
       sequelize,

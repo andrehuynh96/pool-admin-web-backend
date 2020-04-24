@@ -1,15 +1,15 @@
 module.exports = {
   "CREATE_USER": {
     "KEY": "CREATE_USER",
-    "ROLES": []
+    "ROLES": ["Master", "Admin", "Operator1"]
   },
   "UPDATE_USER": {
     "KEY": "UPDATE_USER",
-    "ROLES": []
+    "ROLES": ["Master", "Admin", "Operator1",]
   },
   "DELETE_USER": {
     "KEY": "DELETE_USER",
-    "ROLES": []
+    "ROLES": ["Master", "Admin", "Operator1",]
   },
   "VIEW_LIST_USER": {
     "KEY": "VIEW_LIST_USER",
@@ -42,6 +42,15 @@ module.exports = {
   "VIEW_LOGIN_HISTORY_ACCOUNT": {
     "KEY": "VIEW_LOGIN_HISTORY_ACCOUNT",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
+  },
+  "UPDATE_PROFILE_ACCOUNT": {
+    "KEY": "UPDATE_PROFILE_ACCOUNT",
+    "ROLES": [
+      "Master",
+      "Admin",
+      "Operator1",
+      "Operator2",
+    ]
   },
   "TURN_OFF_2FA_OTHER_USERS": {
     "KEY": "TURN_OFF_2FA_OTHER_USERS",
@@ -151,10 +160,6 @@ module.exports = {
     "KEY": "VIEW_HISTORY_REWARD_SETTING",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   },
-  "VIEW_LIST_ROLE": {
-    "KEY": "VIEW_LIST_ROLE",
-    "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
-  },
   "VIEW_LIST_PLAN_STAKING_PLATFORM": {
     "KEY": "VIEW_LIST_PLAN_STAKING_PLATFORM",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
@@ -231,20 +236,36 @@ module.exports = {
     "KEY": "VIEW_LIST_PERMISSION_DETAIL",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   },
-  "CREATE_ROLE": {
-    "KEY": "CREATE_ROLE",
-    "ROLES": ["Master"]
-  },
-  "UPDATE_ROLE": {
-    "KEY": "UPDATE_ROLE",
-    "ROLES": ["Master"]
-  },
-  "DELETE_ROLE": {
-    "KEY": "DELETE_ROLE",
-    "ROLES": ["Master"]
-  },
+  // "VIEW_LIST_ROLE": {
+  //   "KEY": "VIEW_LIST_ROLE",
+  //   "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
+  // },
+  // "CREATE_ROLE": {
+  //   "KEY": "CREATE_ROLE",
+  //   "ROLES": ["Master"]
+  // },
+  // "UPDATE_ROLE": {
+  //   "KEY": "UPDATE_ROLE",
+  //   "ROLES": ["Master"]
+  // },
+  // "DELETE_ROLE": {
+  //   "KEY": "DELETE_ROLE",
+  //   "ROLES": ["Master"]
+  // },
   "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
     "KEY": "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
-    "ROLES": ["Admin"]
+    "ROLES": ["Master", "Admin"]
+  },
+  // "VIEW_ROLE_PERMISSIONS": {
+  //   "KEY": "VIEW_ROLE_PERMISSIONS",
+  //   "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
+  // },
+  "GET_LIST_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
+    "KEY": "GET_LIST_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
+    "ROLES": ["Master", "Admin"]
+  },
+  "GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
+    "KEY": "GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
+    "ROLES": ["Master", "Admin"]
   }
 }

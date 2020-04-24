@@ -2,7 +2,7 @@ const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const authenticate = require('app/middleware/authenticate.middleware');
 const parseformdata = require('app/middleware/parse-formdata.middleware');
-const { create, update, } = require('./validator');
+const { create, update, resendVerify } = require('./validator');
 const controller = require('./user.controller');
 const config = require('app/config');
 const authority = require('app/middleware/authority.middleware');
@@ -28,8 +28,8 @@ router.get(
 router.post(
   '/users',
   authenticate,
-  authority(Permission.CREATE_USER),
-  levelAuthority("req.body.role_id"),
+  // authority(Permission.CREATE_USER),
+  // levelAuthority("req.body.role_id"),
   validator(create),
   controller.create
 );
@@ -49,6 +49,12 @@ router.post(
   authenticate,
   authority(Permission.RESEND_EMAIL_USER),
   controller.resendEmailActive
+);
+
+router.post(
+  '/users/resend-verify-email',
+  validator(resendVerify),
+  controller.resendVerifyEmail
 );
 
 router.post(
@@ -406,7 +412,53 @@ module.exports = router;
  *           $ref: '#/definitions/500'
  */
 
-
+ /**
+ * @swagger
+ * /web/users/resend-verify-email:
+ *   post:
+ *     summary: Resend expired Otp
+ *     tags:
+ *       - User
+ *     description: Resend expired Otp
+ *     parameters:
+ *       - in: body
+ *         name: data
+ *         description: Data for resend verify email.
+ *         schema:
+ *            type: object
+ *            required:
+ *            - verify_token
+ *            example:
+ *               {
+                        "verify_token":"NzFmYWJkNTMtN2ZlMy00NzY4LTlmOTctNTJkN2QxNDFlZDg2"
+                  }
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *         examples:
+ *           application/json:
+ *             {
+ *                 "data":true
+ *             }
+ *       400:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/400'
+ *       401:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/401'
+ *       404:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/404'
+ *       500:
+ *         description: Error
+ *         schema:
+ *           $ref: '#/definitions/500'
+ */
 /*********************************************************************/
 
 
