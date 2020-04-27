@@ -252,20 +252,24 @@ module.exports = {
   //   "KEY": "DELETE_ROLE",
   //   "ROLES": ["Master"]
   // },
-  // "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
-  //   "KEY": "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
-  //   "ROLES": ["Admin"]
-  // },
+  "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
+    "KEY": "UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
+    "ROLES": ["Master", "Admin"]
+  },
   // "VIEW_ROLE_PERMISSIONS": {
   //   "KEY": "VIEW_ROLE_PERMISSIONS",
   //   "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   // },
   "GET_LIST_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
     "KEY": "GET_LIST_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
-    "ROLES": ["Admin"]
+    "ROLES": ["Master", "Admin"]
   },
   "GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
     "KEY": "GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
-    "ROLES": ["Admin"]
+    "ROLES": ["Master", "Admin"]
+  },
+  "RESEND_EMAIL_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
+    "KEY": "RESEND_EMAIL_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
+    "ROLES": ["Master", "Admin"]
   }
 }

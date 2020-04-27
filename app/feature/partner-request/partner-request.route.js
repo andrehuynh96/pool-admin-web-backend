@@ -9,7 +9,7 @@ const Permission = require('app/model/staking/value-object/permission-key');
 const router = express.Router();
 
 router.put(
-    '/partners/:partner_id/commissions/:commission_id/requests/:id',
+    '/partners/:partner_id/commissions/:partner_commission_id/requests/:id',
     validator(update),
     authenticate,
     authority(Permission.UPDATE_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS),
@@ -29,15 +29,22 @@ router.get(
     authority(Permission.GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS),
     controller.get
 );
+
+router.post(
+    '/partners/:partner_id/commissions/:partner_commission_id/requests/:id/resend-email',
+    authenticate,
+    authority(Permission.RESEND_EMAIL_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS),
+    controller.resendEmail
+)
   
-  module.exports = router;
+module.exports = router;
   
   
 /*********************************************************************/
 
 /**
  * @swagger
- * /web/partners/{partner_id}/commissions/{commission_id}/requests/{id}:
+ * /web/partners/{partner_id}/commissions/{partner_commission_id}/requests/{id}:
  *   put:
  *     summary: update payout
  *     tags:
@@ -49,7 +56,7 @@ router.get(
  *         type: string
  *         required: true
  *       - in: path
- *         name: commission_id
+ *         name: partner_commission_id
  *         type: string
  *         required: true
  *       - in: path
@@ -197,6 +204,55 @@ router.get(
                         "created_at": "2020-01-07T11:22:04.602Z"
                   }
  *             }
+*       400:
+*         description: Error
+*         schema:
+*           $ref: '#/definitions/400'
+*       401:
+*         description: Error
+*         schema:
+*           $ref: '#/definitions/401'
+*       404:
+*         description: Error
+*         schema:
+*           $ref: '#/definitions/404'
+*       500:
+*         description: Error
+*         schema:
+*           $ref: '#/definitions/500'
+*/
+
+/**
+ * @swagger
+ * /web/partners/{partner_id}/commissions/{partner_commission_id}/requests/{id}/resend-email:
+ *   post:
+ *     summary: resend email
+ *     tags:
+ *       - Requests
+ *     description:
+ *     parameters:
+ *       - in: path
+ *         name: partner_id
+ *         type: string
+ *         required: true
+ *       - in: path
+ *         name: partner_commission_id
+ *         type: string
+ *         required: true
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: Ok
+*         examples:
+*           application/json:
+*             {
+*                 "data": true
+*             }
 *       400:
 *         description: Error
 *         schema:

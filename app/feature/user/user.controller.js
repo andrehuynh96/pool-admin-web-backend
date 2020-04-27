@@ -188,12 +188,12 @@ module.exports = {
       await OTP.update({
         expired: true
       }, {
-          where: {
-            user_id: user.id,
-            action_type: OtpType.CREATE_ACCOUNT
-          },
-          returning: true
-        })
+        where: {
+          user_id: user.id,
+          action_type: OtpType.CREATE_ACCOUNT
+        },
+        returning: true
+      })
 
       await OTP.create({
         code: verifyToken,
@@ -203,6 +203,13 @@ module.exports = {
         user_id: user.id,
         action_type: OtpType.CREATE_ACCOUNT
       })
+      let admin = await User.findOne({
+        where: {
+          id: user.created_by
+        }
+      })
+      user.adminName = admin? admin.name : 'Admin'  
+      user.role = role.name
       await transaction.commit();
       _sendEmailCreateUser(user, verifyToken);
 
@@ -326,11 +333,11 @@ module.exports = {
         password_hash: passWord,
         user_sts: UserStatus.ACTIVATED
       }, {
-          where: {
-            id: user.id
-          },
-          returning: true
-        });
+        where: {
+          id: user.id
+        },
+        returning: true
+      });
       if (!response || response.length == 0) {
         return res.serverInternalError();
       }
@@ -338,13 +345,13 @@ module.exports = {
       await OTP.update({
         used: true
       }, {
-          where: {
-            user_id: user.id,
-            code: req.body.verify_token,
-            action_type: OtpType.CREATE_ACCOUNT
-          },
-          returning: true
-        })
+        where: {
+          user_id: user.id,
+          code: req.body.verify_token,
+          action_type: OtpType.CREATE_ACCOUNT
+        },
+        returning: true
+      })
 
       return res.ok(true);
     }
@@ -381,12 +388,12 @@ module.exports = {
       await OTP.update({
         expired: true
       }, {
-          where: {
-            user_id: user.id,
-            action_type: OtpType.CREATE_ACCOUNT
-          },
-          returning: true
-        })
+        where: {
+          user_id: user.id,
+          action_type: OtpType.CREATE_ACCOUNT
+        },
+        returning: true
+      })
 
       await OTP.create({
         code: verifyToken,
@@ -396,11 +403,100 @@ module.exports = {
         user_id: user.id,
         action_type: OtpType.CREATE_ACCOUNT
       })
+      let userRole = await UserRole.findOne({
+        where: {
+          user_id: user.id
+        },
+        order: [['id', 'DESC']]
+      })
+      let role = await Role.findOne({
+        where: {
+          id: userRole.role_id
+        }
+      })
+      let admin = await User.findOne({
+        where: {
+          id: user.created_by
+        }
+      })
+      user.adminName = admin? admin.name : 'Admin'  
+      user.role = role.name
       _sendEmailCreateUser(user, verifyToken);
       return res.ok(true);
     }
     catch (err) {
       logger.error('create account fail:', err);
+      next(err);
+    }
+  },
+  resendVerifyEmail: async (req, res, next) => {
+    try {
+      let otp = await OTP.findOne({
+        where: {
+          code: req.body.verify_token
+        }
+      })
+      if (!otp) {
+        return res.badRequest(res.__("TOKEN_INVALID"), "TOKEN_INVALID", { fields: ['verify_token'] })
+      }
+      if (otp.action_type !== OtpType.CREATE_ACCOUNT) {
+        return res.badRequest(res.__("TOKEN_IS_NOT_CREATE_ACCOUNT"), "TOKEN_IS_NOT_CREATE_ACCOUNT", { fields: ['verify_token'] })
+      }
+      let user = await User.findOne({
+        where: {
+          id: otp.user_id
+        }
+      })
+      if (user.user_sts !== UserStatus.UNACTIVATED) {
+        return res.badRequest(res.__("USER_IS_NOT_UNACTIVATED"), "USER_IS_NOT_UNACTIVATED")
+      }
+
+      let verifyToken = Buffer.from(uuidV4()).toString('base64');
+      let today = new Date();
+      today.setHours(today.getHours() + config.expiredVefiryToken);
+      await OTP.update({
+        expired: true
+      }, {
+        where: {
+          user_id: user.id
+        },
+        returning: true
+      });
+      //TODO:
+      let newOtp = await OTP.create({
+        code: verifyToken,
+        used: false,
+        expired: false,
+        expired_at: today,
+        user_id: user.id,
+        action_type: OtpType.CREATE_ACCOUNT
+      });
+      if (!newOtp) {
+        return res.serverInternalError();
+      }
+      let userRole = await UserRole.findOne({
+        where: {
+          user_id: user.id
+        },
+        order: [['id', 'DESC']]
+      })
+      let role = await Role.findOne({
+        where: {
+          id: userRole.role_id
+        }
+      })
+      let admin = await User.findOne({
+        where: {
+          id: user.created_by
+        }
+      })
+      user.adminName = admin? admin.name : 'Admin'  
+      user.role = role.name
+      await _sendEmailCreateUser(user, newOtp);
+      return res.ok(true);
+    }
+    catch (err) {
+      logger.error('resend verify email fail:', err);
       next(err);
     }
   }
@@ -412,6 +508,8 @@ async function _sendEmailCreateUser(user, verifyToken) {
     let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
     let data = {
       imageUrl: config.website.urlImages,
+      role: user.role,
+      name: user.adminName,
       link: `${config.website.urlActive}${verifyToken}`,
       hours: config.expiredVefiryToken
     }
