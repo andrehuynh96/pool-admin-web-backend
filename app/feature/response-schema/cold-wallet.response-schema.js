@@ -3,24 +3,29 @@ const objectMapper = require('object-mapper');
 const destObject = {
   array: {
     '[].id': '[].id',
-    '[].partner_id': '[].partner_id',
-    '[].partner_commission_id': '[].partner_commission_id',
+    '[].platform': '[].platform',
+    '[].min_amount': '[].min_amount',
+    '[].amount_unit': '[].amount_unit',
     '[].reward_address': '[].reward_address',
-    '[].partner_commission.platform': '[].platform',
-    '[].status': '[].status',
+    '[].percentage': '[].percentage',
+    '[].enable_flg': '[].enable_flg',
     '[].createdAt': '[].created_at',
     '[].updatedAt': '[].updated_at',
-
+    '[].created_by': '[].created_by',
+    '[].updated_by': '[].updated_by'
   },
   single: {
     id: 'id',
-    partner_id: 'partner_id',
-    partner_commission_id: 'partner_commission_id',
+    platform: 'platform',
+    min_amount: 'min_amount',
+    amount_unit: 'amount_unit',
     reward_address: 'reward_address',
-    'partner_commission.platform': 'platform',
-    status: 'status',
+    percentage: 'percentage',
+    enable_flg: 'enable_flg',
     createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    updatedAt: 'updated_at',
+    created_by: 'created_by',
+    updated_by: 'updated_by'
   }
 };
 module.exports = srcObject => {
