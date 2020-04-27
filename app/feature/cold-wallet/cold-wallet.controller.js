@@ -1,13 +1,14 @@
 const logger = require('app/lib/logger');
-const config = require('app/config');
 const ColdWallet = require('app/model/staking').cold_wallets;
 const bech32 = require("bech32");
 const WAValidator = require("wallet-address-validator");
+const mapper = require('app/feature/response-schema/cold-wallet.response-schema');
+const database = require('app/lib/database').db().staking;
 
-module.export = {
-    create: async (req, res, next) => {
-        const transaction;
-        try {
+module.exports = {
+    update: async (req, res, next) => {
+      let transaction;
+      try {
         logger.info('cold-wallet::update');
         const { body: { items }, user } = req;
         let checkAddressMessage = _checkListAddress(items);
@@ -15,32 +16,46 @@ module.export = {
             return res.badRequest(checkAddressMessage);
         }
         transaction = await database.transaction();
-        let updatedCommissions = [];
+        let coldWallets = [];
         for (let item of items) {
             item.updated_by = user.id;
-            let allowedField = ['updated_by', 'partner_updated_by', 'commission'];
+            let allowedField = ['updated_by', 'reward_address', 'amount', 'percenctage',
+          'enable_flg'];
             let filteredItem = Object.keys(item)
                 .filter(key => allowedField.includes(key))
                 .reduce((obj, key) => {
                 obj[key] = item[key];
                 return obj;
                 }, {});
-            let [_, updatedCommission] = await PartnerCommission.update(filteredItem, {
+            let [_, coldWallet] = await ColdWallet.update(filteredItem, {
                 where: {
                 id: item.id
                 }, returning: true
             }, { transaction });
-            updatedCommissions.push(updatedCommission);
+            coldWallets.push(coldWallet);
         }
         
-        logger.info('cold-wallets::update::cold-wallets::', JSON.stringify(updatedCommissions));
+        logger.info('cold-wallets::update::cold-wallets::', JSON.stringify(coldWallets));
         await transaction.commit();
-        return res.ok(mapper(updatedCommissions));
-        } catch (error) {
+        return res.ok(mapper(coldWallets));
+      } catch (error) {
         logger.error(error);
         if (transaction) await transaction.rollback();
         next(error);
-        }
+      }
+    },
+    getAll: async (req, res, next) => {
+      try {
+        logger.info('cold-wallets::all');
+        const { count: total, rows: coldWallets } = await ColdWallet.findAndCountAll({order: [['updatedAt', 'DESC'], ['platform', 'ASC']]});
+        return res.ok({
+          items: mapper(coldWallets),
+          total: total
+        });
+      } catch (error) {
+        logger.error(error);
+        next(error);
+      }
     }
 }
 

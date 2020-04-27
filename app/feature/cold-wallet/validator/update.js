@@ -6,7 +6,7 @@ const schema = Joi.object().keys({
       id: Joi.string().required(),
       percenctage: Joi.number().min(0.000).max(100).optional(),
       reward_address: Joi.string().optional(),
-      amount: Joi.number().optional(),
+      min_amount: Joi.number().optional(),
       enable_flg: Joi.boolean().optional()
     })
   )

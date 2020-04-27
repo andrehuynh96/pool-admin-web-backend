@@ -1,7 +1,7 @@
 
-
+const { Temporalize } = require('sequelize-temporalize');
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("cold_wallets", {
+  const ColdWallet = sequelize.define("cold_wallets", {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -16,9 +16,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(128),
       allowNull: true
     },
-    amount: {
+    min_amount: {
       type: DataTypes.DOUBLE,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     amount_unit: {
       type: DataTypes.STRING(16),
@@ -47,4 +48,14 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
+    Temporalize({
+      model: ColdWallet,
+      sequelize,
+      temporalizeOptions: {
+        blocking: false,
+        full: false,
+        modelSuffix: "_his"
+      }
+    });
+  return ColdWallet;
 }
