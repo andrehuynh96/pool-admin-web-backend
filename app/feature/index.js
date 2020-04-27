@@ -25,6 +25,7 @@ router.use(require('./setting/setting.route'));
 router.use(require('./staking-payout/staking-payout.route'));
 router.use(require('./permission/permission.route'));
 router.use(require('./partner-request/partner-request.route'));
+router.use(require('./cold-wallet/cold-wallet.route'));
 
 module.exports = router;
 

@@ -68,7 +68,7 @@ const config = {
   enableSeed: process.env.ENABLE_SEED == "1",
   websiteUrl: process.env.WEBSITE_URL,
   linkWebsiteActiveUser: process.env.WEBSITE_URL + '/active-user',
-  disableRecaptcha: true,
+  disableRecaptcha: process.env.DISABLE_RECAPTCHA == "1",
   CDN: {
     url: process.env.CDN_URL,
     accessKey: process.env.CDN_ACCESS_KEY,
