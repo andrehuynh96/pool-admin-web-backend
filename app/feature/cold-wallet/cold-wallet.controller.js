@@ -19,7 +19,7 @@ module.exports = {
         let coldWallets = [];
         for (let item of items) {
             item.updated_by = user.id;
-            let allowedField = ['updated_by', 'reward_address', 'amount', 'percenctage',
+            let allowedField = ['updated_by', 'reward_address', 'min_amount', 'percenctage',
           'enable_flg'];
             let filteredItem = Object.keys(item)
                 .filter(key => allowedField.includes(key))
