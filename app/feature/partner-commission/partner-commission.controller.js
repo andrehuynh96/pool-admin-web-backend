@@ -64,7 +64,7 @@ commission.create = async (req, res, next) => {
         item.created_by = user.id;
         item.updated_by = user.id;
         item.partner_id = partner_id;
-        if (e.reward_address) {
+        if (item.reward_address) {
           insertedItems.push(item);
         }
       } else {
