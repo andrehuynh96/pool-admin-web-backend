@@ -8,6 +8,9 @@ const OtpType = require("app/model/staking/value-object/otp-type");
 const UserActivityLog = require("app/model/staking").user_activity_logs;
 const ActionType = require("app/model/staking/value-object/user-activity-action-type");
 const UserRole = require('app/model/staking').user_roles;
+const RolePermissions = require('app/model/staking').role_permissions
+const Permissions = require('app/model/staking').permissions
+const Roles = require('app/model/staking').roles
 
 module.exports = async (req, res, next) => {
   try {
