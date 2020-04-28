@@ -34,7 +34,6 @@ async function _getRoleControl(req) {
   let roleControl = []
   for (let e of levels) {
     let role = await Role.findOne({
-      attribute: ["level"],
       where: {
         level: { [Op.gt]: e },
         deleted_flg: false
@@ -43,7 +42,13 @@ async function _getRoleControl(req) {
     });
 
     if (role) {
-      roleControl.push(role.id)
+      let roles = await Role.findAll({
+        where: {
+          level: role.level,
+          deleted_flg: false
+        }
+      });
+      roleControl = roleControl.concat(roles.map(x => x.id));
     }
   }
 

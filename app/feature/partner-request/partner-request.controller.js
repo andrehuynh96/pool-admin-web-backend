@@ -2,6 +2,7 @@ const logger = require('app/lib/logger');
 const PartnerRequest = require('app/model/staking').partner_request_change_reward_addresses;
 const Partner = require('app/model/staking').partners;
 const PartnerCommission = require('app/model/staking').partner_commissions;
+const StakingPlatform = require('app/model/staking').staking_platforms;
 const uuidV4 = require('uuid/v4');
 const config = require('app/config');
 const mailer = require('app/lib/mailer');
@@ -12,7 +13,7 @@ const { Op } = require("sequelize");
 module.exports = {
     update: async (req, res, next) => {
         try {
-            let {params: {partner_id, commission_id, id}, body: {status}} = req;
+            let {params: {partner_id, partner_commission_id, id}, body: {status}} = req;
             let verifyToken = Buffer.from(uuidV4()).toString('base64');
             let partner = await Partner.findOne({
                 where: {
@@ -24,7 +25,7 @@ module.exports = {
             }
             let commission = await PartnerCommission.findOne({
                 where: {
-                    id: commission_id,
+                    id: partner_commission_id,
                     partner_id: partner_id
                 }
             });
@@ -35,7 +36,7 @@ module.exports = {
             let partnerRequest = await PartnerRequest.findOne({
                 where: {
                     partner_id: partner_id,
-                    partner_commission_id: commission_id,
+                    partner_commission_id: partner_commission_id,
                     id: id,
                     status: 1
                 }
@@ -43,17 +44,24 @@ module.exports = {
             if (!partnerRequest) {
                 return res.badRequest(res.__("CHANGE_REQUEST_ADDRESS_NOT_FOUND"), "CHANGE_REQUEST_ADDRESS_NOT_FOUND");
             }
+            let stakingPlatform = await StakingPlatform.findOne({
+                where: {
+                    platform: commission.platform
+                }
+            })
+            let icon = stakingPlatform ? stakingPlatform.icon : null;
             await PartnerRequest.update({
                 status: status,
                 verify_token: verifyToken
               }, {
                   where: {
                     partner_id: partner_id,
-                    partner_commission_id: commission_id,
+                    partner_commission_id: partner_commission_id,
                     id: id
                   },
                 });
-            _sendEmail(partner, commission, partnerRequest,verifyToken);
+            
+            _sendEmail(partner, commission, partnerRequest,verifyToken, icon);
             return res.ok(true);
         } catch (error) {
             logger.error(error);
@@ -110,20 +118,76 @@ module.exports = {
             logger.error(error);
             next(error);
         }
+    },
+    resendEmail: async (req, res, next) => {
+        try {
+            const { params: {partner_id, partner_commission_id, id}} = req;
+            let verifyToken = Buffer.from(uuidV4()).toString('base64');
+            let partner = await Partner.findOne({
+                where: {
+                    id: partner_id
+                }
+            });
+            if (!partner) {
+                return res.badRequest(res.__("PARTNER_NOT_FOUND"), "PARTNER_NOT_FOUND");
+            }
+            let commission = await PartnerCommission.findOne({
+                where: {
+                    id: partner_commission_id,
+                    partner_id: partner_id
+                }
+            });
+    
+            if (!commission) {
+                return res.badRequest(res.__("PARTNER_COMMISSION_NOT_FOUND"), "PARTNER_COMMISSION_NOT_FOUND");
+            }
+            let partnerRequest = await PartnerRequest.findOne({
+                where: {
+                    partner_id: partner_id,
+                    partner_commission_id: partner_commission_id,
+                    id: id,
+                    status: 2
+                }
+            });
+            if (!partnerRequest) {
+                return res.badRequest(res.__("CHANGE_REQUEST_ADDRESS_NOT_FOUND"), "CHANGE_REQUEST_ADDRESS_NOT_FOUND");
+            }
+            let stakingPlatform = await StakingPlatform.findOne({
+                where: {
+                    platform: commission.platform
+                }
+            })
+            let icon = stakingPlatform ? stakingPlatform.icon : null;
+            await PartnerRequest.update({
+                verify_token: verifyToken
+              }, {
+                  where: {
+                    partner_id: partner_id,
+                    partner_commission_id: partner_commission_id,
+                    id: id
+                  },
+                });
+            
+            _sendEmail(partner, commission, partnerRequest,verifyToken, icon);
+            return res.ok(true);
+        } catch (error) {
+            logger.error(error);
+            next(error);
+        }
     }
 }
 
-async function _sendEmail(partner, commission, partnerRequest, verifyToken) {
+async function _sendEmail(partner, commission, partnerRequest, verifyToken, icon) {
     try {
       let subject = ` ${config.emailTemplate.partnerName} - Change reward address`;
       let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
       let data = {
-        imageUrl: config.website.urlImages,
-        link: `${partnerRequest.link}${config.website.urlConfirmingRequest}${verifyToken}`,
+        imageUrl: partnerRequest.link + `/${config.emailTemplate.partnerName.toLowerCase()}`,
+        link: `${partnerRequest.link}${config.website.urlApproveRequest}${verifyToken}`,
         partnerName: partner.name,
         platform: commission.platform,
         rewardAddress: partnerRequest.reward_address,
-
+        icon: icon
       }
       data = Object.assign({}, data, config.email);
       await mailer.sendWithTemplate(subject, from, partnerRequest.email_confirmed, data, config.emailTemplate.confirmingRequest);

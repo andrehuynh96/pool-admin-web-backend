@@ -3,7 +3,7 @@ const Role = require("app/model/staking").roles;
 const RolePermission = require("app/model/staking").role_permissions;
 let PermissionKey = Object.assign({}, require("app/model/staking/value-object/permission-key"));
 
-(async () => {
+module.exports = async () => {
   let rolePermission = await RolePermission.findAll({});
   if (rolePermission.length == 0) {
     let permissions = await Permission.findAll({});
@@ -29,4 +29,4 @@ let PermissionKey = Object.assign({}, require("app/model/staking/value-object/pe
       });
     }
   }
-})();
+};
