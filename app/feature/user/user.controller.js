@@ -492,7 +492,7 @@ module.exports = {
       })
       user.adminName = admin? admin.name : 'Admin'  
       user.role = role.name
-      await _sendEmailCreateUser(user, newOtp);
+      await _sendEmailCreateUser(user, newOtp.code);
       return res.ok(true);
     }
     catch (err) {
