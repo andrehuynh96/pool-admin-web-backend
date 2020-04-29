@@ -29,10 +29,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DOUBLE,
       allowNull: true
     },
+    email_notification: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
     enable_flg: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
     created_by: {
       type: DataTypes.INTEGER,
@@ -48,14 +52,14 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
     });
-    Temporalize({
-      model: ColdWallet,
-      sequelize,
-      temporalizeOptions: {
-        blocking: false,
-        full: false,
-        modelSuffix: "_his"
-      }
-    });
+  Temporalize({
+    model: ColdWallet,
+    sequelize,
+    temporalizeOptions: {
+      blocking: false,
+      full: false,
+      modelSuffix: "_his"
+    }
+  });
   return ColdWallet;
 }
