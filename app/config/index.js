@@ -51,9 +51,9 @@ const config = {
   mailSendAs: process.env.MAIL_SEND_AS || 'no-reply@infinito.io',
   website: {
     url: process.env.WEBSITE_URL,
-    urlActive: process.env.WEBSITE_URL + '/active-user/',
-    urlResetPassword: process.env.WEBSITE_URL + '/set-new-password/',
-    urlConfirmNewIp: process.env.WEBSITE_URL + '/confirm-ip',
+    urlActive: process.env.WEBSITE_URL + '/active-user/?token=',
+    urlResetPassword: process.env.WEBSITE_URL + '/set-new-password/?token=',
+    urlConfirmNewIp: process.env.WEBSITE_URL + '/confirm-ip/?token=',
     urlApproveRequest: '/approve-request?token=',
     urlImages: process.env.PARTNER_NAME ? process.env.WEBSITE_URL + '/' + process.env.PARTNER_NAME.toLowerCase() : process.env.WEBSITE_URL,
   },
