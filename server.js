@@ -2,7 +2,7 @@
 require('dotenv').config();
 require('rootpath')();
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-process.env.PORT = process.env.PORT || 3005;
+process.env.PORT = process.env.PORT || 3001;
 const express = require('express');
 const morgan = require('morgan');
 const http = require('http');
