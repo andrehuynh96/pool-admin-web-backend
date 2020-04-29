@@ -267,5 +267,17 @@ module.exports = {
   "GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
     "KEY": "GET_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
     "ROLES": ["Master", "Admin"]
-  }
+  },
+  "RESEND_EMAIL_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS": {
+    "KEY": "RESEND_EMAIL_PARTNER_REQUEST_CHANGE_REWARD_ADDRESS",
+    "ROLES": ["Master", "Admin"]
+  },
+  "VIEW_LIST_COLD_WALLET": {
+    "KEY": "VIEW_LIST_COLD_WALLET",
+    "ROLES": ["Master", "Admin"]
+  },
+  "UPDATE_COLD_WALLET": {
+    "KEY": "UPDATE_COLD_WALLET",
+    "ROLES": ["Master", "Admin"]
+  },
 }

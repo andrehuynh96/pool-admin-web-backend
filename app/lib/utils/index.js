@@ -46,7 +46,7 @@ module.exports = {
 
 
     for (let ele of arr) {
-      ele.updated_by_user_name = ele.partner_updated_by ? null : names[ele.updated_by]
+      ele.updated_by_user_name = ele.partner_updated_by ? 'Childpool' : names[ele.updated_by]
     }
 
     return arr;

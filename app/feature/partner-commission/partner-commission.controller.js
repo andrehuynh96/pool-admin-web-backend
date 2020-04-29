@@ -64,7 +64,9 @@ commission.create = async (req, res, next) => {
         item.created_by = user.id;
         item.updated_by = user.id;
         item.partner_id = partner_id;
-        insertedItems.push(item);
+        if (item.reward_address) {
+          insertedItems.push(item);
+        }
       } else {
         item.updated_by = user.id;
         item.partner_updated_by = null;
@@ -163,7 +165,7 @@ function _checkListAddress(data) {
       if (e.id) {
         continue;
       }
-      if (!e.reward_address) {
+      if (!e.reward_address && e.commission == 0) {
         continue;
       }
       let valid = false;
