@@ -17,7 +17,7 @@ memo.all = async (req, res, next) => {
     const where = { partner_id: partner_id, default_flg: true };
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({ offset: off, limit: lim, where: where, order: [['platform', 'ASC']] });
+    const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({ offset: off, limit: lim, where: where, order: [['updated_at', 'DESC']] });
     let result = await _getUsername(partner_tx_memos);
     let platforms = result.map(x => x.platform);
     let defaultPlatfrom = await _getPlatform(platforms);
@@ -89,7 +89,7 @@ memo.getHis = async (req, res, next) => {
     const where = { partner_id: partner_id, default_flg: false };
     const off = parseInt(offset) || 0;
     const lim = parseInt(limit) || parseInt(config.appLimit);
-    const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({ offset: off, limit: lim, where: where, order: [['platform', 'ASC']] });
+    const { count: total, rows: partner_tx_memos } = await TxMemo.findAndCountAll({ offset: off, limit: lim, where: where, order: [['updated_at', 'DESC']] });
     let result = await _getUsername(partner_tx_memos);
     return res.ok({
       items: mapper(result),
