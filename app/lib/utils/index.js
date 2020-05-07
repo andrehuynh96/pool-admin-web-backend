@@ -28,6 +28,9 @@ module.exports = {
     }
   },
   _getUsername: async (arr) => {
+    if (!arr || arr.length == 0) {
+      return arr;
+    }
     let userNames = await User.findAll({
       attributes: [
         "id", "name"
@@ -40,11 +43,12 @@ module.exports = {
       result[item.id] = item.name;
       return result;
     }, {});
-    return arr.map(ele => {
-      return {
-        ...ele.dataValues,
-        updated_by_user_name: ele.partner_updated_by ? null : names[ele.updated_by]
-      };
-    })
+
+
+    for (let ele of arr) {
+      ele.updated_by_user_name = ele.partner_updated_by ? 'Childpool' : names[ele.updated_by]
+    }
+
+    return arr;
   }
 }

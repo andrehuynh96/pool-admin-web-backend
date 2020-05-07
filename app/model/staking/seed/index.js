@@ -1,16 +1,19 @@
 const config = require("app/config");
-require("./permission");
 
-if (config.enableSeed) {
+(async () => {
   try {
-    require("./user");
-    require("./role");
-    require("./role-permission");
-    require("./user-role");
-    require("./setting");
+    await Promise.all([require("./permission")()]);
+    if (config.enableSeed) {
+      await Promise.all([require("./user")(), require("./role")()]);
+      require("./role-permission")();
+      require("./user-role")();
+      require("./cold-wallet")();
+      await require("./setting")(); 
+    }
+    require("./root-permission")();
   }
   catch (err) {
     console.log(err)
   }
 }
-require("./root-permission");
+)()

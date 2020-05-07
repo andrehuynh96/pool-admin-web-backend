@@ -2,7 +2,7 @@ const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const authenticate = require('app/middleware/authenticate.middleware');
 const controller = require('./role.controller');
-const authority = require('app/middleware/authority.middleware');
+const authorityRoot = require('app/middleware/authority-root.middleware');
 const Permission = require('app/model/staking/value-object/permission-key');
 const { create, update } = require("./validator");
 
@@ -11,33 +11,33 @@ const router = express.Router();
 router.get(
   '/roles',
   authenticate,
-  authority(Permission.VIEW_LIST_ROLE),
+  authorityRoot,
   controller.getAll
 );
 router.get(
   '/roles-have-permission',
   authenticate,
-  // authority(Permission.VIEW_LIST_ROLE),
+  //authorityRoot,
   controller.roleHavePermission
 );
 
 router.get(
   '/roles/:id/permissions',
   authenticate,
-  authority(Permission.VIEW_ROLE_PERMISSIONS),
+  authorityRoot,
   controller.permissionsOfRole
 );
 
 router.post("/roles",
   validator(create),
   authenticate,
-  authority(Permission.CREATE_ROLE),
+  authorityRoot,
   controller.create
 );
 router.put("/roles/:id",
   validator(update),
   authenticate,
-  authority(Permission.UPDATE_ROLE),
+  authorityRoot,
   controller.update
 );
 
@@ -163,7 +163,7 @@ module.exports = router;
  *       200:
  *         description: Ok
  *         examples:
- * 
+ *
  *           application/json:
  *             {
                   "data": [

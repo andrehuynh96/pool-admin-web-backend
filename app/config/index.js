@@ -51,10 +51,10 @@ const config = {
   mailSendAs: process.env.MAIL_SEND_AS || 'no-reply@infinito.io',
   website: {
     url: process.env.WEBSITE_URL,
-    urlActive: process.env.WEBSITE_URL + '/active-user/',
-    urlResetPassword: process.env.WEBSITE_URL + '/set-new-password/',
-    urlConfirmNewIp: process.env.WEBSITE_URL + '/confirm-ip',
-    urlConfirmingRequest: '/confirm-request/',
+    urlActive: process.env.WEBSITE_URL + '/active-user?token=',
+    urlResetPassword: process.env.WEBSITE_URL + '/set-new-password?token=',
+    urlConfirmNewIp: process.env.WEBSITE_URL + '/confirm-ip?token=',
+    urlApproveRequest: '/approve-request?token=',
     urlImages: process.env.PARTNER_NAME ? process.env.WEBSITE_URL + '/' + process.env.PARTNER_NAME.toLowerCase() : process.env.WEBSITE_URL,
   },
   emailTemplate: {
@@ -68,7 +68,7 @@ const config = {
   enableSeed: process.env.ENABLE_SEED == "1",
   websiteUrl: process.env.WEBSITE_URL,
   linkWebsiteActiveUser: process.env.WEBSITE_URL + '/active-user',
-  disableRecaptcha: true,
+  disableRecaptcha: process.env.DISABLE_RECAPTCHA == "1",
   CDN: {
     url: process.env.CDN_URL,
     accessKey: process.env.CDN_ACCESS_KEY,
