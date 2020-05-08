@@ -12,14 +12,14 @@ const router = express.Router();
 router.get(
   '/staking-platforms/time-unit',
   authenticate,
-  authority(Permission.VIEW_TIME_UNIT_STAKING_PLATFORM),
+  //authority(Permission.VIEW_TIME_UNIT_STAKING_PLATFORM),
   controller.timeUnit
 );
 
 router.get(
   '/staking-platforms/config',
   authenticate,
-  authority(Permission.VIEW_STAKING_PLATFORM_CONFIG),
+  //authority(Permission.VIEW_STAKING_PLATFORM_CONFIG),
   controller.config
 );
 
@@ -811,5 +811,4 @@ module.exports = router;
  *           $ref: '#/definitions/500'
  */
 
- /*********************************************************************/
- 
+/*********************************************************************/

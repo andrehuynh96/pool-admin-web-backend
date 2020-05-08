@@ -52,10 +52,10 @@ module.exports = {
       "Operator2",
     ]
   },
-  "TURN_OFF_2FA_OTHER_USERS": {
-    "KEY": "TURN_OFF_2FA_OTHER_USERS",
-    "ROLES": ["Master"]
-  },
+  // "TURN_OFF_2FA_OTHER_USERS": {
+  //   "KEY": "TURN_OFF_2FA_OTHER_USERS",
+  //   "ROLES": ["Master"]
+  // },
   "VIEW_LIST_COMMISSION_SETTING": {
     "KEY": "VIEW_LIST_COMMISSION_SETTING",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
@@ -148,10 +148,10 @@ module.exports = {
     "KEY": "UPDATE_PAYOUT_STAKING_PLATFORM",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   },
-  "CREATE_PAYOUT_STAKING_PLATFORM": {
-    "KEY": "CREATE_PAYOUT_STAKING_PLATFORM",
-    "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
-  },
+  // "CREATE_PAYOUT_STAKING_PLATFORM": {
+  //   "KEY": "CREATE_PAYOUT_STAKING_PLATFORM",
+  //   "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
+  // },
   "VIEW_LIST_REWARD_SETTING": {
     "KEY": "VIEW_LIST_REWARD_SETTING",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
@@ -176,14 +176,14 @@ module.exports = {
     "KEY": "CREATE_PLAN_STAKING_PLATFORM",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   },
-  "CREATE_PLAN_ERC20_STAKING_PLATFORM": {
-    "KEY": "CREATE_PLAN_ERC20_STAKING_PLATFORM",
-    "ROLES": ["Master", "Admin"]
-  },
-  "VIEW_TIME_UNIT_STAKING_PLATFORM": {
-    "KEY": "VIEW_TIME_UNIT_STAKING_PLATFORM",
-    "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
-  },
+  // "CREATE_PLAN_ERC20_STAKING_PLATFORM": {
+  //   "KEY": "CREATE_PLAN_ERC20_STAKING_PLATFORM",
+  //   "ROLES": ["Master", "Admin"]
+  // },
+  // "VIEW_TIME_UNIT_STAKING_PLATFORM": {
+  //   "KEY": "VIEW_TIME_UNIT_STAKING_PLATFORM",
+  //   "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
+  // },
   "VIEW_LIST_STAKING_PLATFORM": {
     "KEY": "VIEW_LIST_STAKING_PLATFORM",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
@@ -220,22 +220,22 @@ module.exports = {
     "KEY": "RESEND_EMAIL_USER",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   },
-  "VIEW_STAKING_PLATFORM_CONFIG": {
-    "KEY": "VIEW_STAKING_PLATFORM_CONFIG",
-    "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
-  },
+  // "VIEW_STAKING_PLATFORM_CONFIG": {
+  //   "KEY": "VIEW_STAKING_PLATFORM_CONFIG",
+  //   "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
+  // },
   "VIEW_LIST_SETTING": {
     "KEY": "VIEW_LIST_SETTING",
     "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   },
-  "VIEW_LIST_PERMISSION": {
-    "KEY": "VIEW_LIST_PERMISSION",
-    "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
-  },
-  "VIEW_LIST_PERMISSION_DETAIL": {
-    "KEY": "VIEW_LIST_PERMISSION_DETAIL",
-    "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
-  },
+  // "VIEW_LIST_PERMISSION": {
+  //   "KEY": "VIEW_LIST_PERMISSION",
+  //   "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
+  // },
+  // "VIEW_LIST_PERMISSION_DETAIL": {
+  //   "KEY": "VIEW_LIST_PERMISSION_DETAIL",
+  //   "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
+  // },
   // "VIEW_LIST_ROLE": {
   //   "KEY": "VIEW_LIST_ROLE",
   //   "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
