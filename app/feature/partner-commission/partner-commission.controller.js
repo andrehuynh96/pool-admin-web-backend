@@ -9,6 +9,7 @@ const database = require('app/lib/database').db().staking;
 const { Op } = require("sequelize");
 const bech32 = require("bech32");
 const WAValidator = require("wallet-address-validator");
+const NeonCore = require('@cityofzion/neon-core');
 
 const { _getUsername } = require('app/lib/utils');
 var commission = {};
@@ -173,6 +174,8 @@ function _checkListAddress(data) {
         valid = _verifyCosmosAddress(e.reward_address);
       } else if (e.platform == "IRIS") {
         valid = _verifyIrisAddress(e.reward_address);
+      } else if (e.platform == "ONT" || e.platform == "ONG") {
+        valid = _verifyOntAddress(e.reward_address);
       } else {
         valid = WAValidator.validate(e.reward_address, e.platform, "testnet");
         valid = valid ? true : WAValidator.validate(e.reward_address, e.platform);
@@ -226,5 +229,13 @@ function _verifyIrisAddress(address) {
   }
 }
 
+function _verifyOntAddress(address) {
+  try {
+    return NeonCore.wallet.isAddress(address);
+  } catch (e) {
+    logger.error(e);
+    return false;
+  }
+}
 
 module.exports = commission;
