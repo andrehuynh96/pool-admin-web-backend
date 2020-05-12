@@ -46,11 +46,12 @@ module.exports = {
     }
   },
   update: async (req, res, next) => {
-    const transaction = await database.transaction();
+    let transaction;
     try {
       logger.info('distribute-commission::update');
       const { body: { items }, user } = req;
       let results = [];
+      transaction = await database.transaction();
       for (let item of items) {
         item.updated_by = user.id;
         let [_, updatedCommission] = await DistributeCommissionCfg.update(item, {

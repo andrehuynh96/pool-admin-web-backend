@@ -46,7 +46,7 @@ commission.all = async (req, res, next) => {
 
 
 commission.create = async (req, res, next) => {
-  const transaction = await database.transaction();
+  let transaction;
   try {
     logger.info('partner-commission::update');
     const { params: { partner_id }, body: { items }, user } = req;
@@ -54,7 +54,7 @@ commission.create = async (req, res, next) => {
     if (checkAddressMessage.length > 0) {
       return res.badRequest(checkAddressMessage);
     }
-
+    transaction = await database.transaction();
     let updatedCommissions = [];
     let insertedItems = [];
     for (let item of items) {
