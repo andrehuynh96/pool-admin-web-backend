@@ -36,7 +36,7 @@ memo.all = async (req, res, next) => {
 
 
 memo.create = async (req, res, next) => {
-  const transaction = await database.transaction();
+  let transaction;
   try {
     logger.info('partner-tx-memo::update');
     const { params: { partner_id }, body: { items }, user } = req;
@@ -59,6 +59,7 @@ memo.create = async (req, res, next) => {
         if (txMemo && txMemo.id) updatedItems.push(txMemo.id);
       }
     }
+    transaction = await database.transaction();
     let partner_tx_memos = await TxMemo.bulkCreate(insertedItems, { transaction });
     await TxMemo.update({
       default_flg: false,
