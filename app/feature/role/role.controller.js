@@ -170,6 +170,7 @@ module.exports = {
         return res.badRequest(res.__("PERMISION_IDS_NOT_FOUND"), "PERMISION_IDS_NOT_FOUND", { fields: ['permission_ids'] });
       }
 
+      transaction = await database.transaction();
       if (name !== role.name || level !== role.level) {
         if (name !== role.name) {
           let checkName = await Role.findOne({
@@ -177,9 +178,11 @@ module.exports = {
               name: name
             }
           })
-          if (checkName) return res.badRequest(res.__("NAME_EXIST_ALREADY"), "NAME_EXIST_ALREADY", { fields: ['name'] });
+          if (checkName) {
+            if (transaction) await transaction.rollback();
+            return res.badRequest(res.__("NAME_EXIST_ALREADY"), "NAME_EXIST_ALREADY", { fields: ['name'] });
+          }
         }
-        transaction = await database.transaction();
         let updateRoleResponse = await Role.update({
           name: name,
           level: level
