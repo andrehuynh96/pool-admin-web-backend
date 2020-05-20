@@ -1,16 +1,33 @@
 const logger = require('app/lib/logger');
 const ColdWallet = require('app/model/staking').cold_wallets;
+const User = require("app/model/staking").users;
 const bech32 = require("bech32");
 const WAValidator = require("wallet-address-validator");
 const mapper = require('app/feature/response-schema/cold-wallet.response-schema');
 const database = require('app/lib/database').db().staking;
+const speakeasy = require("speakeasy");
 
 module.exports = {
     update: async (req, res, next) => {
       let transaction;
       try {
         logger.info('cold-wallet::update');
-        const { body: { items }, user } = req;
+        const { body: { items, twofa_code }, user } = req;
+        let result = await User.findOne({
+          where: {
+            id: user.id
+          }
+        });
+        var verified = speakeasy.totp.verify({
+          secret: result.twofa_secret,
+          encoding: 'base32',
+          token: twofa_code,
+        });
+    
+        if (!verified) {
+          return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT", { fields: ["twofa_code"] });
+        }
+
         let checkAddressMessage = _checkListAddress(items);
         if (checkAddressMessage.length > 0) {
             return res.badRequest(checkAddressMessage);

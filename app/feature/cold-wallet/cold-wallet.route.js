@@ -53,7 +53,8 @@ module.exports = router;
                           "min_amount": 0,
                           "enable_flg": false
                       }
-                    ]
+                    ],
+                    "twofa_code": "123456"
                   }
  *     produces:
  *       - application/json
