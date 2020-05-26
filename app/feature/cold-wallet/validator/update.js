@@ -8,8 +8,9 @@ const schema = Joi.object().keys({
       reward_address: Joi.string().optional(),
       min_amount: Joi.number().optional(),
       enable_flg: Joi.boolean().optional()
-    })
-  )
+    }),
+  ),
+  twofa_code: Joi.string().required()
 });
 
 module.exports = schema;
