@@ -2,11 +2,12 @@ const express = require('express');
 const validator = require('app/middleware/validator.middleware');
 const authenticate = require('app/middleware/authenticate.middleware');
 const parseformdata = require('app/middleware/parse-formdata.middleware');
-const { create, update, } = require('./validator');
+const { create, update, resendVerify } = require('./validator');
 const controller = require('./user.controller');
 const config = require('app/config');
 const authority = require('app/middleware/authority.middleware');
 const Permission = require('app/model/staking/value-object/permission-key');
+const levelAuthority = require('app/middleware/level-authority.middleware');
 
 const router = express.Router();
 
@@ -28,6 +29,7 @@ router.post(
   '/users',
   authenticate,
   authority(Permission.CREATE_USER),
+  levelAuthority("req.body.role_id"),
   validator(create),
   controller.create
 );
@@ -36,6 +38,8 @@ router.put(
   '/users/:id',
   authenticate,
   authority(Permission.UPDATE_USER),
+  levelAuthority("req.params.id", true),
+  levelAuthority("req.body.role_id"),
   validator(update),
   controller.update
 );
@@ -48,7 +52,13 @@ router.post(
 );
 
 router.post(
-  '/active-user', 
+  '/users/resend-verify-email',
+  validator(resendVerify),
+  controller.resendVerifyEmail
+);
+
+router.post(
+  '/active-user',
   controller.active
 );
 
@@ -56,6 +66,7 @@ router.delete(
   '/users/:id',
   authenticate,
   authority(Permission.DELETE_USER),
+  levelAuthority("req.params.id", true),
   controller.delete
 );
 
@@ -401,7 +412,53 @@ module.exports = router;
  *           $ref: '#/definitions/500'
  */
 
-
+/**
+* @swagger
+* /web/users/resend-verify-email:
+*   post:
+*     summary: Resend expired Otp
+*     tags:
+*       - User
+*     description: Resend expired Otp
+*     parameters:
+*       - in: body
+*         name: data
+*         description: Data for resend verify email.
+*         schema:
+*            type: object
+*            required:
+*            - verify_token
+*            example:
+*               {
+                       "verify_token":"NzFmYWJkNTMtN2ZlMy00NzY4LTlmOTctNTJkN2QxNDFlZDg2"
+                 }
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: Ok
+*         examples:
+*           application/json:
+*             {
+*                 "data":true
+*             }
+*       400:
+*         description: Error
+*         schema:
+*           $ref: '#/definitions/400'
+*       401:
+*         description: Error
+*         schema:
+*           $ref: '#/definitions/401'
+*       404:
+*         description: Error
+*         schema:
+*           $ref: '#/definitions/404'
+*       500:
+*         description: Error
+*         schema:
+*           $ref: '#/definitions/500'
+*/
 /*********************************************************************/
 
 

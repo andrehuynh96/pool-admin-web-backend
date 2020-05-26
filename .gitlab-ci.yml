@@ -1,58 +1,50 @@
+variables:
+ GIT_STRATEGY: none
+ ANSIBLE_DIR: "/home/ubuntu/staking-iac/ansible"
+ ANSIBLE_REPO: "/home/ubuntu/staking-iac/"
+
 stages:
  - build
- - test
- - deploy   
-variables:
- ANSIBLE_DIR: "/home/ubuntu/staking-iac/ansible"
- 
-###
-.BuildJSApp:
- stage: build
+ - deploy
+
+.deploy:
+ stage: deploy
  script:
   - cd ${ANSIBLE_DIR}
+  # Ensure gitlab.blockchainlabs.asia allow https ssh from runner ip
+  # Ensure staking-iac have ssh remote
+  # Ensure id_rsa chmod 400
+  # Ensure say yes for the first ssh conn
+  - sudo su ubuntu -c "export GIT_SSH_COMMAND='ssh -i /home/ubuntu/staking-iac/ansible/id_rsa';git pull ssh terraform"
   - ansible_file=`grep ${CI_PROJECT_NAME}.git *.yml | awk '{print $1}'|awk -F':' '{print $1}' | grep ${_ENV}`
-  - sudo su ubuntu -c "ansible-playbook $ansible_file"
-  
-.OnlyStagingMS:
+  - sudo su ubuntu -c "ansible-playbook $ansible_file --extra-vars=\"node_git_version=${CI_COMMIT_TAG}\""
+
+.stage-env:
  only:
-  - /^.*-ms-rc$/
+  - /^.*-rc$/
  except:
   - branches
-
-.OnlyStagingBS:
- only:
-  - /^.*-bs-rc$/
- except:
-  - branches
-
-.OnlyProductionMS:
- only:
-  - /^.*-ms$/
- except:
-  - branches
-
-.OnlyProductionBS:
- only:
-  - /^.*-bs$/
- except:
-  - branches
-
-DeployBS:
- variables:
-  _ENV: "stage" 
- extends:
-  - .BuildJSApp
-  - .OnlyStagingBS
- tags:
-  - stage-stak-mp-ansible
-  
-DeployMS:
- variables:
-  _ENV: "stage" 
- extends:
-  - .BuildJSApp
-  - .OnlyStagingMS
  tags:
   - stage-stak-mp-ansible
 
-  
+.prod-env:
+ only:
+  - /^.*[0-9]$/
+ except:
+  - branches
+ tags:
+  - prod-stak-mp-ansible
+
+deploy-stage:
+ variables:
+  _ENV: "stage"
+ extends:
+  - .deploy
+  - .stage-env
+
+deploy-prod:
+ variables:
+  _ENV: "prod" 
+ extends:
+  - .deploy
+  - .prod-env

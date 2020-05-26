@@ -45,12 +45,12 @@ module.exports = {
 
       const match = await bcrypt.compare(req.body.password, result.password_hash);
       if (!match) {
-        return res.badRequest(res.__("PASSWORD_INVALID"), "PASSWORD_INVALID");
+        return res.badRequest(res.__("PASSWORD_INVALID"), "PASSWORD_INVALID", { fields: ['password'] });
       }
 
       const exist = await bcrypt.compare(req.body.new_password, result.password_hash);
       if (exist) {
-        return res.badRequest(res.__("PASSWORD_EXIST"), "PASSWORD_EXIST");
+        return res.badRequest(res.__("PASSWORD_EXIST"), "PASSWORD_EXIST", { fields: ['new_password'] });
       }
 
       let passWord = bcrypt.hashSync(req.body.new_password, 10);
@@ -197,6 +197,26 @@ module.exports = {
     }
     catch (err) {
       logger.error('loginHistory fail:', err);
+      next(err);
+    }
+  },
+  updateProfile: async (req, res, next) => {
+    try {
+      let [_, response] = await User.update({
+        name: req.body.name
+      }, {
+        where: {
+          id: req.user.id
+        },
+        returning: true
+      })
+      if (!response || response.length == 0) {
+        return res.serverInternalError();
+      }
+      return res.ok(userMapper(response));
+    }
+    catch (err) {
+      logger.error('updateProfile fail:', err);
       next(err);
     }
   }

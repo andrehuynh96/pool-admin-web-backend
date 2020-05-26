@@ -1,5 +1,5 @@
 const create = require('./create');
 
 module.exports = {
-  create: create,
+  create: create
 };

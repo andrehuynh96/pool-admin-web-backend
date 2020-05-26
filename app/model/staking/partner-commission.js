@@ -37,11 +37,18 @@ module.exports = (sequelize, DataTypes) => {
     staking_platform_id: {
       type: DataTypes.UUID,
     },
+    partner_updated_by: {
+      type: DataTypes.UUID,
+      allowNull: true
+    }
   }, {
       underscored: true,
       timestamps: true,
     });
-
+  partner_commission.associate = (models) => {
+    // associations can be defined here
+    partner_commission.hasMany(models.partner_request_change_reward_addresses, { foreignKey: 'partner_commission_id' })
+  };
   Temporalize({
     model: partner_commission,
     sequelize,

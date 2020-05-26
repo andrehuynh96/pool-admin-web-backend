@@ -1,14 +1,26 @@
 const Model = require("app/model/staking").roles;
 
-(async () => {
+module.exports = async () => {
   let count = await Model.count();
   if (count == 0) {
     await Model.bulkCreate([{
-      name: "Admin"
-    }, {
-      name: "Operator"
+      name: "Master",
+      root_flg: true,
+      level: 0
+    },
+    {
+      name: "Admin",
+      level: 10
+    },
+    {
+      name: "Operator1",
+      level: 20
+    },
+    {
+      name: "Operator2",
+      level: 30
     }], {
         returning: true
       });
   }
-})();
+};

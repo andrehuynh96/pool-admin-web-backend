@@ -20,7 +20,7 @@ module.exports = {
     try {
       let limit = req.query.limit ? parseInt(req.query.limit) : 10;
       let offset = req.query.offset ? parseInt(req.query.offset) : 0;
-      let roles = req.session.role;
+      let rolesControl = await _getRoleControl(req.roles);
       let where = { deleted_flg: false };
       let include = [
         {
@@ -31,7 +31,7 @@ module.exports = {
             }
           ],
           where: {
-            role_id: { [Op.gte]: Math.min(...roles) }
+            role_id: { [Op.in]: rolesControl }
           }
         }
       ];
@@ -63,7 +63,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       let userRole = await UserRole.findOne({
@@ -84,29 +84,36 @@ module.exports = {
     }
   },
   delete: async (req, res, next) => {
+    let transaction;
     try {
       if (req.params.id == req.user.id) {
-        return res.badRequest(res.__("USER_NOT_DELETED"), "USER_NOT_DELETED");
+        return res.badRequest(res.__("USER_NOT_DELETED"), "USER_NOT_DELETED", { fields: ['id'] });
       }
       let result = await User.findOne({
         where: {
-          id: req.params.id
+          id: req.params.id,
+          deleted_flg: false
         }
       })
 
       if (!result) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
-      let [_, response] = await User.update({
-        deleted_flg: true,
-        updated_by: req.user.id
-      }, {
-          where: {
-            id: req.params.id
-          },
-          returning: true
-        });
+      transaction = await database.transaction();
+      await UserRole.destroy({
+        where: {
+          user_id: req.params.id
+        }
+      }, { transaction });
+      let response = await User.destroy({
+        where: {
+          id: req.params.id
+        },
+        returning: true
+      }, { transaction });
+      await transaction.commit();
+
       if (!response || response.length == 0) {
         return res.serverInternalError();
       }
@@ -115,6 +122,7 @@ module.exports = {
     }
     catch (err) {
       logger.error('delete user fail:', err);
+      if (transaction) await transaction.rollback();
       next(err);
     }
   },
@@ -129,7 +137,7 @@ module.exports = {
       })
 
       if (result) {
-        return res.badRequest(res.__("EMAIL_EXISTS_ALREADY"), "EMAIL_EXISTS_ALREADY");
+        return res.badRequest(res.__("EMAIL_EXISTS_ALREADY"), "EMAIL_EXISTS_ALREADY", { fields: ['email'] });
       }
 
       let role = await Role.findOne({
@@ -139,7 +147,7 @@ module.exports = {
       })
 
       if (!role) {
-        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND");
+        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND", { fields: ['role_id'] });
       }
 
       transaction = await database.transaction();
@@ -180,12 +188,12 @@ module.exports = {
       await OTP.update({
         expired: true
       }, {
-          where: {
-            user_id: user.id,
-            action_type: OtpType.CREATE_ACCOUNT
-          },
-          returning: true
-        })
+        where: {
+          user_id: user.id,
+          action_type: OtpType.CREATE_ACCOUNT
+        },
+        returning: true
+      })
 
       await OTP.create({
         code: verifyToken,
@@ -195,6 +203,13 @@ module.exports = {
         user_id: user.id,
         action_type: OtpType.CREATE_ACCOUNT
       })
+      let admin = await User.findOne({
+        where: {
+          id: user.created_by
+        }
+      })
+      user.adminName = admin? admin.name : 'Admin'  
+      user.role = role.name
       await transaction.commit();
       _sendEmailCreateUser(user, verifyToken);
 
@@ -219,7 +234,7 @@ module.exports = {
       })
 
       if (!result) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       let role = await Role.findOne({
@@ -229,7 +244,7 @@ module.exports = {
       })
 
       if (!role) {
-        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND");
+        return res.badRequest(res.__("ROLE_NOT_FOUND"), "ROLE_NOT_FOUND", { fields: ['role_id'] });
       }
       let data = {
         user_sts: req.body.user_sts,
@@ -242,11 +257,11 @@ module.exports = {
       transaction = await database.transaction();
 
       let [_, response] = await User.update(data, {
-          where: {
-            id: req.params.id
-          },
-          returning: true
-        }, { transaction });
+        where: {
+          id: req.params.id
+        },
+        returning: true
+      }, { transaction });
       if (!response || response.length == 0) {
         if (transaction) await transaction.rollback();
         return res.serverInternalError();
@@ -293,7 +308,7 @@ module.exports = {
 
       let today = new Date();
       if (otp.expired_at < today || otp.expired || otp.used) {
-        return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED");
+        return res.badRequest(res.__("TOKEN_EXPIRED"), "TOKEN_EXPIRED", { fields: ['verify_token'] });
       }
 
       let user = await User.findOne({
@@ -318,11 +333,11 @@ module.exports = {
         password_hash: passWord,
         user_sts: UserStatus.ACTIVATED
       }, {
-          where: {
-            id: user.id
-          },
-          returning: true
-        });
+        where: {
+          id: user.id
+        },
+        returning: true
+      });
       if (!response || response.length == 0) {
         return res.serverInternalError();
       }
@@ -330,13 +345,13 @@ module.exports = {
       await OTP.update({
         used: true
       }, {
-          where: {
-            user_id: user.id,
-            code: req.body.verify_token,
-            action_type: OtpType.CREATE_ACCOUNT
-          },
-          returning: true
-        })
+        where: {
+          user_id: user.id,
+          code: req.body.verify_token,
+          action_type: OtpType.CREATE_ACCOUNT
+        },
+        returning: true
+      })
 
       return res.ok(true);
     }
@@ -355,7 +370,7 @@ module.exports = {
       })
 
       if (!user) {
-        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND");
+        return res.badRequest(res.__("USER_NOT_FOUND"), "USER_NOT_FOUND", { fields: ['id'] });
       }
 
       if (user.user_sts == UserStatus.ACTIVATED) {
@@ -373,12 +388,12 @@ module.exports = {
       await OTP.update({
         expired: true
       }, {
-          where: {
-            user_id: user.id,
-            action_type: OtpType.CREATE_ACCOUNT
-          },
-          returning: true
-        })
+        where: {
+          user_id: user.id,
+          action_type: OtpType.CREATE_ACCOUNT
+        },
+        returning: true
+      })
 
       await OTP.create({
         code: verifyToken,
@@ -388,11 +403,100 @@ module.exports = {
         user_id: user.id,
         action_type: OtpType.CREATE_ACCOUNT
       })
+      let userRole = await UserRole.findOne({
+        where: {
+          user_id: user.id
+        },
+        order: [['id', 'DESC']]
+      })
+      let role = await Role.findOne({
+        where: {
+          id: userRole.role_id
+        }
+      })
+      let admin = await User.findOne({
+        where: {
+          id: user.created_by
+        }
+      })
+      user.adminName = admin? admin.name : 'Admin'  
+      user.role = role.name
       _sendEmailCreateUser(user, verifyToken);
       return res.ok(true);
     }
     catch (err) {
       logger.error('create account fail:', err);
+      next(err);
+    }
+  },
+  resendVerifyEmail: async (req, res, next) => {
+    try {
+      let otp = await OTP.findOne({
+        where: {
+          code: req.body.verify_token
+        }
+      })
+      if (!otp) {
+        return res.badRequest(res.__("TOKEN_INVALID"), "TOKEN_INVALID", { fields: ['verify_token'] })
+      }
+      if (otp.action_type !== OtpType.CREATE_ACCOUNT) {
+        return res.badRequest(res.__("TOKEN_IS_NOT_CREATE_ACCOUNT"), "TOKEN_IS_NOT_CREATE_ACCOUNT", { fields: ['verify_token'] })
+      }
+      let user = await User.findOne({
+        where: {
+          id: otp.user_id
+        }
+      })
+      if (user.user_sts !== UserStatus.UNACTIVATED) {
+        return res.badRequest(res.__("USER_IS_NOT_UNACTIVATED"), "USER_IS_NOT_UNACTIVATED")
+      }
+
+      let verifyToken = Buffer.from(uuidV4()).toString('base64');
+      let today = new Date();
+      today.setHours(today.getHours() + config.expiredVefiryToken);
+      await OTP.update({
+        expired: true
+      }, {
+        where: {
+          user_id: user.id
+        },
+        returning: true
+      });
+      //TODO:
+      let newOtp = await OTP.create({
+        code: verifyToken,
+        used: false,
+        expired: false,
+        expired_at: today,
+        user_id: user.id,
+        action_type: OtpType.CREATE_ACCOUNT
+      });
+      if (!newOtp) {
+        return res.serverInternalError();
+      }
+      let userRole = await UserRole.findOne({
+        where: {
+          user_id: user.id
+        },
+        order: [['id', 'DESC']]
+      })
+      let role = await Role.findOne({
+        where: {
+          id: userRole.role_id
+        }
+      })
+      let admin = await User.findOne({
+        where: {
+          id: user.created_by
+        }
+      })
+      user.adminName = admin? admin.name : 'Admin'  
+      user.role = role.name
+      await _sendEmailCreateUser(user, newOtp.code);
+      return res.ok(true);
+    }
+    catch (err) {
+      logger.error('resend verify email fail:', err);
       next(err);
     }
   }
@@ -404,7 +508,9 @@ async function _sendEmailCreateUser(user, verifyToken) {
     let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
     let data = {
       imageUrl: config.website.urlImages,
-      link: `${config.website.urlActive}?token=${verifyToken}`,
+      role: user.role,
+      name: user.adminName,
+      link: `${config.website.urlActive}${verifyToken}`,
       hours: config.expiredVefiryToken
     }
     data = Object.assign({}, data, config.email);
@@ -416,17 +522,39 @@ async function _sendEmailCreateUser(user, verifyToken) {
 
 async function _sendEmailDeleteUser(user) {
   try {
-    console.log("not email template")
-    // let subject = 'Listco Account - Delete Account';//TODO:
-    // let from = `Listco <${config.mailSendAs}>`;
-    // let data = {
-    //   email: user.email,
-    //   fullname: user.email,
-    //   site: config.websiteUrl
-    // }
-    // data = Object.assign({}, data, config.email);
-    // await mailer.sendWithTemplate(subject, from, user.email, data, "delete-user.ejs");
+    let subject = `${config.emailTemplate.partnerName} - Delete Account`;
+    let from = `${config.emailTemplate.partnerName} <${config.mailSendAs}>`;
+    let data = {
+      imageUrl: config.website.urlImages,
+    }
+    data = Object.assign({}, data, config.email);
+    await mailer.sendWithTemplate(subject, from, user.email, data, config.emailTemplate.deactiveAccount);
   } catch (err) {
-    logger.error("send email create account fail", err);
+    logger.error("send email delete account fail", err);
   }
+}
+async function _getRoleControl(roles) {
+  let levels = roles.map(ele => ele.level)
+  let roleControl = []
+  for (let e of levels) {
+    let role = await Role.findOne({
+      where: {
+        level: { [Op.gt]: e },
+        deleted_flg: false
+      },
+      order: [['level', 'ASC']]
+    });
+
+    if (role) {
+      let roles = await Role.findAll({
+        where: {
+          level: role.level,
+          deleted_flg: false
+        }
+      });
+      roleControl = roleControl.concat(roles.map(x => x.id));
+    }
+  }
+
+  return roleControl;
 }

@@ -1,10 +1,14 @@
 const Model = require("app/model/staking").permissions;
 const PermissionKey = require("app/model/staking/value-object/permission-key");
+const RolePermission = require("app/model/staking").role_permissions;
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
-(async () => {
+
+module.exports = async () => {
   let models = [];
   let permissions = Object.keys(PermissionKey).map(key => {
-    return PermissionKey[key]
+    return PermissionKey[key].KEY;
   })
   for (let permission of permissions) {
     let m = await Model.findOne({
@@ -24,8 +28,37 @@ const PermissionKey = require("app/model/staking/value-object/permission-key");
     }
   }
   await Model.bulkCreate(
-  models, {
+    models, {
       returning: true
     });
-  
-})();
+
+  let permissionObsolete = await Model.findAll({
+    where: {
+      name: {
+        [Op.notIn]: permissions
+      }
+    },
+    raw: true
+  });
+
+  if (permissionObsolete && permissionObsolete.length > 0) {
+    let ids = permissionObsolete.map(i => i.id);
+    await RolePermission.destroy({
+      where: {
+        permission_id: {
+          [Op.in]: ids
+        }
+      }
+    });
+
+    await Model.destroy({
+      where: {
+        id: {
+          [Op.in]: ids
+        }
+      }
+    })
+  }
+
+
+};

@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
       }
     });
     if (!otp) {
-      return res.badRequest(res.__("TOKEN_INVALID"), "TOKEN_INVALID");
+      return res.badRequest(res.__("TOKEN_INVALID"), "TOKEN_INVALID", { fields: ['token'] });
     }
 
     let today = new Date();
