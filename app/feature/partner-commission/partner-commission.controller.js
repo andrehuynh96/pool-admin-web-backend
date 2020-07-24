@@ -8,7 +8,7 @@ const mapper = require('app/feature/response-schema/partner-commission.response-
 const database = require('app/lib/database').db().staking;
 const { Op } = require("sequelize");
 const bech32 = require("bech32");
-const WAValidator = require("wallet-address-validator");
+const WAValidator = require("multicoin-address-validator");
 const NeonCore = require('@cityofzion/neon-core');
 
 const { _getUsername } = require('app/lib/utils');
