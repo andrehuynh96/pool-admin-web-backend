@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(512),
       allowNull: true
     },
+    group_name: {
+      type: DataTypes.STRING(128),
+      allowNull: true
+    },
     deleted_flg: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
