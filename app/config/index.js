@@ -1,5 +1,7 @@
-/*eslint no-process-env: "off"*/
+/* eslint no-process-env: "off"*/
 require('dotenv').config();
+const pkg = require('../../package.json');
+
 const logFolder = process.env.LOG_FOLDER || './public/logs';
 
 const config = {
@@ -21,6 +23,13 @@ const config = {
   rateLimit: process.env.RATE_LIMIT ? parseInt(process.env.RATE_LIMIT) : 100,
   recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
   recaptchaSecret: process.env.RECAPTCHA_SECRET,
+  app: {
+    name: process.env.APP_NAME || 'staking-childpool-admin-web-backend',
+    version: pkg.version,
+    description: pkg.description,
+    buildNumber: process.env.BUILD_NUMBER || '',
+    port: parseInt(process.env.PORT || process.env.APP_PORT),
+  },
   db: {
     staking: {
       database: process.env.STAKING_DB_NAME,
@@ -30,7 +39,7 @@ const config = {
         host: process.env.STAKING_DB_HOST,
         port: process.env.STAKING_DB_PORT,
         dialect: 'postgres',
-        logging: false
+        logging: process.env.POSTPRES_DEBUG === 'true',
       }
     }
   },
