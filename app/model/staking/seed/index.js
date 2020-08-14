@@ -6,13 +6,13 @@ const config = require("app/config");
 
     if (config.enableSeed) {
       await Promise.all([require("./user")(), require("./role")()]);
-      require("./role-permission")();
-      require("./user-role")();
-      require("./cold-wallet")();
+      await require("./role-permission")();
+      await require("./user-role")();
+      await require("./cold-wallet")();
       await require("./setting")();
     }
 
-    require("./root-permission")();
+    await require("./root-permission")();
     console.log('Seeding data is completed.');
   }
   catch (err) {
