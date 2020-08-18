@@ -16,7 +16,7 @@ router.get(
   controller.get
 );
 
-/*********************************************************************/
+/** *******************************************************************/
 
 
 /**
@@ -43,37 +43,54 @@ router.get(
  *         description: Ok
  *         examples:
  *           application/json:
- *            { data: {
- *                items: 
-                    [ { id: 'a92b8ebc-256a-11ea-978f-2e728ce88125',
-                        platform: 'ATOM',
-                        cycle: 1000,
-                        cycle_type: 'BLOCK',
-                        min_amount: 2000,
-                        amount_unit: 'ATOM',
-                        created_by: 5,
-                        created_at: '2019-08-02T03:00:00.000Z'},
-                      { id: 'a92b8ebc-256a-11ea-978f-2e728ce88126',
-                        platform: 'XTZ',
-                        cycle: 3,
-                        cycle_type: 'CYCLE',
-                        min_amount: 1000000,
-                        amount_unit: 'ATOM',
-                        created_by: 5,
-                        created_at: '2019-08-02T03:00:00.000Z' },
-                      { id: 'a92b913c-256a-11ea-978f-2e728ce88125',
-                        platform: 'IRIS',
-                        cycle: 1000,
-                        cycle_type: 'BLOCK',
-                        min_amount: 1000000,
-                        amount_unit: 'IRIS',
-                        created_by: 5,
-                        created_at: '2019-08-02T03:00:00.000Z'} ],
+ *            {
+                "data": {
+                    "items": [
+                        {
+                            "id": 2,
+                            "platform": "ATOM",
+                            "cycle": 50,
+                            "cycle_type": "BLOCK",
+                            "min_amount": 1,
+                            "amount_unit": "uatom",
+                            "min_amount_withdrawal": 1,
+                            "created_at": "2019-08-02T03:00:00.000Z",
+                            "updated_at": "2020-08-18T04:31:40.966Z",
+                            "created_by": 5,
+                            "updated_by": 115
+                        },
+                        {
+                            "id": 5,
+                            "platform": "ETH",
+                            "cycle": 1,
+                            "cycle_type": "BLOCK",
+                            "min_amount": 9007199254740990,
+                            "amount_unit": "bnr",
+                            "min_amount_withdrawal": 9007199254740990,
+                            "created_at": "2019-08-02T03:00:00.000Z",
+                            "updated_at": "2020-08-18T04:31:41.032Z",
+                            "created_by": 5,
+                            "updated_by": 115
+                        },
+                        {
+                            "id": 4,
+                            "platform": "ETH",
+                            "cycle": 1,
+                            "cycle_type": "BLOCK",
+                            "min_amount": 10,
+                            "amount_unit": "moo",
+                            "min_amount_withdrawal": 10,
+                            "created_at": "2019-08-02T03:00:00.000Z",
+                            "updated_at": "2020-08-18T04:31:41.104Z",
+                            "created_by": 5,
+                            "updated_by": 115
+                        }
+                    ],
                     "offset": 0,
                     "limit": 10,
                     "total": 3
-                   }
-      }
+                }
+            }
  *       400:
  *         description: Error
  *         schema:
@@ -104,7 +121,7 @@ module.exports = router;
 
 
 
-/*********************************************************************/
+/** *******************************************************************/
 
 /**
  * @swagger
@@ -175,14 +192,15 @@ router.post(
  *     parameters: 
  *       - in: body
  *         name: data
- *         description: Data for commision.
+ *         description: Data for commission.
  *         schema:
  *            type: array
  *            example:
  *               { items: [{
                         "id": 1, 
                         "cycle":1000,
-                        "min_amount": 1000000
+                        "min_amount": 1000000,
+                        "min_amount_withdrawal": 1000000
                     }]
                   }
  *     produces:
@@ -199,6 +217,7 @@ router.post(
                         cycle_type: 'BLOCK',
                         min_amount: 1000000,
                         amount_unit: 'IRIS',
+                        min_amount_withdrawal: 1000000,
                         created_by: 5,
                         created_at: '2019-08-02T03:00:00.000Z'}]
  *             }

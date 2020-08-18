@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(16),
       allowNull: false
     },
+    min_amount_withdrawal: {
+      type: DataTypes.DOUBLE,
+      allowNull: false
+    },
     created_by: {
       type: DataTypes.INTEGER,
       allowNull: false

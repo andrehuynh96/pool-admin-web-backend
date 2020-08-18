@@ -5,7 +5,8 @@ const schema = Joi.object().keys({
     Joi.object().keys({
       id: Joi.number().required(),
       cycle: Joi.number().integer().min(1).max(9999999999).optional(),
-      min_amount: Joi.number().optional().unsafe()
+      min_amount: Joi.number().optional().unsafe(),
+      min_amount_withdrawal: Joi.number().optional().unsafe()
     })
   )
 });
