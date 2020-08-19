@@ -6,6 +6,7 @@ const Settings = require("app/model/staking").settings;
 const ERC20EventPool = require("app/model/staking").erc20_event_pools;
 const ERC20PayoutCfg = require("app/model/staking").payout_cfgs;
 const ERC20Payout = require("app/model/staking").staking_payouts;
+const Validator = require("app/model/staking").validators;
 const TimeUnit = require("app/model/staking/value-object/time-unit");
 const PlatformConfig = require("app/model/staking/value-object/platform");
 const s3 = require("app/service/s3.service");
@@ -146,6 +147,20 @@ module.exports = {
           returning: true
         }
       );
+
+      if (req.body.estimate_earn_per_year != undefined) {
+        await Validator.update(
+          {
+            estimate_earn_per_year: req.body.estimate_earn_per_year
+          },
+          {
+            where: {
+              platform: result.platform
+            },
+            returning: true
+          }
+        );
+      }
 
       return res.ok(response[0]);
     } catch (err) {
@@ -384,8 +399,8 @@ async function _uploadFile(req, res, next) {
     }
     let uploadName = `${config.CDN.folderPlatform}/${file.name}-${Date.now()}${
       file.ext
-    }`;
-    let buff = await toArray(req.body.icon.data).then(function(parts) {
+      }`;
+    let buff = await toArray(req.body.icon.data).then(function (parts) {
       const buffers = parts.map(part =>
         util.isBuffer(part) ? part : Buffer.from(part)
       );
