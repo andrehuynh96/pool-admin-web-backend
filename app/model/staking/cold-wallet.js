@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     email_notification: {
-      type: DataTypes.STRING(128),
+      type: DataTypes.STRING(250),
       allowNull: true
     },
     enable_flg: {
