@@ -6,9 +6,8 @@ const WAValidator = require("multicoin-address-validator");
 const { isValidAddress: isValidHarmonyAddress } = require('@harmony-js/utils');
 
 module.exports = (platform, address) => {
-  console.log(platform, address);
   if (platform === 'TADA') {
-    platform === 'ADA';
+    platform = 'ADA';
   }
 
   if (platform == 'ATOM') {
