@@ -24,7 +24,7 @@ const config = {
   recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
   recaptchaSecret: process.env.RECAPTCHA_SECRET,
   app: {
-    name: process.env.APP_NAME || 'staking-childpool-admin-web-backend',
+    name: process.env.APP_NAME || 'staking-pool-admin-web-backend',
     version: pkg.version,
     description: pkg.description,
     buildNumber: process.env.BUILD_NUMBER || '',

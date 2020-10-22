@@ -7,9 +7,7 @@ const StakingPlatformStatus = require("app/model/staking/value-object/staking-pl
 const mapper = require('app/feature/response-schema/partner-commission.response-schema');
 const database = require('app/lib/database').db().staking;
 const { Op } = require("sequelize");
-const bech32 = require("bech32");
-const WAValidator = require("multicoin-address-validator");
-const NeonCore = require('@cityofzion/neon-core');
+const verifyAddress = require('app/lib/verify-address');
 
 const { _getUsername } = require('app/lib/utils');
 var commission = {};
@@ -169,17 +167,8 @@ function _checkListAddress(data) {
       if (!e.reward_address && e.commission == 0) {
         continue;
       }
-      let valid = false;
-      if (e.platform == "ATOM") {
-        valid = _verifyCosmosAddress(e.reward_address);
-      } else if (e.platform == "IRIS") {
-        valid = _verifyIrisAddress(e.reward_address);
-      } else if (e.platform == "ONT" || e.platform == "ONG") {
-        valid = _verifyOntAddress(e.reward_address);
-      } else {
-        valid = WAValidator.validate(e.reward_address, e.platform, "testnet");
-        valid = valid ? true : WAValidator.validate(e.reward_address, e.platform);
-      }
+
+      const valid = verifyAddress(e.platform, e.reward_address);
       if (!valid) {
         errorMessage = `invalid address of ${e.platform}!`;
         break;
@@ -207,35 +196,6 @@ const _getSymbol = async (commissions, stakingPlatformIds) => {
   }
 
   return commissions;
-}
-
-function _verifyCosmosAddress(address) {
-  try {
-    let result = bech32.decode(address.toLowerCase());
-    return result.prefix == "cosmos";
-  } catch (e) {
-    logger.error(e);
-    return false;
-  }
-}
-
-function _verifyIrisAddress(address) {
-  try {
-    let result = bech32.decode(address.toLowerCase());
-    return result.prefix == "iaa";
-  } catch (e) {
-    logger.error(e);
-    return false;
-  }
-}
-
-function _verifyOntAddress(address) {
-  try {
-    return NeonCore.wallet.isAddress(address);
-  } catch (e) {
-    logger.error(e);
-    return false;
-  }
-}
+};
 
 module.exports = commission;
