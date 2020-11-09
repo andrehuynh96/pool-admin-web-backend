@@ -27,7 +27,7 @@ const config = {
     name: process.env.APP_NAME || 'staking-pool-admin-web-backend',
     version: pkg.version,
     description: pkg.description,
-    buildNumber: process.env.BUILD_NUMBER || '',
+    buildNumber: process.env.BUILD_NUMBER || process.env.CI_JOB_ID || '',
     port: parseInt(process.env.PORT || process.env.APP_PORT),
   },
   db: {
@@ -132,7 +132,12 @@ const config = {
   lockUser: {
     maximumTriesLogin: process.env.MAXIMUM_TRIES_LOGIN,
     lockTime: process.env.LOCK_TIME
-  }
+  },
+  hangoutError: {
+    isEnabled: process.env.HANGOUT_ERROR_IS_ENABLED === 'true',
+    logLevel: process.env.HANGOUT_ERROR_LOG_LEVEL || 'error',
+    webhookUrl: process.env.HANGOUT_ERROR_CHANEL_WEBHOOK_URL,
+  },
 };
 
 module.exports = config;

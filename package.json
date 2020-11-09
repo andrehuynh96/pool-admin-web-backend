@@ -17,6 +17,7 @@
     "@harmony-js/core": "^0.1.51",
     "@harmony-js/network": "^0.1.51",
     "@harmony-js/utils": "^0.1.48",
+    "@kevit/log4js-hangout": "^1.0.3",
     "aws-sdk": "^2.625.0",
     "axios": "^0.19.0",
     "bcrypt": "^3.0.7",
