@@ -1,7 +1,7 @@
 {
   "name": "staking-pool-admin-web-backend",
   "version": "1.2.1",
-  "description": "v1.14.0",
+  "description": "v1.16.0-ms-rc",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -52,7 +52,7 @@
     "pg-hstore": "^2.3.3",
     "redis": "^2.8.0",
     "rootpath": "^0.1.2",
-    "staking-logging": "^0.1.7",
+    "staking-logging": "^0.1.8",
     "sequelize": "^5.21.3",
     "sequelize-cli": "^5.5.1",
     "sequelize-temporalize": "^4.1.0",
