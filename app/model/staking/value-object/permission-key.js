@@ -221,7 +221,7 @@ module.exports = {
   },
   // "CREATE_PAYOUT_STAKING_PLATFORM": {
   //   "KEY": "CREATE_PAYOUT_STAKING_PLATFORM",
-  //   "GROUP_NAME": "Staking platform", 
+  //   "GROUP_NAME": "Staking platform",
   //   "ROLES": ["Master", "Admin", "Operator1", "Operator2"]
   // },
   "VIEW_LIST_REWARD_SETTING": {
@@ -406,4 +406,10 @@ module.exports = {
     "GROUP_NAME": "Cold wallet",
     "ROLES": ["Master", "Admin"]
   },
-}
+  "VIEW_TOTAL_REWARD": {
+    "KEY": "VIEW_TOTAL_REWARD",
+    "DESCRIPTION": "View total reward",
+    "GROUP_NAME": "Total reward",
+    "ROLES": ["Master", "Admin"]
+  },
+};
