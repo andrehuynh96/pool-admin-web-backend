@@ -2,10 +2,10 @@ const logger = require('app/lib/logger');
 const ColdWallet = require('app/model/staking').cold_wallets;
 const User = require("app/model/staking").users;
 const bech32 = require("bech32");
-const WAValidator = require("wallet-address-validator");
 const mapper = require('app/feature/response-schema/cold-wallet.response-schema');
 const database = require('app/lib/database').db().staking;
 const speakeasy = require("speakeasy");
+const verifyAddress = require('app/lib/verify-address');
 
 module.exports = {
     update: async (req, res, next) => {
@@ -23,7 +23,7 @@ module.exports = {
           encoding: 'base32',
           token: twofa_code,
         });
-    
+
         if (!verified) {
           return res.badRequest(res.__("TWOFA_CODE_INCORRECT"), "TWOFA_CODE_INCORRECT", { fields: ["twofa_code"] });
         }
@@ -51,7 +51,7 @@ module.exports = {
             }, { transaction });
             coldWallets.push(coldWallet);
         }
-        
+
         logger.info('cold-wallets::update::cold-wallets::', JSON.stringify(coldWallets));
         await transaction.commit();
         return res.ok(mapper(coldWallets));
@@ -74,7 +74,7 @@ module.exports = {
         next(error);
       }
     }
-}
+};
 
 function _checkListAddress(data) {
     let errorMessage = "";
@@ -86,15 +86,8 @@ function _checkListAddress(data) {
         if (!e.reward_address) {
           continue;
         }
-        let valid = false;
-        if (e.platform == "ATOM") {
-          valid = _verifyCosmosAddress(e.reward_address);
-        } else if (e.platform == "IRIS") {
-          valid = _verifyIrisAddress(e.reward_address);
-        } else {
-          valid = WAValidator.validate(e.reward_address, e.platform, "testnet");
-          valid = valid ? true : WAValidator.validate(e.reward_address, e.platform);
-        }
+
+        const valid = verifyAddress(e.platform, e.reward_address);
         if (!valid) {
           errorMessage = `invalid address of ${e.platform}!`;
           break;
@@ -103,23 +96,3 @@ function _checkListAddress(data) {
     }
     return errorMessage;
 }
-
-function _verifyCosmosAddress(address) {
-    try {
-      let result = bech32.decode(address.toLowerCase());
-      return result.prefix == "cosmos";
-    } catch (e) {
-      logger.error(e);
-      return false;
-    }
-  }
-  
-  function _verifyIrisAddress(address) {
-    try {
-      let result = bech32.decode(address.toLowerCase());
-      return result.prefix == "iaa";
-    } catch (e) {
-      logger.error(e);
-      return false;
-    }
-  }
