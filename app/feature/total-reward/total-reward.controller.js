@@ -1,7 +1,7 @@
 const logger = require('app/lib/logger');
 const ValidatorWithdrawHis = require('app/model/staking').validator_withdrawal_his;
-const DistributeCommission = require('app/model/staking').distribute_commissions;
 const Calculation = require('app/model/tezos').calculations;
+const db = require("app/model/staking");
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const config = require('app/config');
@@ -27,17 +27,17 @@ module.exports = {
         ],
         where: where,
         group: ['platform'],
-        raw:true
+        raw: true
       });
 
-      const tezosTotalReward = await Calculation.sum('amount',{
+      const tezosTotalReward = await Calculation.sum('amount', {
         where: {
           ...where,
           type: 'B'
         },
       });
 
-      const tezosValidatorAmount = await Calculation.sum('amount',{
+      const tezosValidatorAmount = await Calculation.sum('amount', {
         where: {
           ...where,
           type: 'D',
@@ -52,34 +52,48 @@ module.exports = {
       };
       totalReward.push(tezos);
 
-      const totalDistributeCommission = await DistributeCommission.findAll({
-        attributes: [
-          'platform',
-          [Sequelize.fn('sum', Sequelize.col('commission_amount')), 'total_commission']
-        ],
-        where: {
-          ...where,
-          commission_amount: { [Op.not]: 'NaN' }
-        },
-        group: ['platform'],
-        raw: true
-      });
-
-      const cache = totalDistributeCommission.reduce((result,value) => {
-        result[value.platform] = value.total_commission;
-        return result;
-      },{});
-      totalReward.forEach(item => {
-        cache[item.platform];
-        if (cache[item.platform]) {
-          item.total_commission = cache[item.platform];
+      const getChildpoolCommissionSQL = `select q.*, p."name"
+          from
+            ( select sum(t.amount) as amount, t.partner_id, t.platform
+              from ((
+                select commission_amount as amount, partner_id::uuid , platform, 'DISTRIBUTE' as source
+                from
+                  distribute_commission_his
+                where
+                  created_at >= :startDate
+                  and created_at <= :endDate)
+          union all (
+            select amount, partner_id::uuid , platform, 'BALANCE' as source
+            from partner_commission_balance_his
+            where
+              created_at >= :startDate
+              and created_at <= :endDate)) as t
+            group by
+              partner_id,
+              platform) as q
+          inner join partners as p on p.id = q.partner_id`;
+      let startDate,endDate;
+      if (start_date && end_date) {
+        startDate = start_date;
+        endDate = end_date;
+      }
+      else {
+        startDate = new Date(1970, 1, 1);
+        endDate = new Date();
+      }
+      const childpoolCommissions = await db.sequelize.query(getChildpoolCommissionSQL,
+        {
+          replacements: {
+            startDate: startDate,
+            endDate: endDate
+          },
+          type: Sequelize.QueryTypes.SELECT
         }
-        else {
-          item.total_commission = 0;
-        }
+      );
+      return res.ok({
+        total_reward: totalReward,
+        childpool_commission: childpoolCommissions
       });
-
-      return res.ok(totalReward);
     }
     catch (error) {
       logger.error('Get total reward fail', error);
