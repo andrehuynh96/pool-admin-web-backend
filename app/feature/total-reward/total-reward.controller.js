@@ -1,5 +1,7 @@
 const logger = require('app/lib/logger');
 const ValidatorWithdrawHis = require('app/model/staking').validator_withdrawal_his;
+const StakingPlatform = require('app/model/staking').staking_platforms;
+const StakingType = require('app/model/staking/value-object/staking-type');
 const Calculation = require('app/model/tezos').calculations;
 const db = require("app/model/staking");
 const Sequelize = require('sequelize');
@@ -36,7 +38,13 @@ module.exports = {
           type: 'B'
         },
       });
-
+      const tezosValidator = await StakingPlatform.findOne({
+        where: {
+          symbol: 'XTZ',
+          staking_type: StakingType.NATIVE
+        }
+      });
+      const tezosValidatorAddress = tezosValidator.validator_address;
       const tezosValidatorAmount = await Calculation.sum('amount', {
         where: {
           ...where,
