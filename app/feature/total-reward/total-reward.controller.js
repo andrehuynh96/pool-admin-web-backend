@@ -24,7 +24,7 @@ module.exports = {
       const totalReward = await ValidatorWithdrawHis.findAll({
         attributes: [
           'platform',
-          [Sequelize.fn('sum', Sequelize.col('amount')), 'total_reward '],
+          [Sequelize.fn('sum', Sequelize.col('amount')), 'total_reward'],
           [Sequelize.fn('SUM', Sequelize.literal('(amount - commission_amount)')), 'validator_amount']
         ],
         where: where,
