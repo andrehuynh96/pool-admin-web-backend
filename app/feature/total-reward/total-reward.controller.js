@@ -40,7 +40,6 @@ module.exports = {
       });
       const tezosValidator = await StakingPlatform.findOne({
         where: {
-          name: 'Tezos',
           symbol: 'XTZ',
           staking_type: StakingType.NATIVE
         }
