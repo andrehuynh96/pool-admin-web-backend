@@ -26,10 +26,11 @@ router.use(require('./staking-payout/staking-payout.route'));
 router.use(require('./permission/permission.route'));
 router.use(require('./partner-request/partner-request.route'));
 router.use(require('./cold-wallet/cold-wallet.route'));
+router.use(require('./total-reward/total-reward.route'));
 
 module.exports = router;
 
-/**********************************************************************/
+/** ********************************************************************/
 /**
  * @swagger
  * definition:

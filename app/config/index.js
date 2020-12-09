@@ -41,6 +41,17 @@ const config = {
         dialect: 'postgres',
         logging: process.env.POSTPRES_DEBUG === 'true',
       }
+    },
+    tezos: {
+      database: process.env.TEZOS_DISTRIBUTION_DB_NAME,
+      username: process.env.TEZOS_DISTRIBUTION_DB_USER,
+      password: process.env.TEZOS_DISTRIBUTION_DB_PASS,
+      options: {
+        host: process.env.TEZOS_DISTRIBUTION_DB_HOST,
+        port: process.env.TEZOS_DISTRIBUTION_DB_PORT,
+        dialect: 'postgres',
+        logging: false
+      }
     }
   },
   redis: {
@@ -138,6 +149,7 @@ const config = {
     logLevel: process.env.HANGOUT_ERROR_LOG_LEVEL || 'error',
     webhookUrl: process.env.HANGOUT_ERROR_CHANEL_WEBHOOK_URL,
   },
+  tezosValidatorAddress: process.env.TEZOS_VALIDATOR_ADDRESS
 };
 
 module.exports = config;
