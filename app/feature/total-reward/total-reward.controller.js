@@ -6,9 +6,15 @@ const Calculation = require('app/model/tezos').calculations;
 const db = require("app/model/staking");
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-const config = require('app/config');
-const tezosValidatorAddress = config.tezosValidatorAddress;
-
+const BigNumber = require('bignumber.js');
+const currencyDecimals = {
+  ATOM: 6,
+  IRIS: 18,
+  ADA: 6,
+  ONG: 9,
+  XTZ: 6,
+  ONE: 18
+};
 module.exports = {
   get: async (req, res, next) => {
     try {
@@ -98,6 +104,37 @@ module.exports = {
           type: Sequelize.QueryTypes.SELECT
         }
       );
+
+      const childpoolCommissionByPlatform = totalReward.reduce((result, value) => {
+        if (value.platform == 'ONT') {
+          value.platform = 'ONG';
+        }
+
+        result[value.platform] = 0;
+        return result;
+      },{});
+
+      childpoolCommissions.forEach(item => {
+        if (item.platform == 'ONT') {
+          item.platform = 'ONG';
+        }
+
+        if (childpoolCommissionByPlatform[item.platform] != null) {
+          childpoolCommissionByPlatform[item.platform] += item.amount;
+        }
+      });
+
+      totalReward.forEach(item => {
+        item.master_pool = item.total_reward - (item.validator_amount + childpoolCommissionByPlatform[item.platform]);
+
+        item.total_reward = rewardByCurrency(item.total_reward,item.platform);
+        item.validator_amount = rewardByCurrency(item.validator_amount,item.platform);
+        item.master_pool = rewardByCurrency(item.master_pool,item.platform);
+      });
+
+      childpoolCommissions.forEach(item => {
+        item.amount = rewardByCurrency(item.amount,item.platform);
+      });
       return res.ok({
         total_reward: totalReward,
         childpool_commission: childpoolCommissions
@@ -109,3 +146,15 @@ module.exports = {
     }
   }
 };
+
+function rewardByCurrency(reward,platform) {
+  if (!reward) {
+    return reward;
+  }
+  if (!currencyDecimals[platform]) {
+    return reward;
+  }
+  const value = new BigNumber(reward).div(Math.pow(10,currencyDecimals[platform])).toFixed(3);
+  const result = new BigNumber(value).toFormat();
+  return result;
+}

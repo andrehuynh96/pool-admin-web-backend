@@ -148,8 +148,7 @@ const config = {
     isEnabled: process.env.HANGOUT_ERROR_IS_ENABLED === 'true',
     logLevel: process.env.HANGOUT_ERROR_LOG_LEVEL || 'error',
     webhookUrl: process.env.HANGOUT_ERROR_CHANEL_WEBHOOK_URL,
-  },
-  tezosValidatorAddress: process.env.TEZOS_VALIDATOR_ADDRESS
+  }
 };
 
 module.exports = config;
